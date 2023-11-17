@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 namespace Fun2048
 {
-
-
     public class SwipeDetection : MonoBehaviour
     {
 

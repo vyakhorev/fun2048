@@ -1,4 +1,6 @@
 
+using System;
+
 namespace Fun2048
 {
     public abstract class AChip
@@ -13,11 +15,6 @@ namespace Fun2048
         public void SetChipId(int chipID)
         {
             _chipID = chipID;
-        }
-
-        public ChipType GetChipType()
-        {
-            throw new System.NotImplementedException();
         }
 
     }

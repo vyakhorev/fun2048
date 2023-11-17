@@ -4,5 +4,11 @@ namespace Fun2048
     {
         private int _health;
 
+        public GrassChip(int health)
+        {
+            _health = health;
+        }
+
+
     }
 }

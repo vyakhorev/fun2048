@@ -8,11 +8,4 @@ namespace Fun2048
         RIGHT = 3
     }
 
-    public enum ChipType
-    {
-        NUMBER = 0,
-        STONE = 1,
-        GTASS = 2,
-    }
-
 }

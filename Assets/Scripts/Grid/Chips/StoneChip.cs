@@ -5,6 +5,11 @@ namespace Fun2048
     {
         private int _health;
 
- 
+        public StoneChip(int health)
+        {
+            _health = health;
+        }
+
+
     }
 }

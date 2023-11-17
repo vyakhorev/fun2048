@@ -60,21 +60,31 @@ public partial class Contexts : Entitas.IContexts {
 //------------------------------------------------------------------------------
 public partial class Contexts {
 
-    public const string PrimaryIndex = "PrimaryIndex";
+    public const string ChipID = "ChipID";
+    public const string ChipPrimaryID = "ChipPrimaryID";
 
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeEntityIndices() {
+        game.AddEntityIndex(new Entitas.EntityIndex<GameEntity, int>(
+            ChipID,
+            game.GetGroup(GameMatcher.ChipID),
+            (e, c) => ((Fun2048.ChipIDComponent)c).Value));
+
         game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, int>(
-            PrimaryIndex,
-            game.GetGroup(GameMatcher.PrimaryIndex),
-            (e, c) => ((Fun2048.PrimaryIndexComponent)c).primaryIdx));
+            ChipPrimaryID,
+            game.GetGroup(GameMatcher.ChipPrimaryID),
+            (e, c) => ((Fun2048.ChipPrimaryIDComponent)c).Value));
     }
 }
 
 public static class ContextsExtensions {
 
-    public static GameEntity GetEntityWithPrimaryIndex(this GameContext context, int primaryIdx) {
-        return ((Entitas.PrimaryEntityIndex<GameEntity, int>)context.GetEntityIndex(Contexts.PrimaryIndex)).GetEntity(primaryIdx);
+    public static System.Collections.Generic.HashSet<GameEntity> GetEntitiesWithChipID(this GameContext context, int Value) {
+        return ((Entitas.EntityIndex<GameEntity, int>)context.GetEntityIndex(Contexts.ChipID)).GetEntities(Value);
+    }
+
+    public static GameEntity GetEntityWithChipPrimaryID(this GameContext context, int Value) {
+        return ((Entitas.PrimaryEntityIndex<GameEntity, int>)context.GetEntityIndex(Contexts.ChipPrimaryID)).GetEntity(Value);
     }
 }
 //------------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 
-
-
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,22 +10,55 @@ namespace Fun2048
      */
     public class Chip2048Game
     {
-        private ChipKeeper _chipKeeper;
+        private readonly ChipKeeper _chipKeeper;
+        private Vector2Int _boardSize;
+        private int _lastChipId;
 
         public Chip2048Game(int x, int y)
         {
             _chipKeeper = new ChipKeeper(x, y);
+            _boardSize = new Vector2Int(x, y);
+        }
+
+        public Vector2Int GetBoardSize()
+        {
+            return _boardSize;
+        }
+
+        public void ResetGame()
+        {
+            _chipKeeper.ResetCells();
+            _lastChipId = 0;
+            TrySpawnNewNumber();
         }
 
         public bool TrySwipe(GridDirection gridDirection)
         {
-            Debug.Log(gridDirection);
-            return true;
+            _chipKeeper.DoMergeInDirection(gridDirection);
+            return TrySpawnNewNumber();
         }
 
-        public bool TryTap(Vector2 tapWorldPosition)
+        private bool TrySpawnNewNumber()
         {
-            return true;
+            _lastChipId += 1;
+            NumberChip newChip = new NumberChip(2);
+            newChip.SetChipId(_lastChipId);
+            return _chipKeeper.TrySpawnNewChipAtRandomPosition(newChip);
+        }
+
+        public List<AGridEffect> GetEffects()
+        {
+            return _chipKeeper.GetEffects();
+        }
+
+        public void ResetEffects()
+        {
+            _chipKeeper.ResetEffects();
+        }
+
+        public void TryTap(Vector2 tapWorldPosition)
+        {
+            
         }
 
     }
