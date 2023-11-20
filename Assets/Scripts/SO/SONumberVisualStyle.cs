@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "Fun2048/Grid/Number visual style")]
 public class SONumberVisualStyle : ScriptableObject
