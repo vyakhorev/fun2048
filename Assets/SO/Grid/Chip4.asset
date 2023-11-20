@@ -21,5 +21,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ChipColor: {r: 0.86274517, g: 0.49803925, b: 0.45882356, a: 0}
-  FontColor: {r: 1, g: 1, b: 1, a: 0}
+  _chipColor: {r: 0.86274517, g: 0.49803925, b: 0.45882356, a: 1}
+  _fontColor: {r: 1, g: 1, b: 1, a: 1}
