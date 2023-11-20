@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.pinky.localization": {
+      "version": "https://github.com/Drunk3n-P1nky/Localization.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.textmeshpro": "3.0.6"
+      },
+      "hash": "f791d75d0771070df3f3d0d1d2cfcc7947d47e8e"
+    },
     "com.unity.2d.animation": {
       "version": "9.0.3",
       "depth": 1,
