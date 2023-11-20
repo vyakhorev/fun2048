@@ -1,12 +1,7 @@
-using Mocked2048Game;
+// using Mocked2048Game;
 using Pooling;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 
 /*
  * Responsible for board visualisation
@@ -20,22 +15,34 @@ namespace GameCoreController
         private List<GridDirection> _enquedSwipes;
         private bool _readyToPlay = false;
         private GameObjectPools _pool;
-        private Dictionary<int, GameObject> _chipViews;
 
+        private Dictionary<int, GridCellCtrl> _gridCellViews;
+        private Dictionary<int, ChipCtrl> _numberViews;
+        
+        private GameObject _gridCellPrefab;
+        private GameObject _numberChipPrefab;
+        
         private Camera _camera;
         private float _cellSize;
         private float _vertAlgn;
         private float _horAlgn;
 
-        public void Init(Transform boardParentTransform)
+        public void Init(
+            Transform boardParentTransform,
+            GameObject gridCellPrefab,
+            GameObject numberChipPrefab)
         {
             _boardParentTransform = boardParentTransform;
             _enquedSwipes = new List<GridDirection>();
             _readyToPlay = false;
+            _gridCellPrefab = gridCellPrefab;
+            _numberChipPrefab = numberChipPrefab;
+
             _pool = new GameObjectPools(_boardParentTransform, 10);
             // Warm-up pools
-            _pool.EnsurePoolDefinition(GameAssetsManager.Instance.GetGridCellPrefab(), 16);
-            _pool.EnsurePoolDefinition(GameAssetsManager.Instance.GetNumberChipPrefab(), 16);
+            _pool.EnsurePoolDefinition(_gridCellPrefab, 16);
+            _pool.EnsurePoolDefinition(_numberChipPrefab, 16);
+
             _camera = Camera.main;
         }
 
@@ -43,7 +50,8 @@ namespace GameCoreController
         {
             _chip2048Game = new Chip2048Game(4, 4);
             _chip2048Game.ResetGame();
-            _chipViews = new Dictionary<int, GameObject>();
+            _numberViews = new Dictionary<int, ChipCtrl>();
+            _gridCellViews = new Dictionary<int, GridCellCtrl>();
             _readyToPlay = true;
 
             Vector2Int boardSize = _chip2048Game.GetBoardSize();
@@ -68,13 +76,15 @@ namespace GameCoreController
         {
             if (!_readyToPlay) return;
 
-            // Ensure we collect effects after we apply input
-            foreach (GridDirection gridDirection in _enquedSwipes)
+            // Ensure we collect effects after we apply input,
+            // release _enquedSwipes asap not to miss user input
+            // (and not to get stuck in case of exception)
+            List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
+            _enquedSwipes.Clear();
+            foreach (GridDirection gridDirection in acts)
             {
                 _chip2048Game.TrySwipe(gridDirection);
-            }
-            // we may miss a few fast swipes cause of this
-            _enquedSwipes.Clear();  
+            }              
 
             foreach (AGridEffect effect_i in _chip2048Game.GetEffects())
             {
@@ -91,11 +101,11 @@ namespace GameCoreController
         private void ShowEffect(BoardResetEffect boardResetEffect)
         {
             Debug.Log("Board reset");
-            foreach (KeyValuePair<int, GameObject> entry in _chipViews)
+            foreach (KeyValuePair<int, ChipCtrl> entry in _numberViews)
             {
-                entry.Value.SetActive(false);  // Return to the pool
+                entry.Value.gameObject.SetActive(false);  // Return to the pool
             }
-            _chipViews.Clear();
+            _numberViews.Clear();
         }
 
         private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect)
@@ -103,14 +113,16 @@ namespace GameCoreController
             int chId = chipSpawnedEffect.SpawnedChip.GetChipId();
             Debug.Log("Spawning " + chId + " at " + chipSpawnedEffect.Coords);
 
-            GameObject numberChipPrefab = GameAssetsManager.Instance.GetNumberChipPrefab();
+            GameObject numberChipPrefab = _numberChipPrefab;
             GameObject chipGo = _pool.PoolObject(numberChipPrefab);
             chipGo.SetActive(true);
+
             chipGo.transform.SetPositionAndRotation(
                 LogicalToWorld(chipSpawnedEffect.Coords), 
                 Quaternion.identity
             );
-            _chipViews[chId] = chipGo;
+            ChipCtrl chipCtrl = chipGo.GetComponent<ChipCtrl>();
+            _numberViews[chId] = chipCtrl;
         }
 
         private void ShowEffect(ChipDeletedEffect chipDeletedEffect)
@@ -118,16 +130,16 @@ namespace GameCoreController
             int chId = chipDeletedEffect.Chip.GetChipId();
             Debug.Log("Deleting " + chId);
 
-            _chipViews.Remove(chId, out GameObject chipGo);
-            chipGo.SetActive(false);  // Return to the pool
+            _numberViews.Remove(chId, out ChipCtrl chipCtrl);
+            chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
         private void ShowEffect(ChipMoveEffect chipMoveEffect)
         {
             int chId = chipMoveEffect.Chip.GetChipId();
             Debug.Log("Moving " + chId + " to " + chipMoveEffect.PointTo);
-            GameObject chipGo = _chipViews[chId];
-            chipGo.transform.SetPositionAndRotation(
+            ChipCtrl chipCtrl = _numberViews[chId];
+            chipCtrl.gameObject.transform.SetPositionAndRotation(
                 LogicalToWorld(chipMoveEffect.PointTo), 
                 Quaternion.identity
             );

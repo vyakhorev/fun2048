@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameCoreController
 {
-    public class GridCellAuth : MonoBehaviour
+    public class GridCellCtrl : MonoBehaviour
     {
 
     }

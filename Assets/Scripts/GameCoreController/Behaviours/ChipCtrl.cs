@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameCoreController
 {
-    public class NumberChipAuth : MonoBehaviour
+    public class ChipCtrl : MonoBehaviour
     {
         [SerializeField] private TextMesh _numberTextMesh;
         [SerializeField] private SpriteRenderer _tileSpriteRenderer;

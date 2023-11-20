@@ -36,7 +36,11 @@ namespace Mocked2048Game
             Debug.Log("Seed is = " + _seed);
             _globalCtx = new GlobalCtx(_seed);
 
-            _boardController.Init(_gameGridHolder.transform);
+            _boardController.Init(
+                _gameGridHolder.transform,
+                GameAssetsManager.Instance.GetGridCellPrefab(),
+                GameAssetsManager.Instance.GetNumberChipPrefab()
+            );
 
             _gameInputWiring = gameObject.AddComponent<GameInputWiring>();
             _gameInputWiring.Init();
