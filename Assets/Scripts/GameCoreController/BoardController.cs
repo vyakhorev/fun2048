@@ -2,6 +2,7 @@
 using Pooling;
 using System.Collections.Generic;
 using UnityEngine;
+using VisualSO;
 
 /*
  * Responsible for board visualisation
@@ -15,6 +16,7 @@ namespace GameCoreController
         private List<GridDirection> _enquedSwipes;
         private bool _readyToPlay = false;
         private GameObjectPools _pool;
+        private ChipProducer _chipProducer;
 
         private Dictionary<int, GridCellCtrl> _gridCellViews;
         private Dictionary<int, ChipCtrl> _numberViews;
@@ -30,7 +32,8 @@ namespace GameCoreController
         public void Init(
             Transform boardParentTransform,
             GameObject gridCellPrefab,
-            GameObject numberChipPrefab)
+            GameObject numberChipPrefab,
+            SOBoardVisualStyle soBoardVisualStyle)
         {
             _boardParentTransform = boardParentTransform;
             _enquedSwipes = new List<GridDirection>();
@@ -42,6 +45,9 @@ namespace GameCoreController
             // Warm-up pools
             _pool.EnsurePoolDefinition(_gridCellPrefab, 16);
             _pool.EnsurePoolDefinition(_numberChipPrefab, 16);
+
+            _chipProducer = new ChipProducer();
+            _chipProducer.Init(soBoardVisualStyle);
 
             _camera = Camera.main;
         }
@@ -123,6 +129,10 @@ namespace GameCoreController
             );
             ChipCtrl chipCtrl = chipGo.GetComponent<ChipCtrl>();
             _numberViews[chId] = chipCtrl;
+            if (chipSpawnedEffect.SpawnedChip is NumberChip numberChip)
+            {
+                _chipProducer.UpdateNumberVisuals(chipCtrl, numberChip.GetNumericValue());
+            }   
         }
 
         private void ShowEffect(ChipDeletedEffect chipDeletedEffect)

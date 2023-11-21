@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GameCoreController
 {
+    /*
+     * Attached to all the chips
+     */
     public class ChipCtrl : MonoBehaviour
     {
         [SerializeField] private TextMesh _numberTextMesh;

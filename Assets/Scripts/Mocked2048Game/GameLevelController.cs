@@ -3,6 +3,7 @@ using GameInput;
 using System;
 using UnityEngine;
 using Utils;
+using VisualSO;
 
 namespace Mocked2048Game
 {
@@ -39,7 +40,8 @@ namespace Mocked2048Game
             _boardController.Init(
                 _gameGridHolder.transform,
                 GameAssetsManager.Instance.GetGridCellPrefab(),
-                GameAssetsManager.Instance.GetNumberChipPrefab()
+                GameAssetsManager.Instance.GetNumberChipPrefab(),
+                GameAssetsManager.Instance.GetSOBoardVisualStyle()
             );
 
             _gameInputWiring = gameObject.AddComponent<GameInputWiring>();

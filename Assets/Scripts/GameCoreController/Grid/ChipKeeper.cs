@@ -140,38 +140,43 @@ namespace GameCoreController
             _effects = new List<AGridEffect>();
         }
 
+        private void ResetTurn()
+        {
+            foreach (GridCell cell_i in _gridCells)
+            {
+                cell_i.ResetTurn();
+            }
+        }
+
         public void DoMergeInDirection(GridDirection gridDirection)
         {
-            int safeStopCnt = 0;
-            Debug.Log("Merging direction " + gridDirection);
-            
+            const int max_recursion = 100;
+            const int max_iters = 100;
+            int iters = 0;
+            ResetTurn();
             if (gridDirection == GridDirection.LEFT || gridDirection == GridDirection.RIGHT)
             {
                 for (int line_y = 0; line_y < _Y; line_y++)
                 {
-                    while (ApplyMergeToLine(line_y, gridDirection)) 
+                    // Line in the opposing to the swipe direction
+                    List<GridCell> line = GetLineElements(line_y, gridDirection);
+                    while (ApplyMergeToLine(line, 0, max_recursion))
                     {
-                        Debug.Log("Merging line Y " + line_y);
-                        safeStopCnt += 1;
-                        if (safeStopCnt > 20)
-                        {
-                            throw new Exception("Safe stop Y");
-                        }
-                    };
+                        iters += 1;
+                        if (iters > max_iters) throw new Exception("max_iters");
+                    }
                 }
             }
             else if (gridDirection == GridDirection.DOWN || gridDirection == GridDirection.UP)
             {
                 for (int line_x = 0; line_x < _X; line_x++)
                 {
-                    while (ApplyMergeToLine(line_x, gridDirection))
+                    // Line in the opposing to the swipe direction
+                    List<GridCell> line = GetLineElements(line_x, gridDirection);
+                    while (ApplyMergeToLine(line, 0, max_recursion))
                     {
-                        Debug.Log("Merging line X " + line_x);
-                        safeStopCnt += 1;
-                        if (safeStopCnt > 20)
-                        {
-                            throw new Exception("Safe stop X");
-                        }
+                        iters += 1;
+                        if (iters > max_iters) throw new Exception("max_iters");
                     }
                 }
             }
@@ -180,262 +185,174 @@ namespace GameCoreController
         /*
          * Repeat until cannot move / merge anything in line
          */
-        private bool ApplyMergeToLine(int lineNum, GridDirection gridDirection)
+        private bool ApplyMergeToLine(List<GridCell> line, int rd, int maxRd)
         {
-            bool appliedSmth = false;
-            GridCell? lastKnownNonEmptyCell = null;
-            foreach (GridCell cell_i in GetLineElements(lineNum, gridDirection)) { 
+            if (rd > maxRd) throw new Exception("max_recursion");
 
-                if (!cell_i.IsEmpty() && lastKnownNonEmptyCell == null)
+            GridCell? candidateCell = null;
+            int candidateIdx = 0;
+            for (int i = 0; i < line.Count; i++)
+            {
+                GridCell cell_i = line[i];
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn())
                 {
-                    // Take the chip
-                    lastKnownNonEmptyCell = cell_i;
-                }
-                else if (!cell_i.IsEmpty() && lastKnownNonEmptyCell != null)
-                {
-                    // Move or merge the chip
-                    bool merged = false;
-
-                    if (lastKnownNonEmptyCell.GetChip() is NumberChip numberChipFrom && 
-                        cell_i.GetChip() is NumberChip numberChipTo)
-                    {
-                        if (numberChipFrom.GetNumericValue() == numberChipTo.GetNumericValue())
-                        {
-                            // Merge
-                            numberChipTo.IncreaseNumericValue(numberChipFrom.GetNumericValue());
-
-                            _effects.Add(
-                                new ChipMoveEffect(
-                                    lastKnownNonEmptyCell.GetChip(),
-                                    cell_i.GetCoords()
-                                )
-                            );
-
-                            _effects.Add(
-                                new ChipNumberChangedEffect(
-                                    numberChipFrom
-                                )
-                            );
-
-                            _effects.Add(
-                                new ChipsMergeEffect(
-                                    numberChipFrom,
-                                    numberChipTo
-                                )
-                            );
-
-
-                            _effects.Add(
-                                new ChipDeletedEffect(
-                                    cell_i.GetChip()
-                                )
-                            );
-
-                            lastKnownNonEmptyCell.ClearChip();
-                            lastKnownNonEmptyCell = cell_i;
-                            merged = true;
-                            appliedSmth = true;
-                        }
-                    }
-
-                    if (!merged)
-                    {
-                        // Move
-                        GridCell? moveTo = GetReverseAdjecentCell(
-                            cell_i.GetCoords(),
-                            gridDirection
-                        );
-                        if (moveTo != null && moveTo != cell_i)
-                        {
-                            // If we have a place to move and this is a new cell
-                            _effects.Add(
-                                new ChipMoveEffect(
-                                    lastKnownNonEmptyCell.GetChip(),
-                                    cell_i.GetCoords()
-                                )
-                            );
-                            appliedSmth = true;
-                        }       
-                    }
+                    candidateCell = cell_i;
+                    candidateIdx = i;
+                    break;
                 }
             }
-            return appliedSmth;
+
+            if (candidateCell == null) { 
+                // No candidates - switch to the next line / column
+                // We may return false only once per line to indicate
+                // that we're done with this line
+                return false; 
+            }
+
+            if (candidateIdx == 0)
+            {
+                // This cell is facing an edge, cannot move futher
+                // Switch to the next candidate
+                candidateCell.SetCannotBeMovedThisTurn();
+                return ApplyMergeToLine(line, rd+1, maxRd);
+            }
+
+            // Iterate backwards for each available spot
+            for (int i = candidateIdx-1; i>=0; i--)
+            {
+                GridCell cell_i = line[i];
+                // Reached the end of the line, move the chip
+                if (cell_i.IsEmpty() && i == 0)
+                {
+                    DoMove(candidateCell, cell_i);
+                    cell_i.SetCannotBeMovedThisTurn();
+                    return true;
+                }
+                // A cell can be merged only once, no cascade merging in 2048
+                else if (!cell_i.IsEmpty() && !cell_i.MergedThisTurn())
+                {
+                    // Try merging
+                    bool merged = TryMerge(candidateCell, cell_i);
+                    if (merged)
+                    {
+                        cell_i.SetMergedThisTurn();
+                        return true;
+                    }
+                    // Failed to merge, try to move it close to the cell
+                    if (i + 1 == candidateIdx)
+                    {
+                        // No movement, already close to another cell
+                        candidateCell.SetCannotBeMovedThisTurn();
+                        return true;
+                    }
+                    GridCell available_cell = line[i+1];
+                    DoMove(candidateCell, available_cell);
+                    available_cell.SetCannotBeMovedThisTurn();
+                    return true;
+                }
+
+            }
+
+            return false;
         }
 
-        public List<GridCell> GetLineElements(int lineNum, GridDirection gridDirection)
+        private void DoMove(GridCell cellFrom, GridCell cellTo)
         {
-            // TODO - iterator
+            AChip? chip = cellFrom.GetChip() ?? throw new Exception("nothing to move from cell " + cellFrom.GetCoords());
+            if (!cellTo.IsEmpty())
+            {
+                throw new Exception("Attempt to move into non-empty cell from " + cellFrom.GetCoords() + " to " + cellTo.GetCoords());
+            }
+            _effects.Add(
+                new ChipMoveEffect(
+                    chip,
+                    cellTo.GetCoords()
+                )
+            );
+            cellTo.SetChip(chip);
+            cellFrom.ClearChip();
+        }
+
+        private bool TryMerge(GridCell cellFrom, GridCell cellTo)
+        {
+            if (cellFrom == cellTo) throw new Exception("Attempt to merge cell with itself: " + cellFrom.GetCoords());
+            AChip? chipFrom = cellFrom.GetChip() ?? throw new Exception("Attempt to merge an empty cell: " + cellFrom.GetCoords());
+            AChip? chipTo = cellTo.GetChip() ?? throw new Exception("Attempt to merge with an empty cell: " + cellTo.GetCoords());
+            
+            if (chipFrom is NumberChip numberChipFrom &&
+                chipTo is NumberChip numberChipTo &&
+                numberChipFrom.GetNumericValue() == numberChipTo.GetNumericValue())
+            {
+                // Merge numeric cells
+                numberChipFrom.IncreaseNumericValue(numberChipTo.GetNumericValue());
+
+                _effects.Add(
+                    new ChipMoveEffect(
+                        chipFrom,
+                        cellTo.GetCoords()
+                    )
+                );
+
+                _effects.Add(
+                    new ChipNumberChangedEffect(
+                        numberChipFrom
+                    )
+                );
+
+                _effects.Add(
+                    new ChipsMergeEffect(
+                        numberChipFrom,
+                        numberChipTo
+                    )
+                );
+
+
+                _effects.Add(
+                    new ChipDeletedEffect(
+                        numberChipTo
+                    )
+                );
+
+                cellTo.SetChip(numberChipFrom);
+                cellFrom.ClearChip();
+                return true;
+            }
+            return false;
+        }
+
+        private List<GridCell> GetLineElements(int lineNum, GridDirection gridDirection)
+        {
             List<GridCell> lineCells = new List<GridCell>();
-            if (gridDirection == GridDirection.LEFT)
+            if (gridDirection == GridDirection.RIGHT)
             {
                 for (int idx = _X-1; idx >= 0; idx--)
                 {
                     lineCells.Add(_gridCells[idx, lineNum]);
                 }
             }
-            else if (gridDirection == GridDirection.RIGHT)
+            else if (gridDirection == GridDirection.LEFT)
             {
                 for (int idx = 0; idx < _X; idx++)
                 {
                     lineCells.Add(_gridCells[idx, lineNum]);
                 }
             }
-            else if(gridDirection == GridDirection.DOWN)
+            else if(gridDirection == GridDirection.UP)
             {
                 for (int idy = _Y-1; idy >= 0; idy--)
                 {
                     lineCells.Add(_gridCells[lineNum, idy]);
                 }
             }
-            else // if (gridDirection == GridDirection.UP)
+            else // if (gridDirection == GridDirection.DOWN)
             {
                 for (int idy = 0; idy < _Y; idy++)
                 {
                     lineCells.Add(_gridCells[lineNum, idy]);
                 }
             }
-
             return lineCells;
-
         }
-
-        private GridCell? GetReverseAdjecentCell(Vector2Int pos, GridDirection gridDirection)
-        {
-            if (gridDirection == GridDirection.LEFT)
-            {
-                if (pos.x + 1 < _X) return _gridCells[pos.x + 1, pos.y];
-                return null;
-            } 
-            else if (gridDirection == GridDirection.RIGHT)
-            {
-                if (pos.x - 1 >= 0) return _gridCells[pos.x - 1, pos.y];
-                return null;
-            }
-            else if (gridDirection == GridDirection.DOWN)
-            {
-                if (pos.y + 1 < _Y) return _gridCells[pos.x, pos.y + 1];
-                return null;
-            }
-            else // if (gridDirection == GridDirection.UP)
-            {
-                if (pos.y - 1 >= 0) return _gridCells[pos.x, pos.y - 1];
-                return null;
-            }
-        }
-
- 
-
-        /*
-         * startXorY - start line, X for left/right, Y for up/down
-         */
-        private GridCell TraceLineFromPos(int lineNum, int startXorY, GridDirection gridDirection)
-        {
-            if (gridDirection == GridDirection.LEFT)
-            {
-                for (int idx = startXorY; idx >= 0; idx--)
-                {
-                    if (!_gridCells[lineNum, idx].IsEmpty())
-                    {
-                        return _gridCells[lineNum, idx];
-                    }
-                }
-                return _gridCells[lineNum, 0];
-            }
-
-            else if (gridDirection == GridDirection.RIGHT)
-            {
-                for (int idx = startXorY; idx < _X; idx++)
-                {
-                    if (!_gridCells[lineNum, idx].IsEmpty())
-                    {
-                        return _gridCells[lineNum, idx];
-                    }
-                }
-                return _gridCells[lineNum, _X - 1];
-            }
-
-            else if (gridDirection == GridDirection.DOWN)
-            {
-                for (int idy = startXorY; idy >= 0; idy--)
-                {
-                    if (!_gridCells[idy, lineNum].IsEmpty())
-                    {
-                        return _gridCells[idy, lineNum];
-                    }
-                }
-                return _gridCells[0, lineNum];
-            }
-
-            else // (gridDirection == GridDirection.UP)
-            {
-                for (int idy = startXorY; idy < _Y; idy++)
-                {
-                    if (!_gridCells[idy, lineNum].IsEmpty())
-                    {
-                        return _gridCells[idy, lineNum];
-                    }
-                }
-                return _gridCells[_Y - 1, lineNum];
-            }
-        }
-
-        /*
-         * Check first occuring chip / edge in a line by direction
-         */
-        private GridCell TraceLineFromEdge(int lineNum, GridDirection gridDirection)
-        {
-
-            if (gridDirection == GridDirection.LEFT)
-            {
-                for (int idx = _X - 1; idx >= 0; idx--)
-                {
-                    if (!_gridCells[lineNum, idx].IsEmpty())
-                    {
-                        return _gridCells[lineNum, idx];
-                    }
-                }
-                return _gridCells[lineNum, 0];
-            }
-
-            else if (gridDirection == GridDirection.RIGHT)
-            {
-                for (int idx = 0; idx < _X; idx++)
-                {
-                    if (!_gridCells[lineNum, idx].IsEmpty())
-                    {
-                        return _gridCells[lineNum, idx];
-                    }
-                }
-                return _gridCells[lineNum, _X-1];
-            }
-
-            else if (gridDirection == GridDirection.DOWN)
-            {
-                for (int idy = _Y - 1; idy >= 0; idy--)
-                {
-                    if (!_gridCells[idy, lineNum].IsEmpty())
-                    {
-                        return _gridCells[idy, lineNum];
-                    }
-                }
-                return _gridCells[0, lineNum];
-            }
-
-            else // (gridDirection == GridDirection.UP)
-            {
-                for (int idy = 0; idy < _Y; idy++)
-                {
-                    if (!_gridCells[idy, lineNum].IsEmpty())
-                    {
-                        return _gridCells[idy, lineNum];
-                    }
-                }
-                return _gridCells[_Y-1, lineNum];
-            }
-
-        }
-
-
 
     }
 }

@@ -10,12 +10,40 @@ namespace GameCoreController
         private AChip? _chip;
         private readonly Vector2Int _coords;
         private readonly bool _isEdge;
+        private bool _canBeMovedThisTurn;
+        private bool _mergedThisTurn;
 
         public GridCell(Vector2Int coords, bool isEdge)
         {
             _coords = coords;
             _isEdge = isEdge;
             _chip = null;
+        }
+
+        public void ResetTurn()
+        {
+            _canBeMovedThisTurn = true;
+            _mergedThisTurn = false;
+        }
+
+        public bool CanBeMovedThisTurn()
+        {
+            return _canBeMovedThisTurn;
+        }
+
+        public void SetCannotBeMovedThisTurn()
+        {
+            _canBeMovedThisTurn = false;
+        }
+
+        public bool MergedThisTurn()
+        {
+            return _mergedThisTurn;
+        }
+
+        public void SetMergedThisTurn()
+        {
+            _mergedThisTurn = true;
         }
 
         public Vector2Int GetCoords()
