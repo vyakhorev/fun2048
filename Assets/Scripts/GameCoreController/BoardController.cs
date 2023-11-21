@@ -161,6 +161,7 @@ namespace GameCoreController
             int chIdTo = chipsMergeEffect.ChipTo.GetChipId();
 
             Debug.Log("Merging " + chIdFrom + " with " + chIdTo);
+
         }
 
 
@@ -170,6 +171,9 @@ namespace GameCoreController
             int newVal = chipNumberChangedEffect.Chip.GetNumericValue();
 
             Debug.Log("Changed value of " + chId + " to " + newVal);
+
+            ChipCtrl chipCtrl = _numberViews[chId];
+            _chipProducer.UpdateNumberVisuals(chipCtrl, newVal);
         }
 
         private Vector3 LogicalToWorld(Vector2Int logicalPosition)
