@@ -229,14 +229,17 @@ namespace GameCoreController
                     return true;
                 }
                 // A cell can be merged only once, no cascade merging in 2048
-                else if (!cell_i.IsEmpty() && !cell_i.MergedThisTurn())
+                else if (!cell_i.IsEmpty())
                 {
-                    // Try merging
-                    bool merged = TryMerge(candidateCell, cell_i);
-                    if (merged)
+                    if (!cell_i.MergedThisTurn())
                     {
-                        cell_i.SetMergedThisTurn();
-                        return true;
+                        // Try merging
+                        bool merged = TryMerge(candidateCell, cell_i);
+                        if (merged)
+                        {
+                            cell_i.SetMergedThisTurn();
+                            return true;
+                        }
                     }
                     // Failed to merge, try to move it close to the cell
                     if (i + 1 == candidateIdx)
