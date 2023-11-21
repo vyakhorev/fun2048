@@ -12,12 +12,13 @@ namespace Utility.DataStructures.Editor
         private const string KEYS = "_keys";
         private const string VALUES = "_values";
         private double _tempDoubleKey;
+        private bool _isFoldOut;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             Object targetObject = property.serializedObject.targetObject;
             ICollection map = fieldInfo.GetValue(targetObject) as ICollection;
-            return EditorGUIUtility.singleLineHeight * map.Count + EditorGUIUtility.standardVerticalSpacing * map.Count + EditorGUIUtility.singleLineHeight;
+            return EditorGUIUtility.singleLineHeight * (map.Count + 2) + EditorGUIUtility.standardVerticalSpacing * (map.Count + 1);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -25,30 +26,37 @@ namespace Utility.DataStructures.Editor
             SerializedProperty keysProperty = property.FindPropertyRelative(KEYS);
             SerializedProperty valuesProperty = property.FindPropertyRelative(VALUES);
 
-            EditorGUI.BeginProperty(position, GUIContent.none, property);
-
+            EditorGUI.BeginProperty(position, label, property);
             Rect line = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-            float oneFifth = position.width / 5;
-            float twoFifth = oneFifth * 2f;
+            _isFoldOut = EditorGUI.Foldout(line, _isFoldOut, label, EditorStyles.foldoutHeader);
 
-            GUIContent languageContent = new("Key:");
-            GUIContent txtContent = new("Value:");
-            float languageContentWidth = GUI.skin.label.CalcSize(languageContent).x;
-            float txtContentWidth = GUI.skin.label.CalcSize(txtContent).x;
-
-            for (int i = 0; i < keysProperty.arraySize; i++)
+            if (_isFoldOut) 
             {
-                SerializedProperty iKeyProperty = keysProperty.GetArrayElementAtIndex(i);
-                SerializedProperty iValueProperty = valuesProperty.GetArrayElementAtIndex(i);
-                EditorGUI.PrefixLabel(new Rect(line.x, line.y, twoFifth, line.height), languageContent, EditorStyles.label);
-                DrawKeyInputField(iKeyProperty, new Rect(line.x + languageContentWidth, line.y, twoFifth - languageContentWidth, line.height));
-                EditorGUI.PrefixLabel(new Rect(line.x + twoFifth, line.y, twoFifth, line.y), txtContent);
-                EditorGUI.PropertyField(new Rect(line.x + twoFifth + txtContentWidth, line.y, twoFifth - txtContentWidth, line.height), iValueProperty, GUIContent.none);
-                DrawRemoveButton(new Rect(line.x + twoFifth * 2, line.y, oneFifth, line.height), keysProperty, valuesProperty, i);
-                line = new Rect(line.x, line.y + EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight, line.width, line.height);
-            }
+                line.y = line.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
-            DrawAddButton(new Rect(line.x + twoFifth, line.y, oneFifth, line.height), keysProperty, valuesProperty);
+                float oneFifth = position.width / 5;
+                float twoFifth = oneFifth * 2f;
+
+                GUIContent languageContent = new("Key:");
+                GUIContent txtContent = new("Value:");
+                float languageContentWidth = GUI.skin.label.CalcSize(languageContent).x;
+                float txtContentWidth = GUI.skin.label.CalcSize(txtContent).x;
+
+                for (int i = 0; i < keysProperty.arraySize; i++)
+                {
+                    SerializedProperty iKeyProperty = keysProperty.GetArrayElementAtIndex(i);
+                    SerializedProperty iValueProperty = valuesProperty.GetArrayElementAtIndex(i);
+                    EditorGUI.PrefixLabel(new Rect(line.x, line.y, twoFifth, line.height), languageContent, EditorStyles.label);
+                    DrawKeyInputField(iKeyProperty, new Rect(line.x + languageContentWidth, line.y, twoFifth - languageContentWidth, line.height));
+                    EditorGUI.PrefixLabel(new Rect(line.x + twoFifth, line.y, twoFifth, line.y), txtContent);
+                    EditorGUI.PropertyField(new Rect(line.x + twoFifth + txtContentWidth, line.y, twoFifth - txtContentWidth, line.height), iValueProperty, GUIContent.none);
+                    DrawRemoveButton(new Rect(line.x + twoFifth * 2, line.y, oneFifth, line.height), keysProperty, valuesProperty, i);
+                    line = new Rect(line.x, line.y + EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight, line.width, line.height);
+                }
+
+                DrawAddButton(new Rect(line.x + twoFifth, line.y, oneFifth, line.height), keysProperty, valuesProperty);
+            }
+            
             EditorGUI.EndProperty();
         }
 
