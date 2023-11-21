@@ -11,6 +11,7 @@ namespace Utility.DataStructures.Editor
     {
         private const string KEYS = "_keys";
         private const string VALUES = "_values";
+        private double _tempDoubleKey;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -40,7 +41,7 @@ namespace Utility.DataStructures.Editor
                 SerializedProperty iKeyProperty = keysProperty.GetArrayElementAtIndex(i);
                 SerializedProperty iValueProperty = valuesProperty.GetArrayElementAtIndex(i);
                 EditorGUI.PrefixLabel(new Rect(line.x, line.y, twoFifth, line.height), languageContent, EditorStyles.label);
-                EditorGUI.PropertyField(new Rect(line.x + languageContentWidth, line.y, twoFifth - languageContentWidth, line.height), iKeyProperty, GUIContent.none);
+                DrawKeyInputField(iKeyProperty, new Rect(line.x + languageContentWidth, line.y, twoFifth - languageContentWidth, line.height));
                 EditorGUI.PrefixLabel(new Rect(line.x + twoFifth, line.y, twoFifth, line.y), txtContent);
                 EditorGUI.PropertyField(new Rect(line.x + twoFifth + txtContentWidth, line.y, twoFifth - txtContentWidth, line.height), iValueProperty, GUIContent.none);
                 DrawRemoveButton(new Rect(line.x + twoFifth * 2, line.y, oneFifth, line.height), keysProperty, valuesProperty, i);
@@ -72,6 +73,29 @@ namespace Utility.DataStructures.Editor
 
             keysProperty.DeleteArrayElementAtIndex(index);
             valuesProperty.DeleteArrayElementAtIndex(index);
+        }
+
+        private void DrawKeyInputField(SerializedProperty serializedKeyProperty, Rect inputRect)
+        {
+            switch (serializedKeyProperty.propertyType)
+            {
+                case SerializedPropertyType.String:
+                    EditorGUI.DelayedTextField(inputRect, serializedKeyProperty, GUIContent.none);
+                    break;
+                case SerializedPropertyType.Integer:
+                    EditorGUI.DelayedIntField(inputRect, serializedKeyProperty, GUIContent.none);
+                    break;
+                case SerializedPropertyType.Float:
+                    Type type = Type.GetType(serializedKeyProperty.type);
+                    if (type == typeof(float))
+                        EditorGUI.DelayedFloatField(inputRect, serializedKeyProperty, GUIContent.none);
+                    else
+                        _tempDoubleKey = EditorGUI.DelayedDoubleField(inputRect, GUIContent.none, _tempDoubleKey);
+                    break;
+                default:
+                    EditorGUI.PropertyField(inputRect, serializedKeyProperty, GUIContent.none);
+                    break;
+            }
         }
 
         private void SetDefaultValue(SerializedProperty targetKeyProperty)

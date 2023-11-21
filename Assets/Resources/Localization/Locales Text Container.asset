@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Locales Text Container
   m_EditorClassIdentifier: 
   localizationMap:
-    keys: 
-    values: []
+    keys: 0a000000
+    values:
+    - {fileID: 4900000, guid: 00407025f16fd9b4591575d22f898ef4, type: 3}
