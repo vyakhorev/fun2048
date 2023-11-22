@@ -16,7 +16,7 @@ namespace Bootstrap
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<LoadingService>(Lifetime.Scoped);
-
+            builder.Register<AudioService>(Lifetime.Singleton);
             builder.RegisterEntryPoint<BootstrapFlow>();
         }
     }
