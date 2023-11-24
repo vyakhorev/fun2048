@@ -37,12 +37,16 @@ namespace Mocked2048Game
             Debug.Log("Seed is = " + _seed);
             _globalCtx = new GlobalCtx(_seed);
 
-            _boardController.Init(
+            var chipProducer = new ChipProducer();
+            chipProducer.Init(
+                Camera.main,
                 _gameGridHolder.transform,
-                GameAssetsManager.Instance.GetGridCellPrefab(),
                 GameAssetsManager.Instance.GetNumberChipPrefab(),
+                GameAssetsManager.Instance.GetGridCellPrefab(),
                 GameAssetsManager.Instance.GetSOBoardVisualStyle()
             );
+
+            _boardController.Init(chipProducer);
 
             _gameInputWiring = gameObject.AddComponent<GameInputWiring>();
             _gameInputWiring.Init();
@@ -52,7 +56,9 @@ namespace Mocked2048Game
             _gameInputWiring.OnSwipeEvent += OnSwiped;
             _swipeDetection.OnSwipeEvent += OnSwiped;
 
-            _boardController.StartNewGame();
+            _boardController.StartNewGame(
+                new Vector2Int(9, 9)
+            );
         }
 
         private void OnDestroy()

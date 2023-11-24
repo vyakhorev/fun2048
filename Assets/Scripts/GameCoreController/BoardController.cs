@@ -19,66 +19,30 @@ namespace GameCoreController
         [SerializeField] private float _animSpeed = 0.1f;
 
         private Chip2048Game _chip2048Game;
-        private Transform _boardParentTransform;
+
         private List<GridDirection> _enquedSwipes;
         private bool _readyToPlay = false;
-        private GameObjectPools _pool;
         private ChipProducer _chipProducer;
 
         private Dictionary<int, GridCellCtrl> _gridCellViews;
         private Dictionary<int, ChipCtrl> _numberViews;
-        
-        private GameObject _gridCellPrefab;
-        private GameObject _numberChipPrefab;
-        
-        private Camera _camera;
-        private float _cellSize;
-        private float _vertAlgn;
-        private float _horAlgn;
+       
 
-        public void Init(
-            Transform boardParentTransform,
-            GameObject gridCellPrefab,
-            GameObject numberChipPrefab,
-            SOBoardVisualStyle soBoardVisualStyle)
+        public void Init(ChipProducer chipProducer)
         {
-            _boardParentTransform = boardParentTransform;
             _enquedSwipes = new List<GridDirection>();
             _readyToPlay = false;
-            _gridCellPrefab = gridCellPrefab;
-            _numberChipPrefab = numberChipPrefab;
-
-            _pool = new GameObjectPools(_boardParentTransform, 10);
-            // Warm-up pools
-            _pool.EnsurePoolDefinition(_gridCellPrefab, 16);
-            _pool.EnsurePoolDefinition(_numberChipPrefab, 16);
-
-            _chipProducer = new ChipProducer();
-            _chipProducer.Init(soBoardVisualStyle);
-
-            _camera = Camera.main;
-
-            DOTween.Init();
-
+            _chipProducer = chipProducer;
         }
 
-        public void StartNewGame()
+        public void StartNewGame(Vector2Int boardSize)
         {
-            _chip2048Game = new Chip2048Game(4, 4);
+            _chip2048Game = new Chip2048Game(boardSize.x, boardSize.y);
             _chip2048Game.ResetGame();
+            _chipProducer.InitNewGame(boardSize);
+
             _numberViews = new Dictionary<int, ChipCtrl>();
             _gridCellViews = new Dictionary<int, GridCellCtrl>();
-
-            Vector2Int boardSize = _chip2048Game.GetBoardSize();
-            float worldHeight = _camera.orthographicSize * 2f;
-            float worldWidth = worldHeight * _camera.aspect;
-            _horAlgn = worldWidth / 2f;
-            _vertAlgn = worldHeight / 2f;
-
-            _cellSize = Mathf.Min(
-                worldWidth * 0.8f / boardSize.x,
-                worldHeight * 0.8f / boardSize.y
-            );
 
             _readyToPlay = true;
 
@@ -173,20 +137,13 @@ namespace GameCoreController
         {
             int chId = chipSpawnedEffect.SpawnedChip.GetChipId();
 
-            GameObject numberChipPrefab = _numberChipPrefab;
-            GameObject chipGo = _pool.PoolObject(numberChipPrefab);
-            chipGo.SetActive(true);
-
-            chipGo.transform.SetPositionAndRotation(
-                LogicalToWorld(chipSpawnedEffect.Coords),
-                Quaternion.identity
-            );
-            chipGo.transform.localScale = Vector3.zero;
-            ChipCtrl chipCtrl = chipGo.GetComponent<ChipCtrl>();
-            _numberViews[chId] = chipCtrl;
             if (chipSpawnedEffect.SpawnedChip is NumberChip numberChip)
             {
-                _chipProducer.UpdateNumberVisuals(chipCtrl, numberChip.GetNumericValue());
+                ChipCtrl chipCtrl = _chipProducer.SpawnChip(
+                    chipSpawnedEffect.Coords,
+                    numberChip.GetNumericValue()
+                );
+                _numberViews[chId] = chipCtrl;
             }
         }
 
@@ -245,7 +202,7 @@ namespace GameCoreController
             tweenSeq.Insert(
                 0f,
                 chipCtrl.transform.DOMove(
-                    LogicalToWorld(chipMoveEffect.PointTo),
+                    _chipProducer.LogicalToWorld(chipMoveEffect.PointTo),
                     _animSpeed
                 )
             );
@@ -267,22 +224,6 @@ namespace GameCoreController
                 )
             );
 
-            ChipCtrl chipCtrlFrom = _numberViews[chIdFrom];
-            tweenSeq.Insert(
-                0f,
-                chipCtrlFrom.transform.DOScale(
-                    1.1f * Vector3.one,
-                    _animSpeed
-                )
-            );
-            tweenSeq.Insert(
-                _animSpeed,
-                chipCtrlFrom.transform.DOScale(
-                    Vector3.one,
-                    _animSpeed
-                )
-            );
-
         }
 
 
@@ -293,15 +234,21 @@ namespace GameCoreController
 
             ChipCtrl chipCtrl = _numberViews[chId];
             _chipProducer.UpdateNumberVisuals(chipCtrl, newVal);
-        }
 
-        private Vector3 LogicalToWorld(Vector2Int logicalPosition)
-        {
-            return _cellSize * new Vector3(
-                _cellSize * (1 + logicalPosition.x) - _horAlgn,
-                _cellSize * (1 + logicalPosition.y) - _vertAlgn
+            tweenSeq.Insert(
+                0f,
+                chipCtrl.transform.DOScale(
+                    1.2f * Vector3.one,
+                    _animSpeed
+                )
             );
-
+            tweenSeq.Insert(
+                _animSpeed,
+                chipCtrl.transform.DOScale(
+                    Vector3.one,
+                    _animSpeed
+                )
+            );
         }
 
     }
