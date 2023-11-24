@@ -73,10 +73,6 @@ namespace GameCoreController
 
         public void ClearChip()
         {
-            if (_chip != null)
-            {
-                Debug.Log("Clearing chip " + _chip.GetChipId());
-            }
             _chip = null;
         }
 
