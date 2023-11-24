@@ -1,8 +1,12 @@
 // using Mocked2048Game;
 using Pooling;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VisualSO;
+using DG.Tweening;
+using System.Linq;
+using System;
 
 /*
  * Responsible for board visualisation
@@ -11,6 +15,8 @@ namespace GameCoreController
 {
     public class BoardController : MonoBehaviour
     {
+        [SerializeField] private float _animSpeed = 0.1f;
+
         private Chip2048Game _chip2048Game;
         private Transform _boardParentTransform;
         private List<GridDirection> _enquedSwipes;
@@ -50,6 +56,9 @@ namespace GameCoreController
             _chipProducer.Init(soBoardVisualStyle);
 
             _camera = Camera.main;
+
+            DOTween.Init();
+
         }
 
         public void StartNewGame()
@@ -58,7 +67,6 @@ namespace GameCoreController
             _chip2048Game.ResetGame();
             _numberViews = new Dictionary<int, ChipCtrl>();
             _gridCellViews = new Dictionary<int, GridCellCtrl>();
-            _readyToPlay = true;
 
             Vector2Int boardSize = _chip2048Game.GetBoardSize();
             float worldHeight = _camera.orthographicSize * 2f;
@@ -70,6 +78,8 @@ namespace GameCoreController
                 worldWidth * 0.8f / boardSize.x,
                 worldHeight * 0.8f / boardSize.y
             );
+
+            _readyToPlay = true;
 
         }
 
@@ -90,21 +100,60 @@ namespace GameCoreController
             foreach (GridDirection gridDirection in acts)
             {
                 _chip2048Game.TrySwipe(gridDirection);
-            }              
-
-            foreach (AGridEffect effect_i in _chip2048Game.GetEffects())
-            {
-                if (effect_i is BoardResetEffect boardResetEffect) ShowEffect(boardResetEffect);
-                else if (effect_i is ChipSpawnedEffect chipSpawnedEffect) ShowEffect(chipSpawnedEffect);
-                else if (effect_i is ChipDeletedEffect chipDeletedEffect) ShowEffect(chipDeletedEffect);
-                else if (effect_i is ChipMoveEffect chipMoveEffect) ShowEffect(chipMoveEffect);
-                else if (effect_i is ChipNumberChangedEffect chipNumberChangedEffect) ShowEffect(chipNumberChangedEffect);
-                else if (effect_i is ChipsMergeEffect chipsMergeEffect) ShowEffect(chipsMergeEffect);
             }
+
+            CoroutineRunEffects(_chip2048Game.GetEffects());
             _chip2048Game.ResetEffects();
         }
 
-        private void ShowEffect(BoardResetEffect boardResetEffect)
+        // Just a chained call with board reset as a root call
+        private async void CoroutineRunEffects(List<AGridEffect> effects)
+        {
+            Sequence tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<BoardResetEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipMoveEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipNumberChangedEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipsMergeEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipDeletedEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipSpawnedEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+        }
+
+        private void ShowEffect(BoardResetEffect boardResetEffect, Sequence tweenSeq)
         {
             Debug.Log("Board reset");
             foreach (KeyValuePair<int, ChipCtrl> entry in _numberViews)
@@ -114,7 +163,7 @@ namespace GameCoreController
             _numberViews.Clear();
         }
 
-        private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect)
+        private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect, Sequence tweenSeq)
         {
             int chId = chipSpawnedEffect.SpawnedChip.GetChipId();
             Debug.Log("Spawning " + chId + " at " + chipSpawnedEffect.Coords);
@@ -127,15 +176,25 @@ namespace GameCoreController
                 LogicalToWorld(chipSpawnedEffect.Coords), 
                 Quaternion.identity
             );
+            chipGo.transform.localScale = Vector3.zero;
             ChipCtrl chipCtrl = chipGo.GetComponent<ChipCtrl>();
             _numberViews[chId] = chipCtrl;
             if (chipSpawnedEffect.SpawnedChip is NumberChip numberChip)
             {
                 _chipProducer.UpdateNumberVisuals(chipCtrl, numberChip.GetNumericValue());
-            }   
+            }
+
+            tweenSeq.Insert(
+                0f,
+                chipCtrl.transform.DOScale(
+                    Vector3.one,
+                    _animSpeed
+                )
+            );
+
         }
 
-        private void ShowEffect(ChipDeletedEffect chipDeletedEffect)
+        private void ShowEffect(ChipDeletedEffect chipDeletedEffect, Sequence tweenSeq)
         {
             int chId = chipDeletedEffect.Chip.GetChipId();
             Debug.Log("Deleting " + chId);
@@ -144,28 +203,31 @@ namespace GameCoreController
             chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
-        private void ShowEffect(ChipMoveEffect chipMoveEffect)
+        private void ShowEffect(ChipMoveEffect chipMoveEffect, Sequence tweenSeq)
         {
             int chId = chipMoveEffect.Chip.GetChipId();
             Debug.Log("Moving " + chId + " to " + chipMoveEffect.PointTo);
             ChipCtrl chipCtrl = _numberViews[chId];
-            chipCtrl.gameObject.transform.SetPositionAndRotation(
-                LogicalToWorld(chipMoveEffect.PointTo), 
-                Quaternion.identity
+
+            tweenSeq.Insert(
+                0f,
+                chipCtrl.transform.DOMove(
+                    LogicalToWorld(chipMoveEffect.PointTo),
+                    _animSpeed
+                )
             );
         }
 
-        private void ShowEffect(ChipsMergeEffect chipsMergeEffect)
+        private void ShowEffect(ChipsMergeEffect chipsMergeEffect, Sequence tweenSeq)
         {
             int chIdFrom = chipsMergeEffect.ChipFrom.GetChipId();
             int chIdTo = chipsMergeEffect.ChipTo.GetChipId();
 
             Debug.Log("Merging " + chIdFrom + " with " + chIdTo);
-
         }
 
 
-        private void ShowEffect(ChipNumberChangedEffect chipNumberChangedEffect)
+        private void ShowEffect(ChipNumberChangedEffect chipNumberChangedEffect, Sequence tweenSeq)
         {
             int chId = chipNumberChangedEffect.Chip.GetChipId();
             int newVal = chipNumberChangedEffect.Chip.GetNumericValue();
