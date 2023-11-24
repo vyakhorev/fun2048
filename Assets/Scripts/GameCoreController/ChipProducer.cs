@@ -21,6 +21,8 @@ namespace GameCoreController
         private GameObjectPools _pool;
 
         private float _cellSize;
+        private float _worldWidth;
+        private float _worldHeight;
         private float _worldSize;
         private float _vertAlgn;
         private float _horAlgn;
@@ -53,22 +55,26 @@ namespace GameCoreController
                 numSr.sprite.bounds.size.y
             ) / 10f;
 
-            float worldHeight = _camera.orthographicSize * 2f;
-            float worldWidth = worldHeight / Screen.height * Screen.width;
+            _worldHeight = _camera.orthographicSize * 2f;
+            _worldWidth = _worldHeight / Screen.height * Screen.width;
+            _worldSize = Mathf.Min(_worldHeight, _worldWidth);
 
-            _horAlgn = worldWidth / 2f;
-            _vertAlgn = worldHeight / 2f;
+            _horAlgn = _worldWidth / 2f;
+            _vertAlgn = _worldHeight / 2f;
 
-            _worldSize = Mathf.Min(
-                worldWidth, 
-                worldHeight
-            );
         }
 
         public void InitNewGame(Vector2Int boardSize)
-        { 
-            int maxBoardSize = Mathf.Max(boardSize.x+1, boardSize.y+1);
-            _cellSize = _worldSize / maxBoardSize;
+        {
+
+            if (boardSize.y <= boardSize.x)
+            {
+                _cellSize = _worldSize / (boardSize.y + 1);
+            }
+            else
+            {
+                _cellSize = _worldSize / (boardSize.x + 1);
+            }
             _visualsScale = _cellSize / _numberChipSpriteSize;
         }
 

@@ -57,7 +57,7 @@ namespace Mocked2048Game
             _swipeDetection.OnSwipeEvent += OnSwiped;
 
             _boardController.StartNewGame(
-                new Vector2Int(9, 9)
+                new Vector2Int(5, 9)
             );
         }
 
