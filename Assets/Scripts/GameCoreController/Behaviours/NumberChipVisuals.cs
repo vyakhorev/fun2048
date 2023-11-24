@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameCoreController
 {
-    // Indicate a group that can be easily scaled
+    // Indicates a number chip visuals in chip hierarchy
     public class NumberChipVisuals : MonoBehaviour
     {
 

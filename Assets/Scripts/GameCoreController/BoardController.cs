@@ -79,6 +79,11 @@ namespace GameCoreController
         private async void CoroutineRunEffects(List<AGridEffect> effects)
         {
 
+            foreach (var eff in effects.OfType<BoardResetEffect>())
+            {
+                ResetBoard(eff);
+            }
+
             Sequence tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
@@ -155,13 +160,36 @@ namespace GameCoreController
             chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
-        private void ShowEffect(BoardResetEffect boardResetEffect, Sequence tweenSeq)
+        private void ResetBoard(BoardResetEffect boardResetEffect)
         {
             foreach (KeyValuePair<int, ChipCtrl> entry in _numberViews)
             {
                 entry.Value.gameObject.SetActive(false);  // Return to the pool
             }
             _numberViews.Clear();
+
+            // TODO: maybe do not reset?
+            foreach (KeyValuePair<int, GridCellCtrl> entry in _gridCellViews)
+            {
+                entry.Value.gameObject.SetActive(false);  // Return to the pool
+            }
+            _gridCellViews.Clear();
+
+            Vector2Int bs = _chip2048Game.GetBoardSize();
+            for (int x = 0; x < bs.x; x++)
+            {
+                for (int y = 0; y < bs.y; y++)
+                {
+                    _chipProducer.SpawnGridCell(
+                        new Vector2Int(x, y)
+                    );
+                }
+            }
+        }
+
+        private void ShowEffect(BoardResetEffect boardResetEffect, Sequence tweenSeq)
+        {
+
         }
 
         private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect, Sequence tweenSeq)

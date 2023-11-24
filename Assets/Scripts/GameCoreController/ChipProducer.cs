@@ -43,17 +43,18 @@ namespace GameCoreController
 
             _pool = new GameObjectPools(boardParentTransform, 10);
             // Warm-up pools
-            _pool.EnsurePoolDefinition(_gridCellPrefab, 16);
-            _pool.EnsurePoolDefinition(_numberChipPrefab, 16);
+            _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
+            _pool.EnsurePoolDefinition(_numberChipPrefab, 64);
 
             NumberChipVisuals numVis = _numberChipPrefab.GetComponentInChildren<NumberChipVisuals>();
             SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>();
 
             // Have no idea why I should divide it by 10
+            float imageScale = Mathf.Min(numSr.transform.localScale.x, numSr.transform.localScale.y);
             _numberChipSpriteSize = Mathf.Max(
                 numSr.sprite.bounds.size.x,
                 numSr.sprite.bounds.size.y
-            ) / 10f;
+            ) * imageScale;
 
             _worldHeight = _camera.orthographicSize * 2f;
             _worldWidth = _worldHeight / Screen.height * Screen.width;
@@ -76,6 +77,28 @@ namespace GameCoreController
                 _cellSize = _worldSize / (boardSize.x + 1);
             }
             _visualsScale = _cellSize / _numberChipSpriteSize;
+        }
+
+        public GridCellCtrl SpawnGridCell(Vector2Int logicalPosition)
+        {
+            GameObject gridCellGo = _pool.PoolObject(_gridCellPrefab);
+            gridCellGo.SetActive(true);
+
+            gridCellGo.transform.SetPositionAndRotation(
+                LogicalToWorld(logicalPosition),
+                Quaternion.identity
+            );
+            gridCellGo.transform.localScale = Vector3.one;
+            GridCellCtrl gridCellCtrl = gridCellGo.GetComponent<GridCellCtrl>();
+            ScalableVisuals scVis = gridCellGo.GetComponentInChildren<ScalableVisuals>();
+
+            scVis.transform.localScale = new Vector3(
+                _visualsScale,
+                _visualsScale,
+                1
+            );
+
+            return gridCellCtrl;
         }
 
         public ChipCtrl SpawnChip(Vector2Int logicalPosition, int val)
