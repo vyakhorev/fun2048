@@ -280,9 +280,9 @@ namespace GameCoreController
                     cell_i.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                // A cell can be merged only once, no cascade merging in 2048
                 else if (!cell_i.IsEmpty() && cell_i.IsEnabled())
                 {
+                    // A cell can be merged only once, no cascade merging in 2048
                     if (!cell_i.MergedThisTurn())
                     {
                         // Try merging
@@ -338,8 +338,41 @@ namespace GameCoreController
                     cellTo.GetCoords()
                 )
             );
+            // Safer to clear grass after confirmed movement, not during
+            // the line traverse (who knows what can block the movement
+            // in our futher game design).
+            ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
+
+            // Move the chip on logical level.
             cellTo.SetChip(chip);
             cellFrom.ClearChip();
+        }
+
+        private void ClearGrass(Vector2Int cellFromCoords, Vector2Int cellToCoords)
+        {
+            int minX = Math.Min(cellFromCoords.x, cellToCoords.x);
+            int maxX = Math.Max(cellFromCoords.x, cellToCoords.x);
+            int minY = Math.Min(cellFromCoords.y, cellToCoords.y);
+            int maxY = Math.Max(cellFromCoords.y, cellToCoords.y);
+
+            // Essentially a line, always
+            for (int x=minX; x<=maxX; x++)
+            {
+                for (int y=minY; y<=maxY; y++)
+                {
+                    GridCell cell_i = _gridCells[x, y];
+                    if (cell_i.IsGrass())
+                    {
+                        cell_i.DecreaseGrassHealth();
+                        _effects.Add(
+                            new GrassHealthChangeEffect(
+                                new Vector2Int(x, y),
+                                cell_i.GetGrassHealth()
+                            )
+                        );
+                    }
+                }
+            }
         }
 
         private bool TryMerge(GridCell cellFrom, GridCell cellTo)

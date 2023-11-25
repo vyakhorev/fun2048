@@ -58,6 +58,36 @@ namespace Mocked2048Game
                     HoneyHealth = 0,
                     IsEnabled = true,
                 },
+                 new GridCellData {
+                    Coords = new Vector2Int(2,0),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,2),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,1),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,2),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,2),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
                 new GridCellData {
                     Coords = new Vector2Int(5,5),
                     GrassHealth = 0,
