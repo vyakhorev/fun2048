@@ -1,13 +1,8 @@
-// using Mocked2048Game;
-using Pooling;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VisualSO;
 using DG.Tweening;
 using System.Linq;
-using System;
-using UnityEngine.InputSystem.HID;
+using LevelData;
 
 /*
  * Responsible for board visualisation
@@ -24,10 +19,9 @@ namespace GameCoreController
         private bool _readyToPlay = false;
         private ChipProducer _chipProducer;
 
-        private Dictionary<int, GridCellCtrl> _gridCellViews;
+        private Dictionary<Vector2Int, GridCellCtrl> _gridCellViews;
         private Dictionary<int, ChipCtrl> _numberViews;
        
-
         public void Init(ChipProducer chipProducer)
         {
             _enquedSwipes = new List<GridDirection>();
@@ -35,14 +29,15 @@ namespace GameCoreController
             _chipProducer = chipProducer;
         }
 
-        public void StartNewGame(Vector2Int boardSize)
+        public void StartNewGame(BoardData boardData)
         {
+            var boardSize = boardData.BoardSize;
             _chip2048Game = new Chip2048Game(boardSize.x, boardSize.y);
-            _chip2048Game.ResetGame();
+            _chip2048Game.ResetGame(boardData);
             _chipProducer.InitNewGame(boardSize);
 
             _numberViews = new Dictionary<int, ChipCtrl>();
-            _gridCellViews = new Dictionary<int, GridCellCtrl>();
+            _gridCellViews = new Dictionary<Vector2Int, GridCellCtrl>();
 
             _readyToPlay = true;
 
@@ -86,6 +81,27 @@ namespace GameCoreController
 
             Sequence tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<BoardResetEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<GrassHealthChangeEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<HoneyHealthChangeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
@@ -169,7 +185,7 @@ namespace GameCoreController
             _numberViews.Clear();
 
             // TODO: maybe do not reset?
-            foreach (KeyValuePair<int, GridCellCtrl> entry in _gridCellViews)
+            foreach (KeyValuePair<Vector2Int, GridCellCtrl> entry in _gridCellViews)
             {
                 entry.Value.gameObject.SetActive(false);  // Return to the pool
             }
@@ -180,16 +196,70 @@ namespace GameCoreController
             {
                 for (int y = 0; y < bs.y; y++)
                 {
-                    _chipProducer.SpawnGridCell(
+                    GridCellCtrl gridCellCtrl = _chipProducer.SpawnGridCell(
                         new Vector2Int(x, y)
                     );
+                    _gridCellViews[new Vector2Int(x, y)] = gridCellCtrl;
+                    gridCellCtrl.InitHierarchy(_animSpeed);
                 }
             }
+
         }
 
         private void ShowEffect(BoardResetEffect boardResetEffect, Sequence tweenSeq)
         {
 
+        }
+
+        private void ShowEffect(CellEnabledChangeEffect cellEnabledChangeEffect, Sequence tweenSeq)
+        {
+            GridCellCtrl gridCellCtrl = _gridCellViews[cellEnabledChangeEffect.CellCoords];
+            if (cellEnabledChangeEffect.IsEnabled)
+            {
+                gridCellCtrl.SetCellEnabled(tweenSeq);
+            } else
+            {
+                gridCellCtrl.SetCellDisabled(tweenSeq);
+            }
+        }
+
+        private void ShowEffect(GrassHealthChangeEffect grassHealthChangeEffect, Sequence tweenSeq)
+        {
+            GridCellCtrl gridCellCtrl = _gridCellViews[grassHealthChangeEffect.CellCoords];
+            if (grassHealthChangeEffect.HealthLevel == 0)
+            {
+                gridCellCtrl.RemoveGrass(tweenSeq);
+            }
+            else if (grassHealthChangeEffect.HealthLevel == 1)
+            {
+                gridCellCtrl.SetGrassLevel1(tweenSeq);
+            }
+            else if (grassHealthChangeEffect.HealthLevel == 2)
+            {
+                gridCellCtrl.SetGrassLevel2(tweenSeq);
+            } else
+            {
+                throw new System.Exception(
+                    "Wrong grass health level " + grassHealthChangeEffect.HealthLevel);
+            }
+        }
+
+        private void ShowEffect(HoneyHealthChangeEffect honeyHealthChangeEffect, Sequence tweenSeq)
+        {
+            GridCellCtrl gridCellCtrl = _gridCellViews[honeyHealthChangeEffect.CellCoords];
+            if (honeyHealthChangeEffect.HealthLevel == 0)
+            {
+                gridCellCtrl.RemoveHoney(tweenSeq);
+            }
+            else if (honeyHealthChangeEffect.HealthLevel == 1)
+            {
+                gridCellCtrl.SetHoney(tweenSeq);
+            }
+            else
+            {
+                throw new System.Exception(
+                    "Wrong honey health level " + honeyHealthChangeEffect.HealthLevel);
+            }
         }
 
         private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect, Sequence tweenSeq)

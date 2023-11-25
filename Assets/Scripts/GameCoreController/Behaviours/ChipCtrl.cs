@@ -12,6 +12,11 @@ namespace GameCoreController
         [SerializeField] private TextMesh _numberTextMesh;
         [SerializeField] private SpriteRenderer _tileSpriteRenderer;
 
+        public void InitHierarchy()
+        {
+
+        }
+
         public void SetNumber(int number)
         {
             _numberTextMesh.text = number.ToString();

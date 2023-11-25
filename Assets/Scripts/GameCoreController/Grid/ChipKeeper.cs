@@ -1,3 +1,4 @@
+using LevelData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,16 +30,19 @@ namespace GameCoreController
             _effects = new List<AGridEffect>();
         }
 
-        public void ResetCells()
+        public void ResetCells(BoardData boardData)
         {
             for (int idx = 0; idx < _X; idx++)
             {
                 for (int idy = 0; idy < _Y; idy++)
                 {
-                    _gridCells[idx, idy] = new GridCell(
-                        new Vector2Int(idx, idy),
-                        idx == 0 || idx == _X || idy == 0 || idy == _Y
+                    GridCell cell = new GridCell(
+                        new Vector2Int(idx, idy)
                     );
+                    cell.Enable();
+                    cell.SetGrassHealth(0);
+                    cell.SetHoneyHealth(0);
+                    _gridCells[idx, idy] = cell;
                 }
             }
 
@@ -46,6 +50,53 @@ namespace GameCoreController
                 new BoardResetEffect()
             );
 
+            LoadBoard(boardData);
+
+        }
+
+        // TODO - reversable command pattern will be better here
+        // (so that we can spawn things runtime).
+        private void LoadBoard(BoardData boardData)
+        {
+            foreach (GridCellData cellData in boardData.GridCellList)
+            {
+                GridCell cell = _gridCells[
+                    cellData.Coords.x,
+                    cellData.Coords.y
+                ];
+                if (cellData.GrassHealth > 0)
+                {
+                    cell.SetGrassHealth(cellData.GrassHealth);
+                    _effects.Add(
+                        new GrassHealthChangeEffect(
+                            cellData.Coords,
+                            cellData.GrassHealth
+                        )
+                    );
+                }
+                if (cellData.HoneyHealth > 0)
+                {
+                    cell.SetHoneyHealth(cellData.HoneyHealth);
+                    _effects.Add(
+                        new HoneyHealthChangeEffect(
+                            cellData.Coords,
+                            cellData.HoneyHealth
+                        )
+                    );
+                }
+                if (!cellData.IsEnabled)
+                {
+                    cell.Disable();
+                    _effects.Add(
+                        new CellEnabledChangeEffect(
+                            cellData.Coords, 
+                            false
+                        )
+                    );
+                }
+
+
+            }
         }
 
         public void SetCellSize(float newCellSize)

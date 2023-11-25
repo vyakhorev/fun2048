@@ -1,6 +1,9 @@
 ﻿using GameCoreController;
 using GameInput;
+using LevelData;
 using System;
+using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using Utils;
 using VisualSO;
@@ -26,10 +29,83 @@ namespace Mocked2048Game
         private void Start()
         {
             Instance = this;
-            Setup();
+
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(8, 7);
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(0,0),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,1),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,0),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,1),
+                    GrassHealth = 1,
+                    HoneyHealth = 0,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(5,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(6,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(5,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(6,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,4),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                }
+            };
+
+            Setup(boardData);
         }
 
-        private void Setup()
+        private void Setup(BoardData boardData)
         {
             _gameAssetsManager.OnGameStart();
 
@@ -56,9 +132,7 @@ namespace Mocked2048Game
             _gameInputWiring.OnSwipeEvent += OnSwiped;
             _swipeDetection.OnSwipeEvent += OnSwiped;
 
-            _boardController.StartNewGame(
-                new Vector2Int(5, 9)
-            );
+            _boardController.StartNewGame(boardData);
         }
 
         private void OnDestroy()

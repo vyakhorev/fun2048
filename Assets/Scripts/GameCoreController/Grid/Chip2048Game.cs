@@ -1,4 +1,5 @@
 
+using LevelData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,9 +26,9 @@ namespace GameCoreController
             return _boardSize;
         }
 
-        public void ResetGame()
+        public void ResetGame(BoardData boardData)
         {
-            _chipKeeper.ResetCells();
+            _chipKeeper.ResetCells(boardData);
             _lastChipId = 0;
             TrySpawnNewNumber();
         }
@@ -36,6 +37,11 @@ namespace GameCoreController
         {
             _chipKeeper.DoMergeInDirection(gridDirection);
             return TrySpawnNewNumber();
+        }
+
+        public void TryTap(Vector2 tapWorldPosition)
+        {
+            
         }
 
         private bool TrySpawnNewNumber()
@@ -56,10 +62,6 @@ namespace GameCoreController
             _chipKeeper.ResetEffects();
         }
 
-        public void TryTap(Vector2 tapWorldPosition)
-        {
-            
-        }
 
     }
 }
