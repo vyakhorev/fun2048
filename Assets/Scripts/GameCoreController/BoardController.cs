@@ -294,7 +294,6 @@ namespace GameCoreController
         private void ShowEffect(ChipMoveEffect chipMoveEffect, Sequence tweenSeq)
         {
             int chId = chipMoveEffect.Chip.GetChipId();
-            //Debug.Log("Moving " + chId + " to " + chipMoveEffect.PointTo);
             ChipCtrl chipCtrl = _numberViews[chId];
 
             tweenSeq.Insert(
@@ -310,8 +309,6 @@ namespace GameCoreController
         {
             int chIdFrom = chipsMergeEffect.ChipFrom.GetChipId();
             int chIdTo = chipsMergeEffect.ChipTo.GetChipId();
-
-            //Debug.Log("Merging " + chIdFrom + " with " + chIdTo);
 
             ChipCtrl chipCtrlTo = _numberViews[chIdTo];
             tweenSeq.Insert(

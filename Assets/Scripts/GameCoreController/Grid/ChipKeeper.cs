@@ -408,12 +408,28 @@ namespace GameCoreController
                     )
                 );
 
-
                 _effects.Add(
                     new ChipDeletedEffect(
                         numberChipTo
                     )
                 );
+
+                // Check merge effects on neighbours - clear honey
+                foreach (GridCell cellNeigh in GetNeighbours(cellTo.GetCoords(), true))
+                {
+                    if (cellNeigh.IsHoney())
+                    {
+                        cellNeigh.DecreaseHoneyHealth();
+                        _effects.Add(
+                            new HoneyHealthChangeEffect(
+                                cellNeigh.GetCoords(),
+                                cellNeigh.GetHoneyHealth()
+                            )
+                        );
+                    }
+                }
+                // Clear grass on the way
+                ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
 
                 cellTo.SetChip(numberChipFrom);
                 cellFrom.ClearChip();
@@ -454,6 +470,32 @@ namespace GameCoreController
                 }
             }
             return lineCells;
+        }
+
+        private List<GridCell> GetNeighbours(Vector2Int coords, bool includeSelf)
+        {
+            var neigh = new List<GridCell>();
+            if (coords.x - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x - 1, coords.y]);
+            }
+            if (coords.x + 1 < _X)
+            {
+                neigh.Add(_gridCells[coords.x + 1, coords.y]);
+            }
+            if (coords.y - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y - 1]);
+            }
+            if (coords.y + 1 < _Y)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y + 1]);
+            }
+            if (includeSelf)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y]);
+            }
+            return neigh;
         }
 
     }
