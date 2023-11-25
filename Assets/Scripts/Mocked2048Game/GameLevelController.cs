@@ -99,6 +99,60 @@ namespace Mocked2048Game
                     GrassHealth = 0,
                     HoneyHealth = 0,
                     IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,4),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,4),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,4),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,5),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,6),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
                 }
             };
 

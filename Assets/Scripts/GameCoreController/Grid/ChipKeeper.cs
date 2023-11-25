@@ -153,6 +153,7 @@ namespace GameCoreController
 
         public GridCell? GetFreeRandomPosition()
         {
+            // TODO - LINQ
             var emptyGridCells = GetEmptyGridCellList();
             if (emptyGridCells.Count == 0)
             {
@@ -172,7 +173,7 @@ namespace GameCoreController
             var emptyGridCells = new List<GridCell>();
             foreach (GridCell cell_i in _gridCells)
             {
-                if (cell_i.IsEmpty())
+                if (cell_i.IsEmpty() && cell_i.IsEnabled())
                 {
                     emptyGridCells.Add(cell_i);
                 }
@@ -245,7 +246,7 @@ namespace GameCoreController
             for (int i = 0; i < line.Count; i++)
             {
                 GridCell cell_i = line[i];
-                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn())
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled())
                 {
                     candidateCell = cell_i;
                     candidateIdx = i;
@@ -280,7 +281,7 @@ namespace GameCoreController
                     return true;
                 }
                 // A cell can be merged only once, no cascade merging in 2048
-                else if (!cell_i.IsEmpty())
+                else if (!cell_i.IsEmpty() && cell_i.IsEnabled())
                 {
                     if (!cell_i.MergedThisTurn())
                     {
@@ -300,6 +301,20 @@ namespace GameCoreController
                         return true;
                     }
                     GridCell available_cell = line[i+1];
+                    DoMove(candidateCell, available_cell);
+                    available_cell.SetCannotBeMovedThisTurn();
+                    return true;
+                }
+                else if (!cell_i.IsEnabled())
+                {
+                    // We cannot merge with a disabled cell
+                    if (i + 1 == candidateIdx)
+                    {
+                        // No movement, already close to another cell
+                        candidateCell.SetCannotBeMovedThisTurn();
+                        return true;
+                    }
+                    GridCell available_cell = line[i + 1];
                     DoMove(candidateCell, available_cell);
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
