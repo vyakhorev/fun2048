@@ -93,20 +93,6 @@ namespace GameCoreController
             }
             await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
-            foreach (var eff in effects.OfType<GrassHealthChangeEffect>())
-            {
-                ShowEffect(eff, tweenSeq);
-            }
-            await tweenSeq.AsyncWaitForCompletion();
-
-            tweenSeq = DOTween.Sequence();
-            foreach (var eff in effects.OfType<HoneyHealthChangeEffect>())
-            {
-                ShowEffect(eff, tweenSeq);
-            }
-            await tweenSeq.AsyncWaitForCompletion();
-
             foreach (var eff in effects.OfType<ChipSpawnedEffect>())
             {
                 SpawnNewChip(eff);
@@ -135,6 +121,20 @@ namespace GameCoreController
 
             tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<GrassHealthChangeEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+            await tweenSeq.AsyncWaitForCompletion();
+
+            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<HoneyHealthChangeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
