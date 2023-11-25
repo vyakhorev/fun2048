@@ -1,11 +1,11 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Fun2048/Grid/Number visual style")]
-public class SONumberVisualStyle : SerializedScriptableObject
+public class SONumberVisualStyle : ScriptableObject
 {
-    [SerializeField] public Color ChipColor;
-    [SerializeField] public Color FontColor;
+    public Color ChipColor => _chipColor;
+    public Color FontColor => _fontColor;
+
+    [SerializeField] private Color _chipColor;
+    [SerializeField] private Color _fontColor;
 }
