@@ -68,6 +68,14 @@ namespace GameCoreController
             return _chip == null;
         }
 
+        public bool IsFullyAvailable()
+        {
+
+            return IsEmpty() &&
+                IsEnabled() &&
+                !IsHoney();
+        }
+
         public AChip? GetChip()
         {
             return _chip;

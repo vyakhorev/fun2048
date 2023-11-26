@@ -16,6 +16,9 @@ namespace LevelData
         public Vector2Int BoardSize;
         public List<GridCellData> GridCellList;
         public List<NumberChipData> NumberChipList;
+        public List<StoneChipData> StoneChipList;
+        public List<EggChipData> EggChipList;
+        public List<BubbleChipData> BubbleChipList;
         public List<BoosterChipData> BoosterChipList;
     }
 }

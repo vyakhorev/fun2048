@@ -21,7 +21,7 @@ namespace GameCoreController
         private ChipProducer _chipProducer;
 
         private Dictionary<Vector2Int, GridCellCtrl> _gridCellViews;
-        private Dictionary<int, ChipCtrl> _numberViews;
+        private Dictionary<int, ChipCtrl> _chipViews;
        
         public void Init(ChipProducer chipProducer)
         {
@@ -31,7 +31,7 @@ namespace GameCoreController
             _chipProducer = chipProducer;
             _chip2048Game = new Chip2048Game();
 
-            _numberViews = new Dictionary<int, ChipCtrl>();
+            _chipViews = new Dictionary<int, ChipCtrl>();
             _gridCellViews = new Dictionary<Vector2Int, GridCellCtrl>();
             _readyToPlay = false;
 
@@ -45,7 +45,7 @@ namespace GameCoreController
             _chip2048Game.ResetGame(boardData);
             _chipProducer.InitNewGame(boardSize);
 
-            _numberViews = new Dictionary<int, ChipCtrl>();
+            _chipViews = new Dictionary<int, ChipCtrl>();
             _gridCellViews = new Dictionary<Vector2Int, GridCellCtrl>();
 
             _readyToPlay = true;
@@ -184,11 +184,42 @@ namespace GameCoreController
 
             if (chipSpawnedEffect.SpawnedChip is NumberChip numberChip)
             {
-                ChipCtrl chipCtrl = _chipProducer.SpawnChip(
+                ChipCtrl chipCtrl = _chipProducer.SpawnNumberChip(
                     chipSpawnedEffect.Coords,
                     numberChip.GetNumericValue()
                 );
-                _numberViews[chId] = chipCtrl;
+                _chipViews[chId] = chipCtrl;
+            }
+            else if (chipSpawnedEffect.SpawnedChip is StoneChip stoneChip)
+            {
+                ChipCtrl chipCtrl = _chipProducer.SpawnStoneChip(
+                    chipSpawnedEffect.Coords,
+                    stoneChip.GetHealth()
+                );
+                _chipViews[chId] = chipCtrl;
+            }
+            else if (chipSpawnedEffect.SpawnedChip is EggChip eggChip)
+            {
+                ChipCtrl chipCtrl = _chipProducer.SpawnEggChip(
+                    chipSpawnedEffect.Coords,
+                    eggChip.GetHealth()
+                );
+                _chipViews[chId] = chipCtrl;
+            }
+            else if (chipSpawnedEffect.SpawnedChip is BubbleChip bubbleChip)
+            {
+                ChipCtrl chipCtrl = _chipProducer.SpawnBubbleChip(
+                    chipSpawnedEffect.Coords,
+                    bubbleChip.GetBubbleValue()
+                );
+                _chipViews[chId] = chipCtrl;
+            }
+            else if (chipSpawnedEffect.SpawnedChip is BoosterChip boosterChip)
+            {
+                ChipCtrl chipCtrl = _chipProducer.SpawnBoosterChip(
+                    chipSpawnedEffect.Coords
+                );
+                _chipViews[chId] = chipCtrl;
             }
         }
 
@@ -196,17 +227,17 @@ namespace GameCoreController
         {
             int chId = chipDeletedEffect.Chip.GetChipId();
 
-            _numberViews.Remove(chId, out ChipCtrl chipCtrl);
+            _chipViews.Remove(chId, out ChipCtrl chipCtrl);
             chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
         private void ClearBoard()
         {
-            foreach (KeyValuePair<int, ChipCtrl> entry in _numberViews)
+            foreach (KeyValuePair<int, ChipCtrl> entry in _chipViews)
             {
                 entry.Value.gameObject.SetActive(false);  // Return to the pool
             }
-            _numberViews.Clear();
+            _chipViews.Clear();
 
             // TODO: maybe do not reset?
             foreach (KeyValuePair<Vector2Int, GridCellCtrl> entry in _gridCellViews)
@@ -294,7 +325,7 @@ namespace GameCoreController
         private void ShowEffect(ChipSpawnedEffect chipSpawnedEffect, Sequence tweenSeq)
         {
             int chId = chipSpawnedEffect.SpawnedChip.GetChipId();
-            ChipCtrl chipCtrl = _numberViews[chId];
+            ChipCtrl chipCtrl = _chipViews[chId];
 
             tweenSeq.Insert(
                 0f,
@@ -309,7 +340,7 @@ namespace GameCoreController
         private void ShowEffect(ChipDeletedEffect chipDeletedEffect, Sequence tweenSeq)
         {
             int chId = chipDeletedEffect.Chip.GetChipId();
-            ChipCtrl chipCtrl = _numberViews[chId];
+            ChipCtrl chipCtrl = _chipViews[chId];
 
             tweenSeq.Insert(
                 0f,
@@ -323,7 +354,7 @@ namespace GameCoreController
         private void ShowEffect(ChipMoveEffect chipMoveEffect, Sequence tweenSeq)
         {
             int chId = chipMoveEffect.Chip.GetChipId();
-            ChipCtrl chipCtrl = _numberViews[chId];
+            ChipCtrl chipCtrl = _chipViews[chId];
 
             tweenSeq.Insert(
                 0f,
@@ -339,7 +370,7 @@ namespace GameCoreController
             int chIdFrom = chipsMergeEffect.ChipFrom.GetChipId();
             int chIdTo = chipsMergeEffect.ChipTo.GetChipId();
 
-            ChipCtrl chipCtrlTo = _numberViews[chIdTo];
+            ChipCtrl chipCtrlTo = _chipViews[chIdTo];
             tweenSeq.Insert(
                 0f,
                 chipCtrlTo.transform.DOScale(
@@ -356,7 +387,7 @@ namespace GameCoreController
             int chId = chipNumberChangedEffect.Chip.GetChipId();
             int newVal = chipNumberChangedEffect.Chip.GetNumericValue();
 
-            ChipCtrl chipCtrl = _numberViews[chId];
+            ChipCtrl chipCtrl = _chipViews[chId];
             _chipProducer.UpdateNumberVisuals(chipCtrl, newVal);
 
             tweenSeq.Insert(

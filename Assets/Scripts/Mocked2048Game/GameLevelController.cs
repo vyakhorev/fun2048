@@ -32,7 +32,7 @@ namespace Mocked2048Game
         {
             Instance = this;
             _gameAssetsManager.OnGameStart();
-            BoardData boardData = DebugLevelGenerator.Level0();
+            BoardData boardData = DebugLevelGenerator.Level3();
             _seed = Guid.NewGuid().GetHashCode();
             Debug.Log("Seed is = " + _seed);
             _globalCtx = new GlobalCtx(_seed);

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,5 +50,52 @@ namespace GameCoreController
         {
             _numberSpriteRenderer.color = color;
         }
+
+        public void SpawnAsNumber()
+        {
+            _numberChipVisuals.gameObject.SetActive(true);
+            _stoneChipVisuals.gameObject.SetActive(false);
+            _eggChipVisuals.gameObject.SetActive(false);
+            _bubbleChipVisuals.gameObject.SetActive(false);
+            _boosterChipVisuals.gameObject.SetActive(false);
+        }
+
+        public void SpawnAsStone()
+        {
+            _numberChipVisuals.gameObject.SetActive(false);
+            _stoneChipVisuals.gameObject.SetActive(true);
+            _eggChipVisuals.gameObject.SetActive(false);
+            _bubbleChipVisuals.gameObject.SetActive(false);
+            _boosterChipVisuals.gameObject.SetActive(false);
+        }
+
+        public void SpawnAsEgg()
+        {
+            _numberChipVisuals.gameObject.SetActive(false);
+            _stoneChipVisuals.gameObject.SetActive(false);
+            _eggChipVisuals.gameObject.SetActive(true);
+            _bubbleChipVisuals.gameObject.SetActive(false);
+            _boosterChipVisuals.gameObject.SetActive(false);
+        }
+
+        public void SpawnAsBubble()
+        {
+            _numberChipVisuals.gameObject.SetActive(false);
+            _stoneChipVisuals.gameObject.SetActive(false);
+            _eggChipVisuals.gameObject.SetActive(false);
+            _bubbleChipVisuals.gameObject.SetActive(true);
+            _boosterChipVisuals.gameObject.SetActive(false);
+        }
+
+        public void SpawnAsBooster()
+        {
+            _numberChipVisuals.gameObject.SetActive(false);
+            _stoneChipVisuals.gameObject.SetActive(false);
+            _eggChipVisuals.gameObject.SetActive(false);
+            _bubbleChipVisuals.gameObject.SetActive(false);
+            _boosterChipVisuals.gameObject.SetActive(true);
+        }
+
+
     }
 }

@@ -13,7 +13,6 @@ namespace GameCoreController
     {
         private ChipKeeper _chipKeeper;
         private Vector2Int _boardSize;
-        private int _lastChipId;
 
         public Vector2Int GetBoardSize()
         {
@@ -26,7 +25,6 @@ namespace GameCoreController
             _chipKeeper = new ChipKeeper(boardSize.x, boardSize.y);
             _boardSize = new Vector2Int(boardSize.x, boardSize.y);
             _chipKeeper.ResetCells(boardData);
-            _lastChipId = 0;
             TrySpawnNewNumber();
         }
 
@@ -43,10 +41,7 @@ namespace GameCoreController
 
         private bool TrySpawnNewNumber()
         {
-            _lastChipId += 1;
-            NumberChip newChip = new NumberChip(2);
-            newChip.SetChipId(_lastChipId);
-            return _chipKeeper.TrySpawnNewChipAtRandomPosition(newChip);
+            return _chipKeeper.TrySpawnNewNumberChipAtRandomPosition();
         }
 
         public List<AGridEffect> GetEffects()

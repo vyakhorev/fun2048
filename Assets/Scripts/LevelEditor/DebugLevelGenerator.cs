@@ -409,5 +409,68 @@ namespace LevelEditor
         }
 
 
+        public static BoardData Level3()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(0,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,3),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,3),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+            };
+
+            boardData.StoneChipList = new List<StoneChipData>
+            {
+                new StoneChipData {
+                    Coords = new Vector2Int(1,1),
+                    Health = 1
+                },
+
+                new StoneChipData {
+                    Coords = new Vector2Int(2,2),
+                    Health = 1
+                }
+            };
+
+            boardData.EggChipList = new List<EggChipData>
+            {
+                new EggChipData {
+                    Coords = new Vector2Int(2,1),
+                    Health = 1
+                },
+
+                new EggChipData {
+                    Coords = new Vector2Int(1,2),
+                    Health = 1
+                }
+            };
+
+            return boardData;
+
+        }
+
     }
 }

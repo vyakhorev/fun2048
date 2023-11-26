@@ -16,7 +16,7 @@ namespace GameCoreController
     {
         private Camera _camera;
         private GameObject _gridCellPrefab;
-        private GameObject _numberChipPrefab;
+        private GameObject _chipPrefab;
         private SOBoardVisualStyle _soBoardVisualStyle;
         private GameObjectPools _pool;
 
@@ -32,21 +32,21 @@ namespace GameCoreController
         public void Init(
             Camera camera,
             Transform boardParentTransform,
-            GameObject numberChipPrefab,
+            GameObject chipPrefab,
             GameObject gridCellPrefab,
             SOBoardVisualStyle soBoardVisualStyle)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
             _gridCellPrefab = gridCellPrefab;
-            _numberChipPrefab = numberChipPrefab;
+            _chipPrefab = chipPrefab;
 
             _pool = new GameObjectPools(boardParentTransform, 10);
             // Warm-up pools
             _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
-            _pool.EnsurePoolDefinition(_numberChipPrefab, 64);
+            _pool.EnsurePoolDefinition(_chipPrefab, 64);
 
-            CmpNumberChipVisuals numVis = _numberChipPrefab.GetComponentInChildren<CmpNumberChipVisuals>();
+            CmpNumberChipVisuals numVis = _chipPrefab.GetComponentInChildren<CmpNumberChipVisuals>();
             SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>();
 
             float imageScale = Mathf.Min(
@@ -103,9 +103,45 @@ namespace GameCoreController
             return gridCellCtrl;
         }
 
-        public ChipCtrl SpawnChip(Vector2Int logicalPosition, int val)
+        public ChipCtrl SpawnNumberChip(Vector2Int logicalPosition, int val)
         {
-            GameObject chipGo = _pool.PoolObject(_numberChipPrefab);
+            ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
+            chipCtrl.SpawnAsNumber();
+            UpdateNumberVisuals(chipCtrl, val);
+            return chipCtrl;
+        }
+
+        public ChipCtrl SpawnStoneChip(Vector2Int logicalPosition, int health)
+        {
+            ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
+            chipCtrl.SpawnAsStone();
+            return chipCtrl;
+        }
+
+        public ChipCtrl SpawnEggChip(Vector2Int logicalPosition, int health)
+        {
+            ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
+            chipCtrl.SpawnAsEgg();
+            return chipCtrl;
+        }
+
+        public ChipCtrl SpawnBubbleChip(Vector2Int logicalPosition, int bubbleValue)
+        {
+            ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
+            chipCtrl.SpawnAsBubble();
+            return chipCtrl;
+        }
+
+        public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
+        {
+            ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
+            chipCtrl.SpawnAsBooster();
+            return chipCtrl;
+        }
+
+        private ChipCtrl SpawnAChip(Vector2Int logicalPosition)
+        {
+            GameObject chipGo = _pool.PoolObject(_chipPrefab);
             chipGo.SetActive(true);
 
             chipGo.transform.SetPositionAndRotation(
@@ -117,15 +153,14 @@ namespace GameCoreController
             CmpScalableVisuals scVis = chipGo.GetComponentInChildren<CmpScalableVisuals>();
 
             scVis.transform.localScale = new Vector3(
-                _visualsScale, 
-                _visualsScale, 
+                _visualsScale,
+                _visualsScale,
                 1
             );
 
-            UpdateNumberVisuals(chipCtrl, val);
-
             return chipCtrl;
         }
+
 
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
