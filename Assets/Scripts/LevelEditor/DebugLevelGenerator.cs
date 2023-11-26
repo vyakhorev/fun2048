@@ -31,6 +31,11 @@ namespace LevelEditor
             File.WriteAllText(saveFile, jsonString);
             Debug.Log("Saving " + saveFile);
 
+            jsonString = JsonUtility.ToJson(Level3());
+            saveFile = Application.persistentDataPath + "/level3.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
         }
 
         public static BoardData Level0()
@@ -413,44 +418,17 @@ namespace LevelEditor
         {
             // Default level
             BoardData boardData = new BoardData();
-            boardData.BoardSize = new Vector2Int(4, 4);
-            boardData.GridCellList = new List<GridCellData>
-            {
-                new GridCellData {
-                    Coords = new Vector2Int(0,0),
-                    GrassHealth = 0,
-                    HoneyHealth = 0,
-                    IsEnabled = false,
-                },
-                new GridCellData {
-                    Coords = new Vector2Int(3,3),
-                    GrassHealth = 0,
-                    HoneyHealth = 0,
-                    IsEnabled = false,
-                },
-                new GridCellData {
-                    Coords = new Vector2Int(0,3),
-                    GrassHealth = 0,
-                    HoneyHealth = 0,
-                    IsEnabled = false,
-                },
-                new GridCellData {
-                    Coords = new Vector2Int(3,0),
-                    GrassHealth = 0,
-                    HoneyHealth = 0,
-                    IsEnabled = false,
-                },
-            };
+            boardData.BoardSize = new Vector2Int(5, 5);
 
             boardData.StoneChipList = new List<StoneChipData>
             {
                 new StoneChipData {
-                    Coords = new Vector2Int(1,1),
+                    Coords = new Vector2Int(0,0),
                     Health = 1
                 },
 
                 new StoneChipData {
-                    Coords = new Vector2Int(2,2),
+                    Coords = new Vector2Int(1,1),
                     Health = 1
                 }
             };
@@ -458,12 +436,11 @@ namespace LevelEditor
             boardData.EggChipList = new List<EggChipData>
             {
                 new EggChipData {
-                    Coords = new Vector2Int(2,1),
+                    Coords = new Vector2Int(3,3),
                     Health = 1
                 },
-
                 new EggChipData {
-                    Coords = new Vector2Int(1,2),
+                    Coords = new Vector2Int(4,4),
                     Health = 1
                 }
             };

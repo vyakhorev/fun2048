@@ -405,6 +405,13 @@ namespace GameCoreController
                 return ApplyMergeToLine(line, rd+1, maxRd);
             }
 
+            if (candidateCell.HasImmovableChip())
+            {
+                // This cannot be moved, go to the next one
+                candidateCell.SetCannotBeMovedThisTurn();
+                return ApplyMergeToLine(line, rd + 1, maxRd);
+            }
+
             // Iterate backwards for each available spot
             for (int i = candidateIdx-1; i>=0; i--)
             {
@@ -516,12 +523,12 @@ namespace GameCoreController
             if (cellFrom == cellTo) throw new Exception("Attempt to merge cell with itself: " + cellFrom.GetCoords());
             AChip? chipFrom = cellFrom.GetChip() ?? throw new Exception("Attempt to merge an empty cell: " + cellFrom.GetCoords());
             AChip? chipTo = cellTo.GetChip() ?? throw new Exception("Attempt to merge with an empty cell: " + cellTo.GetCoords());
-            
+
             if (chipFrom is NumberChip numberChipFrom &&
                 chipTo is NumberChip numberChipTo &&
                 numberChipFrom.GetNumericValue() == numberChipTo.GetNumericValue())
             {
-                // Merge numeric cells
+                // Main case - merge numeric cells
                 numberChipFrom.IncreaseNumericValue(numberChipTo.GetNumericValue());
 
                 _effects.Add(
@@ -550,9 +557,10 @@ namespace GameCoreController
                     )
                 );
 
-                // Check merge effects on neighbours - clear honey
+                // Check merge effects on neighbours - clear honey, eggs, stones
                 foreach (GridCell cellNeigh in GetNeighbours(cellTo.GetCoords(), true))
                 {
+                    // Eggs and stones inside honey are not destroyed the same turn
                     if (cellNeigh.IsHoney())
                     {
                         cellNeigh.DecreaseHoneyHealth();
@@ -563,7 +571,34 @@ namespace GameCoreController
                             )
                         );
                     }
+                    else if (cellNeigh.GetChip() is EggChip eggChip)
+                    {
+                        eggChip.DecreaseHealth();
+                        if (!eggChip.IsAlive())
+                        {
+                            cellNeigh.ClearChip();
+                            _effects.Add(
+                                new ChipDeletedEffect(
+                                    eggChip
+                                )
+                            );
+                        }
+                    }
+                    else if (cellNeigh.GetChip() is StoneChip stoneChip)
+                    {
+                        stoneChip.DecreaseHealth();
+                        if (!stoneChip.IsAlive())
+                        {
+                            cellNeigh.ClearChip();
+                            _effects.Add(
+                                new ChipDeletedEffect(
+                                    stoneChip
+                                )
+                            );
+                        }
+                    }
                 }
+
                 // Clear grass on the way
                 ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
 
@@ -571,6 +606,32 @@ namespace GameCoreController
                 cellFrom.ClearChip();
                 return true;
             }
+            else if (chipFrom is NumberChip numberChipFromNoMerge &&
+                chipTo is EggChip eggChip)
+            {
+                // Minor case - numbers can be merged into eggs,
+                // however, no area effect in this case
+                _effects.Add(
+                    new ChipMoveEffect(
+                        numberChipFromNoMerge,
+                        cellTo.GetCoords()
+                    )
+                );
+
+                _effects.Add(
+                    new ChipDeletedEffect(
+                        eggChip
+                    )
+                );
+
+                // Clear grass on the way
+                ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
+
+                cellTo.SetChip(numberChipFromNoMerge);
+                cellFrom.ClearChip();
+                return true;
+            }
+
             return false;
         }
 

@@ -86,6 +86,16 @@ namespace GameCoreController
             _chip = null;
         }
 
+        public bool HasImmovableChip()
+        {
+            if (_chip != null)
+            {
+                if (_chip is StoneChip || _chip is EggChip || _chip is BubbleChip) return true;
+                return false;
+            }
+            return false;
+        }
+
         public bool IsEnabled()
         {
             return _isEnabled;
