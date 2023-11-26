@@ -17,6 +17,9 @@ namespace GameInput
         public delegate void OnSwipe(object sender, SwipeEventArgs e);
         public event OnSwipe OnSwipeEvent;
 
+        public delegate void OnTap(object sender, TapEventArgs e);
+        public event OnTap OnTapEvent;
+
         private GameInputWiring _gameInputWiring;
         private Vector2 _startPosition;
         private float _startTime;
@@ -58,6 +61,9 @@ namespace GameInput
                 Vector3 direction = _endPosition - _startPosition;
                 Vector2 direction2D = new Vector2(direction.x, direction.y).normalized;
                 InvokeSwipe(direction2D);
+            } else
+            {
+                InvokeTap(_endPosition);
             }
         }
 
@@ -80,6 +86,12 @@ namespace GameInput
                 OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.RIGHT));
             }
         }
+
+        private void InvokeTap(Vector2 pos)
+        {
+            OnTapEvent?.Invoke(this, new TapEventArgs(pos));
+        }
+
 
     }
 

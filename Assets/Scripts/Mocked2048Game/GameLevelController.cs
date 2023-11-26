@@ -55,6 +55,7 @@ namespace Mocked2048Game
 
             _gameInputWiring.OnSwipeEvent += OnSwiped;
             _swipeDetection.OnSwipeEvent += OnSwiped;
+            _swipeDetection.OnTapEvent += OnTapped;
 
             ResetLevelWithData(boardData);
         }
@@ -68,6 +69,7 @@ namespace Mocked2048Game
         {
             _gameInputWiring.OnSwipeEvent -= OnSwiped;
             _swipeDetection.OnSwipeEvent -= OnSwiped;
+            _swipeDetection.OnTapEvent -= OnTapped;
         }
 
         private void OnSwiped(object sender, SwipeEventArgs swipeEventArgs)
@@ -91,159 +93,15 @@ namespace Mocked2048Game
 
         }
 
+        private void OnTapped(object sender, TapEventArgs tapEventArgs)
+        {
+            _boardController.ExecuteTap(tapEventArgs.At);
+        }
+
         public GameGridHolder GetGameGridHolder()
         {
             return _gameGridHolder;
         }
-
-        //private BoardData BuildDebugLevel()
-        //{
-        //    // Default level
-        //    BoardData boardData = new BoardData();
-        //    boardData.BoardSize = new Vector2Int(7, 6);
-        //    boardData.GridCellList = new List<GridCellData>
-        //    {
-        //        new GridCellData {
-        //            Coords = new Vector2Int(0,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(0,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(0,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(1,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(1,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(1,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(2,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(2,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(2,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 0,
-        //            IsEnabled = true,
-        //        },
-
-        //        // honey
-        //        new GridCellData {
-        //            Coords = new Vector2Int(4,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(4,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(4,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(5,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(5,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(5,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(6,0),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(6,1),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(6,2),
-        //            GrassHealth = 2,
-        //            HoneyHealth = 1,
-        //            IsEnabled = true,
-        //        },
-
-
-        //        // disabled
-        //        new GridCellData {
-        //            Coords = new Vector2Int(3,1),
-        //            GrassHealth = 0,
-        //            HoneyHealth = 0,
-        //            IsEnabled = false,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(3,2),
-        //            GrassHealth = 0,
-        //            HoneyHealth = 0,
-        //            IsEnabled = false,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(3,3),
-        //            GrassHealth = 0,
-        //            HoneyHealth = 0,
-        //            IsEnabled = false,
-        //        },
-        //        new GridCellData {
-        //            Coords = new Vector2Int(3,4),
-        //            GrassHealth = 0,
-        //            HoneyHealth = 0,
-        //            IsEnabled = false,
-        //        },
-        //    };
-
-        //    return boardData;
-        //}
 
     }
 }

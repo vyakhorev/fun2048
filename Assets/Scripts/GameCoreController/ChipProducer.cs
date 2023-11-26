@@ -141,7 +141,14 @@ namespace GameCoreController
                 _cellSize * (logicalPosition.y + 1) - _vertAlgn,
                 0f
             );
+        }
 
+        public Vector2Int WorldToLogical(Vector2 worldPosition)
+        {
+            return new Vector2Int(
+                Mathf.RoundToInt((worldPosition.x + _horAlgn - _cellSize) / _cellSize),
+                Mathf.RoundToInt((worldPosition.y + _vertAlgn - _cellSize) / _cellSize)
+            );
         }
 
 

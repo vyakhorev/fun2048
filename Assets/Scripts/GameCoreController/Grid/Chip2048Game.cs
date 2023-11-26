@@ -36,9 +36,9 @@ namespace GameCoreController
             return TrySpawnNewNumber();
         }
 
-        public void TryTap(Vector2 tapWorldPosition)
+        public void TryTap(Vector2Int tapLogicalPosition)
         {
-            
+            _chipKeeper.DoInteractionAt(tapLogicalPosition);
         }
 
         private bool TrySpawnNewNumber()

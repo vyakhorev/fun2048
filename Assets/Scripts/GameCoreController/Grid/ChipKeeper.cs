@@ -234,6 +234,11 @@ namespace GameCoreController
             }
         }
 
+        public void DoInteractionAt(Vector2Int at)
+        {
+            Debug.Log("Interacting at " +  at);
+        }
+
         /*
          * Repeat until cannot move / merge anything in line
          */

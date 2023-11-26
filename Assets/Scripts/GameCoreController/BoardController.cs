@@ -16,6 +16,7 @@ namespace GameCoreController
         private Chip2048Game _chip2048Game;
 
         private List<GridDirection> _enquedSwipes;
+        private List<Vector2Int> _enquedTaps;
         private bool _readyToPlay = false;
         private ChipProducer _chipProducer;
 
@@ -25,7 +26,8 @@ namespace GameCoreController
         public void Init(ChipProducer chipProducer)
         {
             _enquedSwipes = new List<GridDirection>();
-            
+            _enquedTaps = new List<Vector2Int>();
+
             _chipProducer = chipProducer;
             _chip2048Game = new Chip2048Game();
 
@@ -56,15 +58,30 @@ namespace GameCoreController
             _enquedSwipes.Add(gridDirection);
         }
 
+        public void ExecuteTap(Vector2 tapWorldPosition)
+        {
+            if (!_readyToPlay) return;
+            Vector2Int tapLogicalPosition = _chipProducer.WorldToLogical(tapWorldPosition);
+            _enquedTaps.Add(tapLogicalPosition);
+        }
+
         public void Update()
         {
             if (!_readyToPlay) return;
            
+            // TODO - swipes and taps should be in one queue
             List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
             _enquedSwipes.Clear();
             foreach (GridDirection gridDirection in acts)
             {
                 _chip2048Game.TrySwipe(gridDirection);
+            }
+
+            List<Vector2Int> tapActs = new List<Vector2Int>(_enquedTaps);
+            _enquedTaps.Clear();
+            foreach (Vector2Int tap in tapActs)
+            {
+                _chip2048Game.TryTap(tap);
             }
 
             List<AGridEffect> effects = _chip2048Game.GetEffects();
