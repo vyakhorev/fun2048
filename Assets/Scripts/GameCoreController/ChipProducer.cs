@@ -72,11 +72,11 @@ namespace GameCoreController
 
             if (boardSize.y <= boardSize.x)
             {
-                _cellSize = _worldSize / (boardSize.y + 1);
+                _cellSize = _worldSize / (boardSize.y + 2);
             }
             else
             {
-                _cellSize = _worldSize / (boardSize.x + 1);
+                _cellSize = _worldSize / (boardSize.x + 2);
             }
             _visualsScale = _cellSize / _numberChipSpriteSize;
         }

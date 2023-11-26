@@ -9,12 +9,20 @@ namespace LevelEditor
     /*
      * Dummy level controller for core gameplay debug
      */
-    public class DebugJsonGenerator : MonoBehaviour
+    public class DebugLevelGenerator : MonoBehaviour
     {
         private void Start()
         {
-            string jsonString = JsonUtility.ToJson(Level1());
-            string saveFile = Application.persistentDataPath + "/level1.json";
+            string jsonString;
+            string saveFile;
+
+            jsonString = JsonUtility.ToJson(Level0());
+            saveFile = Application.persistentDataPath + "/level0.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
+            jsonString = JsonUtility.ToJson(Level1());
+            saveFile = Application.persistentDataPath + "/level1.json";
             File.WriteAllText(saveFile, jsonString);
             Debug.Log("Saving " + saveFile);
 
@@ -25,7 +33,45 @@ namespace LevelEditor
 
         }
 
-        private BoardData Level1()
+        public static BoardData Level0()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(0,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,3),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,3),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+            };
+
+            return boardData;
+
+        }
+
+
+        public static BoardData Level1()
         {
             // Default level
             BoardData boardData = new BoardData();
@@ -176,7 +222,7 @@ namespace LevelEditor
         }
 
 
-        private BoardData Level2()
+        public static BoardData Level2()
         {
             BoardData boardData = new BoardData();
             boardData.BoardSize = new Vector2Int(8, 7);

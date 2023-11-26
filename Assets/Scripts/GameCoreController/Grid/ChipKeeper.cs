@@ -274,13 +274,13 @@ namespace GameCoreController
             {
                 GridCell cell_i = line[i];
                 // Reached the end of the line, move the chip
-                if (cell_i.IsEmpty() && i == 0)
+                if (cell_i.IsEmpty() && i == 0 && !cell_i.IsHoney() && cell_i.IsEnabled())
                 {
                     DoMove(candidateCell, cell_i);
                     cell_i.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                else if (!cell_i.IsEmpty() && cell_i.IsEnabled())
+                else if (!cell_i.IsEmpty() && cell_i.IsEnabled() && !cell_i.IsHoney())
                 {
                     // A cell can be merged only once, no cascade merging in 2048
                     if (!cell_i.MergedThisTurn())
