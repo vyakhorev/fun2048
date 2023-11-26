@@ -608,6 +608,16 @@ namespace GameCoreController
             {
                 // Minor case - numbers can be merged into eggs,
                 // however, no area effect in this case
+
+                eggChip.DecreaseHealth();
+
+                if (eggChip.IsAlive())
+                {
+                    // TODO - an event indicating that we're breaking an egg
+                    // We'll move the number chip anyway
+                    return false;
+                }
+
                 _effects.Add(
                     new ChipMoveEffect(
                         numberChipFromNoMerge,

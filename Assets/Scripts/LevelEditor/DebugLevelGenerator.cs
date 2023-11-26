@@ -61,6 +61,11 @@ namespace LevelEditor
             File.WriteAllText(saveFile, jsonString);
             Debug.Log("Saving " + saveFile);
 
+            jsonString = JsonUtility.ToJson(Level9());
+            saveFile = Application.persistentDataPath + "/level9.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
         }
 
         public static BoardData Level0()
@@ -582,25 +587,25 @@ namespace LevelEditor
                 new GridCellData {
                     Coords = new Vector2Int(2,1),
                     GrassHealth = 5,
-                    HoneyHealth = 5,
+                    HoneyHealth = 1,
                     IsEnabled = true,
                 },
                 new GridCellData {
                     Coords = new Vector2Int(1,1),
                     GrassHealth = 5,
-                    HoneyHealth = 5,
+                    HoneyHealth = 1,
                     IsEnabled = true,
                 },
                 new GridCellData {
                     Coords = new Vector2Int(2,2),
                     GrassHealth = 5,
-                    HoneyHealth = 5,
+                    HoneyHealth = 1,
                     IsEnabled = true,
                 },
                 new GridCellData {
                     Coords = new Vector2Int(1,2),
                     GrassHealth = 5,
-                    HoneyHealth = 5,
+                    HoneyHealth = 1,
                     IsEnabled = true,
                 }
             };
@@ -631,6 +636,43 @@ namespace LevelEditor
                 new NumberChipData {
                     Coords = new Vector2Int(1,2),
                     NumberValue = 512
+                }
+            };
+
+            return boardData;
+        }
+
+        public static BoardData Level9()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(20, 20);
+
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(0,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(19,0),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(0,19),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(19,19),
+                    GrassHealth = 0,
+                    HoneyHealth = 0,
+                    IsEnabled = false,
                 }
             };
 
