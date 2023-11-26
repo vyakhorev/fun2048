@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameCoreController
 {
     // Indicates a number chip visuals in chip hierarchy
-    public class NumberChipVisuals : MonoBehaviour
+    public class CmpNumberChipVisuals : MonoBehaviour
     {
 
     }

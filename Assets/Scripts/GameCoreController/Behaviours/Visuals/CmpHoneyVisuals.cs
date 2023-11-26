@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameCoreController
 {
-    public class HoneyVisuals : MonoBehaviour
+    public class CmpHoneyVisuals : MonoBehaviour
     {
 
     }

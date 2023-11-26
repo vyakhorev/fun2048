@@ -46,11 +46,13 @@ namespace GameCoreController
             _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
             _pool.EnsurePoolDefinition(_numberChipPrefab, 64);
 
-            NumberChipVisuals numVis = _numberChipPrefab.GetComponentInChildren<NumberChipVisuals>();
+            CmpNumberChipVisuals numVis = _numberChipPrefab.GetComponentInChildren<CmpNumberChipVisuals>();
             SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>();
 
-            // Have no idea why I should divide it by 10
-            float imageScale = Mathf.Min(numSr.transform.localScale.x, numSr.transform.localScale.y);
+            float imageScale = Mathf.Min(
+                numSr.transform.localScale.x, 
+                numSr.transform.localScale.y
+            );
             _numberChipSpriteSize = Mathf.Max(
                 numSr.sprite.bounds.size.x,
                 numSr.sprite.bounds.size.y
@@ -90,7 +92,7 @@ namespace GameCoreController
             );
             gridCellGo.transform.localScale = Vector3.one;
             GridCellCtrl gridCellCtrl = gridCellGo.GetComponent<GridCellCtrl>();
-            ScalableVisuals scVis = gridCellGo.GetComponentInChildren<ScalableVisuals>();
+            CmpScalableVisuals scVis = gridCellGo.GetComponentInChildren<CmpScalableVisuals>();
 
             scVis.transform.localScale = new Vector3(
                 _visualsScale,
@@ -112,7 +114,7 @@ namespace GameCoreController
             );
             chipGo.transform.localScale = Vector3.zero;
             ChipCtrl chipCtrl = chipGo.GetComponent<ChipCtrl>();
-            ScalableVisuals scVis = chipGo.GetComponentInChildren<ScalableVisuals>();
+            CmpScalableVisuals scVis = chipGo.GetComponentInChildren<CmpScalableVisuals>();
 
             scVis.transform.localScale = new Vector3(
                 _visualsScale, 

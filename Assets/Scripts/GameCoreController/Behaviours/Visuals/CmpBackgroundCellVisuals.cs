@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameCoreController
 {
     // Indicate background visuals
-    public class BackgroundCellVisuals : MonoBehaviour
+    public class CmpBackgroundCellVisuals : MonoBehaviour
     {
 
     }

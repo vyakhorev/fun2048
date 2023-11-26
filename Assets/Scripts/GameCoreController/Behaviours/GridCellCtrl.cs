@@ -7,24 +7,24 @@ namespace GameCoreController
 {
     public class GridCellCtrl : MonoBehaviour
     {
-        private BackgroundCellVisuals _backgroundCellVisuals;
-        private GrassLevel1Visuals _grassLevel1Visuals;
-        private GrassLevel2Visuals _grassLevel2Visuals;
-        private HoneyVisuals _honeyVisuals;
-        private ScalableVisuals _scalableVisuals;
+        private CmpBackgroundCellVisuals _backgroundCellVisuals;
+        private CmpGrassLevel1Visuals _grassLevel1Visuals;
+        private CmpGrassLevel2Visuals _grassLevel2Visuals;
+        private CmpHoneyVisuals _honeyVisuals;
+        private CmpScalableVisuals _scalableVisuals;
         private float _animSpeed;
 
         public void InitHierarchy(float animSpeed)
         {
-            _backgroundCellVisuals = GetComponentInChildren<BackgroundCellVisuals>(true);
+            _backgroundCellVisuals = GetComponentInChildren<CmpBackgroundCellVisuals>(true);
             if (_backgroundCellVisuals == null) throw new System.Exception("no BackgroundCellVisuals");
-            _grassLevel1Visuals = GetComponentInChildren<GrassLevel1Visuals>(true);
+            _grassLevel1Visuals = GetComponentInChildren<CmpGrassLevel1Visuals>(true);
             if (_grassLevel1Visuals == null) throw new System.Exception("no GrassLevel1Visuals");
-            _grassLevel2Visuals = GetComponentInChildren<GrassLevel2Visuals>(true);
+            _grassLevel2Visuals = GetComponentInChildren<CmpGrassLevel2Visuals>(true);
             if (_grassLevel2Visuals == null) throw new System.Exception("no GrassLevel2Visuals");
-            _honeyVisuals = GetComponentInChildren<HoneyVisuals>(true);
+            _honeyVisuals = GetComponentInChildren<CmpHoneyVisuals>(true);
             if (_honeyVisuals == null) throw new System.Exception("no HoneyVisuals");
-            _scalableVisuals = GetComponentInChildren<ScalableVisuals>(true);
+            _scalableVisuals = GetComponentInChildren<CmpScalableVisuals>(true);
             if (_scalableVisuals == null) throw new System.Exception("no ScalableVisuals");
             _animSpeed = animSpeed;
 
