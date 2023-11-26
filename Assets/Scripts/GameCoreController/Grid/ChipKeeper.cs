@@ -173,7 +173,7 @@ namespace GameCoreController
             var emptyGridCells = new List<GridCell>();
             foreach (GridCell cell_i in _gridCells)
             {
-                if (cell_i.IsEmpty() && cell_i.IsEnabled())
+                if (cell_i.IsEmpty() && cell_i.IsEnabled() && !cell_i.IsHoney())
                 {
                     emptyGridCells.Add(cell_i);
                 }
@@ -305,7 +305,7 @@ namespace GameCoreController
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                else if (!cell_i.IsEnabled())
+                else if (!cell_i.IsEnabled() || cell_i.IsHoney())
                 {
                     // We cannot merge with a disabled cell
                     if (i + 1 == candidateIdx)

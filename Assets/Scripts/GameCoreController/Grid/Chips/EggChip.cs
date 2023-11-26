@@ -1,11 +1,11 @@
 
 namespace GameCoreController
 {
-    public class StoneChip : AChip
+    public class EggChip : AChip
     {
         private int _health;
 
-        public StoneChip(int health)
+        public EggChip(int health)
         {
             _health = health;
         }
