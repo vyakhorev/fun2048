@@ -294,7 +294,7 @@ namespace GameCoreController
             {
                 gridCellCtrl.SetGrassLevel1(tweenSeq);
             }
-            else if (grassHealthChangeEffect.HealthLevel == 2)
+            else if (grassHealthChangeEffect.HealthLevel >= 2)
             {
                 gridCellCtrl.SetGrassLevel2(tweenSeq);
             } else
@@ -311,7 +311,7 @@ namespace GameCoreController
             {
                 gridCellCtrl.RemoveHoney(tweenSeq);
             }
-            else if (honeyHealthChangeEffect.HealthLevel == 1)
+            else if (honeyHealthChangeEffect.HealthLevel >= 1)
             {
                 gridCellCtrl.SetHoney(tweenSeq);
             }

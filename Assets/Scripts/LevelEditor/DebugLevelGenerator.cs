@@ -36,6 +36,31 @@ namespace LevelEditor
             File.WriteAllText(saveFile, jsonString);
             Debug.Log("Saving " + saveFile);
 
+            jsonString = JsonUtility.ToJson(Level4());
+            saveFile = Application.persistentDataPath + "/level4.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
+            jsonString = JsonUtility.ToJson(Level5());
+            saveFile = Application.persistentDataPath + "/level5.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
+            jsonString = JsonUtility.ToJson(Level6());
+            saveFile = Application.persistentDataPath + "/level6.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
+            jsonString = JsonUtility.ToJson(Level7());
+            saveFile = Application.persistentDataPath + "/level7.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
+            jsonString = JsonUtility.ToJson(Level8());
+            saveFile = Application.persistentDataPath + "/level8.json";
+            File.WriteAllText(saveFile, jsonString);
+            Debug.Log("Saving " + saveFile);
+
         }
 
         public static BoardData Level0()
@@ -408,9 +433,7 @@ namespace LevelEditor
                     IsEnabled = false,
                 }
             };
-
             return boardData;
-
         }
 
 
@@ -444,9 +467,174 @@ namespace LevelEditor
                     Health = 1
                 }
             };
+            return boardData;
+        }
+
+        public static BoardData Level4()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+
+            boardData.StoneChipList = new List<StoneChipData>
+            {
+                new StoneChipData {
+                    Coords = new Vector2Int(0,0),
+                    Health = 3
+                },
+
+                new StoneChipData {
+                    Coords = new Vector2Int(1,1),
+                    Health = 3
+                },
+
+                new StoneChipData {
+                    Coords = new Vector2Int(0,1),
+                    Health = 3
+                },
+
+                new StoneChipData {
+                    Coords = new Vector2Int(1,0),
+                    Health = 3
+                }
+            };
 
             return boardData;
+        }
 
+        public static BoardData Level5()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+
+            boardData.EggChipList = new List<EggChipData>
+            {
+                new EggChipData {
+                    Coords = new Vector2Int(0,0),
+                    Health = 3
+                },
+
+                new EggChipData {
+                    Coords = new Vector2Int(1,1),
+                    Health = 3
+                },
+
+                new EggChipData {
+                    Coords = new Vector2Int(0,1),
+                    Health = 3
+                },
+
+                new EggChipData {
+                    Coords = new Vector2Int(1,0),
+                    Health = 3
+                }
+            };
+
+            return boardData;
+        }
+
+        public static BoardData Level6()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(0,0),
+                    GrassHealth = 5,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,1),
+                    GrassHealth = 5,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,2),
+                    GrassHealth = 5,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(3,3),
+                    GrassHealth = 5,
+                    HoneyHealth = 1,
+                    IsEnabled = true,
+                }
+            };
+
+            return boardData;
+        }
+
+        public static BoardData Level7()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+
+            boardData.GridCellList = new List<GridCellData>
+            {
+                new GridCellData {
+                    Coords = new Vector2Int(2,1),
+                    GrassHealth = 5,
+                    HoneyHealth = 5,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,1),
+                    GrassHealth = 5,
+                    HoneyHealth = 5,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(2,2),
+                    GrassHealth = 5,
+                    HoneyHealth = 5,
+                    IsEnabled = true,
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(1,2),
+                    GrassHealth = 5,
+                    HoneyHealth = 5,
+                    IsEnabled = true,
+                }
+            };
+
+            return boardData;
+        }
+
+        public static BoardData Level8()
+        {
+            // Default level
+            BoardData boardData = new BoardData();
+            boardData.BoardSize = new Vector2Int(4, 4);
+
+            boardData.NumberChipList = new List<NumberChipData>
+            {
+                new NumberChipData {
+                    Coords = new Vector2Int(2,1),
+                    NumberValue = 512
+                },
+                new NumberChipData {
+                    Coords = new Vector2Int(1,1),
+                    NumberValue = 512
+                },
+                new NumberChipData {
+                    Coords = new Vector2Int(2,2),
+                    NumberValue = 512
+                },
+                new NumberChipData {
+                    Coords = new Vector2Int(1,2),
+                    NumberValue = 512
+                }
+            };
+
+            return boardData;
         }
 
     }
