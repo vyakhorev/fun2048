@@ -25,14 +25,21 @@ namespace GameCoreController
         public void Init(ChipProducer chipProducer)
         {
             _enquedSwipes = new List<GridDirection>();
-            _readyToPlay = false;
+            
             _chipProducer = chipProducer;
+            _chip2048Game = new Chip2048Game();
+
+            _numberViews = new Dictionary<int, ChipCtrl>();
+            _gridCellViews = new Dictionary<Vector2Int, GridCellCtrl>();
+            _readyToPlay = false;
+
         }
 
         public void StartNewGame(BoardData boardData)
         {
+            ClearBoard();
+
             var boardSize = boardData.BoardSize;
-            _chip2048Game = new Chip2048Game(boardSize.x, boardSize.y);
             _chip2048Game.ResetGame(boardData);
             _chipProducer.InitNewGame(boardSize);
 
@@ -176,7 +183,7 @@ namespace GameCoreController
             chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
-        private void ResetBoard(BoardResetEffect boardResetEffect)
+        private void ClearBoard()
         {
             foreach (KeyValuePair<int, ChipCtrl> entry in _numberViews)
             {
@@ -190,6 +197,11 @@ namespace GameCoreController
                 entry.Value.gameObject.SetActive(false);  // Return to the pool
             }
             _gridCellViews.Clear();
+        }
+
+        private void ResetBoard(BoardResetEffect boardResetEffect)
+        {
+            ClearBoard();
 
             Vector2Int bs = _chip2048Game.GetBoardSize();
             for (int x = 0; x < bs.x; x++)

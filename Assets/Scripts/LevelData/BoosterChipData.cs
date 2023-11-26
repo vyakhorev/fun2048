@@ -8,7 +8,7 @@ namespace LevelData
     [Serializable]
     public class BoosterChipData
     {
-        public Vector2Int Coords { get; set; }
+        public Vector2Int Coords;
 
     }
 }

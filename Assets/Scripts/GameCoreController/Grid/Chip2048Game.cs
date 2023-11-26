@@ -11,15 +11,9 @@ namespace GameCoreController
      */
     public class Chip2048Game
     {
-        private readonly ChipKeeper _chipKeeper;
+        private ChipKeeper _chipKeeper;
         private Vector2Int _boardSize;
         private int _lastChipId;
-
-        public Chip2048Game(int x, int y)
-        {
-            _chipKeeper = new ChipKeeper(x, y);
-            _boardSize = new Vector2Int(x, y);
-        }
 
         public Vector2Int GetBoardSize()
         {
@@ -28,6 +22,9 @@ namespace GameCoreController
 
         public void ResetGame(BoardData boardData)
         {
+            var boardSize = boardData.BoardSize;
+            _chipKeeper = new ChipKeeper(boardSize.x, boardSize.y);
+            _boardSize = new Vector2Int(boardSize.x, boardSize.y);
             _chipKeeper.ResetCells(boardData);
             _lastChipId = 0;
             TrySpawnNewNumber();

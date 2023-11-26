@@ -13,9 +13,9 @@ namespace LevelData
     [Serializable]
     public class BoardData
     {
-        public Vector2Int BoardSize { get; set; }
-        public List<GridCellData> GridCellList { get; set; }
-        public List<NumberChipData> NumberChipList { get; set; }
-        public List<BoosterChipData> BoosterChipList { get; set; }
+        public Vector2Int BoardSize;
+        public List<GridCellData> GridCellList;
+        public List<NumberChipData> NumberChipList;
+        public List<BoosterChipData> BoosterChipList;
     }
 }

@@ -8,8 +8,8 @@ namespace LevelData
     [Serializable]
     public class NumberChipData
     {
-        public Vector2Int Coords { get; set; }
-        public int NumberValue {  get; set; }
+        public Vector2Int Coords;
+        public int NumberValue;
 
     }
 }
