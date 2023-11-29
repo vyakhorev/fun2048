@@ -9,7 +9,6 @@ namespace Mocked2048Game
      */
     public class GameAssetsManager : MonoBehaviour
     {
-
         [SerializeField] private GameObject _numberChipPrefab;
         [SerializeField] private GameObject _gridCellPrefab;
         [SerializeField] private SOBoardVisualStyle _SOBoardVisualStyle;
@@ -35,6 +34,5 @@ namespace Mocked2048Game
         {
             return _SOBoardVisualStyle;
         }
-
     }
 }
