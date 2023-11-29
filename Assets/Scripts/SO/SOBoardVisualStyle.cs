@@ -5,7 +5,10 @@ using Utility.DataStructures;
 [CreateAssetMenu(menuName = "Fun2048/Grid/Board visual style")]
 public class SOBoardVisualStyle : ScriptableObject
 {
-    public NumberVisualsMap NumberVisualStyles;
+    [SerializeField]
+    private NumberVisualsMap _numberVisualStyles;
+
+    public SONumberVisualStyle GetNumberVisualStyle(int number) => _numberVisualStyles[number];
 }
 
 [System.Serializable]

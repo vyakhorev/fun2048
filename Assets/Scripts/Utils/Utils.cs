@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Fun2048
+namespace Utils
 {
-    public class Utils
+    public class UtilFunc
     {
         public static Vector3 ScreenToWorld(Camera camera, Vector3 position)
         {
