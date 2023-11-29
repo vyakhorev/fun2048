@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3dab5ab60a51345aa9e0632e7a0373, type: 3}
   m_Name: Chip128
   m_EditorClassIdentifier: 
-  _chipColor: {r: 0, g: 0, b: 0, a: 0}
-  _fontColor: {r: 0, g: 0, b: 0, a: 0}
+  _chipColor: {r: 0.098039225, g: 0.32156864, b: 0.69803923, a: 1}
+  _fontColor: {r: 1, g: 1, b: 1, a: 1}
