@@ -9,17 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e91a1dc3af5e4943a2eb2eb3a625c1b, type: 3}
+  m_Script: {fileID: 11500000, guid: ce3dab5ab60a51345aa9e0632e7a0373, type: 3}
   m_Name: Chip32
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  _chipColor: {r: 0.2509804, g: 0.5137255, b: 0.78823537, a: 1}
-  _fontColor: {r: 1, g: 1, b: 1, a: 1}
+  _chipColor: {r: 0, g: 0, b: 0, a: 0}
+  _fontColor: {r: 0, g: 0, b: 0, a: 0}

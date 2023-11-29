@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using VisualSO;
 
 namespace Mocked2048Game
 {

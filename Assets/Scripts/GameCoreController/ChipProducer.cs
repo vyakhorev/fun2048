@@ -1,9 +1,5 @@
 using Pooling;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
-using VisualSO;
 
 namespace GameCoreController
 {
@@ -164,7 +160,7 @@ namespace GameCoreController
 
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
-            SONumberVisualStyle style = _soBoardVisualStyle.NumberVisualStyles[val];
+            SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
             chipCtrl.SetNumber(val);
             chipCtrl.SetColor(style.ChipColor);
         }
@@ -185,7 +181,5 @@ namespace GameCoreController
                 Mathf.RoundToInt((worldPosition.y + _vertAlgn - _cellSize) / _cellSize)
             );
         }
-
-
     }
 }
