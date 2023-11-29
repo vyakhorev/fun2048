@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Fun2048
+namespace GameInput
 {
 
     public class GameInputWiring : MonoBehaviour
@@ -12,17 +12,18 @@ namespace Fun2048
         public delegate void EndTouch(Vector2 postion, float time);
         public event StartTouch OnEndTouch;
 
+        public delegate void OnSwipe(object sender, SwipeEventArgs e);
+        public event OnSwipe OnSwipeEvent;
+
         private GameControls _gameControls;
-        private InputContext _inputContext;
         private Camera _mainCamera;
 
 
-        public void Init(InputContext inputContext)
+        public void Init()
         {
             _gameControls = new GameControls();
             _gameControls.Enable();
             _mainCamera = Camera.main;
-            _inputContext = inputContext;
         }
 
         private void OnDisable()
@@ -52,8 +53,7 @@ namespace Fun2048
 
         private void OnLeft(InputAction.CallbackContext ctx)
         {
-            InputEntity inputEntity = _inputContext.CreateEntity();
-            inputEntity.AddSwipeAction(Fun2048.GridDirection.LEFT);
+            OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.LEFT));
         }
 
         private void OnLeftCancelled(InputAction.CallbackContext ctx)
@@ -63,8 +63,7 @@ namespace Fun2048
 
         private void OnRight(InputAction.CallbackContext ctx)
         {
-            InputEntity inputEntity = _inputContext.CreateEntity();
-            inputEntity.AddSwipeAction(Fun2048.GridDirection.RIGHT);
+            OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.RIGHT));
         }
 
         private void OnRightCancelled(InputAction.CallbackContext ctx)
@@ -74,8 +73,7 @@ namespace Fun2048
 
         private void OnUp(InputAction.CallbackContext ctx)
         {
-            InputEntity inputEntity = _inputContext.CreateEntity();
-            inputEntity.AddSwipeAction(Fun2048.GridDirection.UP);
+            OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.UP));
         }
 
         private void OnUpCancelled(InputAction.CallbackContext ctx)
@@ -85,8 +83,7 @@ namespace Fun2048
 
         private void OnDown(InputAction.CallbackContext ctx)
         {
-            InputEntity inputEntity = _inputContext.CreateEntity();
-            inputEntity.AddSwipeAction(Fun2048.GridDirection.DOWN);
+            OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.DOWN));
         }
 
         private void OnDownCancelled(InputAction.CallbackContext ctx)
@@ -96,30 +93,24 @@ namespace Fun2048
 
         private void StartTouchPrimary(InputAction.CallbackContext ctx)
         {
-            if (OnStartTouch != null)
-            {
-                OnStartTouch(
-                    PrimaryPosition(),
-                    (float)ctx.startTime
-                );
-            }
+            OnStartTouch?.Invoke(
+                PrimaryPosition(),
+                (float)ctx.startTime
+            );
 
         }
 
         private void EndTouchPrimary(InputAction.CallbackContext ctx)
         {
-            if (OnEndTouch != null)
-            {
-                OnEndTouch(
-                    PrimaryPosition(),
-                    (float)ctx.time
-                );
-            }
+            OnEndTouch?.Invoke(
+                PrimaryPosition(),
+                (float)ctx.time
+            );
         }
 
         public Vector2 PrimaryPosition()
         {
-            return Utils.ScreenToWorld(
+            return Utils.UtilFunc.ScreenToWorld(
                 _mainCamera,
                 _gameControls.SwipeMap.PrimaryPosition.ReadValue<Vector2>()
             );

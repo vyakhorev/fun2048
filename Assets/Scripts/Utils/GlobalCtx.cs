@@ -1,6 +1,6 @@
 using System;
 
-namespace Fun2048
+namespace Utils
 {
 	public class GlobalCtx
 	{

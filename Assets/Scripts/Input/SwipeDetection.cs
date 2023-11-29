@@ -1,10 +1,12 @@
+
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Fun2048
+namespace GameInput
 {
+
     public class SwipeDetection : MonoBehaviour
     {
 
@@ -12,18 +14,22 @@ namespace Fun2048
         [SerializeField] private float _maximumTime = 1f;
         [SerializeField, Range(0f, 1f)] private float _directionThreshold = .9f;
 
+        public delegate void OnSwipe(object sender, SwipeEventArgs e);
+        public event OnSwipe OnSwipeEvent;
+
+        public delegate void OnTap(object sender, TapEventArgs e);
+        public event OnTap OnTapEvent;
+
         private GameInputWiring _gameInputWiring;
-        private InputContext _inputContext;
         private Vector2 _startPosition;
         private float _startTime;
         private Vector2 _endPosition;
         private float _endTime;
 
 
-        public void Init(GameInputWiring gameInputWiring, InputContext inputContext)
+        public void Init(GameInputWiring gameInputWiring)
         {
             _gameInputWiring = gameInputWiring;
-            _inputContext = inputContext;
             _gameInputWiring.OnStartTouch += SwipeStart;
             _gameInputWiring.OnEndTouch += SwipeEnd;
         }
@@ -54,33 +60,38 @@ namespace Fun2048
             {
                 Vector3 direction = _endPosition - _startPosition;
                 Vector2 direction2D = new Vector2(direction.x, direction.y).normalized;
-                SwipeDirection(direction2D);
+                InvokeSwipe(direction2D);
+            } else
+            {
+                InvokeTap(_endPosition);
             }
         }
 
-        private void SwipeDirection(Vector2 direction)
+        private void InvokeSwipe(Vector2 direction)
         {
             if (Vector2.Dot(Vector2.up, direction) > _directionThreshold)
             {
-                InputEntity inputEntity = _inputContext.CreateEntity();
-                inputEntity.AddSwipeAction(Fun2048.GridDirection.UP);
+                OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.UP));
             }
             else if (Vector2.Dot(Vector2.down, direction) > _directionThreshold)
             {
-                InputEntity inputEntity = _inputContext.CreateEntity();
-                inputEntity.AddSwipeAction(Fun2048.GridDirection.DOWN);
+                OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.DOWN));
             }
             else if (Vector2.Dot(Vector2.left, direction) > _directionThreshold)
             {
-                InputEntity inputEntity = _inputContext.CreateEntity();
-                inputEntity.AddSwipeAction(Fun2048.GridDirection.LEFT);
+                OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.LEFT));
             }
             else if (Vector2.Dot(Vector2.right, direction) > _directionThreshold)
             {
-                InputEntity inputEntity = _inputContext.CreateEntity();
-                inputEntity.AddSwipeAction(Fun2048.GridDirection.RIGHT);
+                OnSwipeEvent?.Invoke(this, new SwipeEventArgs(SwipeDirection.RIGHT));
             }
         }
+
+        private void InvokeTap(Vector2 pos)
+        {
+            OnTapEvent?.Invoke(this, new TapEventArgs(pos));
+        }
+
 
     }
 

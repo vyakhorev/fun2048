@@ -5,6 +5,12 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   isPreloaded: 0
+<<<<<<<< HEAD:Assets/Plugins/Demigiant/DOTween/DOTween.dll.meta
+========
+  isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
+>>>>>>>> e97534e37fc3f7bad65df989a5d306d74380bb3a:Assets/DesperateDevs/DesperateDevs.Logging.dll.meta
   platformData:
     Any:
       enabled: 1
