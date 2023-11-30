@@ -1,11 +1,11 @@
-using Pooling;
+using LegacyPooling;
 using UnityEngine;
+using SO2048;
 
 namespace GameCoreController
 {
     /*
      * Helps with setting up new chips
-     * TODO - move object pools here and make this thing responsible
      * for all construction / destruction. 
      */
     public class ChipProducer
@@ -28,14 +28,12 @@ namespace GameCoreController
         public void Init(
             Camera camera,
             Transform boardParentTransform,
-            GameObject chipPrefab,
-            GameObject gridCellPrefab,
             SOBoardVisualStyle soBoardVisualStyle)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
-            _gridCellPrefab = gridCellPrefab;
-            _chipPrefab = chipPrefab;
+            _gridCellPrefab = soBoardVisualStyle.GridCellPrefab;
+            _chipPrefab = soBoardVisualStyle.ChipPrefab;
 
             _pool = new GameObjectPools(boardParentTransform, 10);
             // Warm-up pools
@@ -160,9 +158,9 @@ namespace GameCoreController
 
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
-            SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
-            chipCtrl.SetNumber(val);
-            chipCtrl.SetColor(style.ChipColor);
+            //SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
+            //chipCtrl.SetNumber(val);
+            //chipCtrl.SetColor(style.ChipColor);
         }
 
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)

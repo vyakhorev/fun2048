@@ -12,17 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17b94c232dc31b4c944c042e5af6994, type: 3}
   m_Name: BoardStyle
   m_EditorClassIdentifier: 
-  _numberVisualStyles:
-    _keys: 0200000004000000080000001000000020000000400000008000000000010000000200000004000000080000
-    _values:
-    - {fileID: 11400000, guid: d86ca12d8c2a12f47b5e28a20209b0bf, type: 2}
-    - {fileID: 11400000, guid: 20e3a682c7da0254f931f95a037d2c22, type: 2}
-    - {fileID: 11400000, guid: e876cfa938a36854994afef8ed1b8447, type: 2}
-    - {fileID: 11400000, guid: dd48c84bc4c6e6743be1182feb9277e5, type: 2}
-    - {fileID: 11400000, guid: 2ed3edc2d93659d4090687435f38a489, type: 2}
-    - {fileID: 11400000, guid: de2172365f76c004099fd3ee80b06afb, type: 2}
-    - {fileID: 11400000, guid: e29b8539507dbae47b7a1b11caa8d7ca, type: 2}
-    - {fileID: 11400000, guid: 21d167f887c52e04bb877b0d94a0449c, type: 2}
-    - {fileID: 11400000, guid: c6d533646bd52c347bb9ed6452c6e998, type: 2}
-    - {fileID: 11400000, guid: e059cac48961b47498b9380760e04cd3, type: 2}
-    - {fileID: 11400000, guid: 04ac378e0741e684f87448cb09d7c87a, type: 2}
+  _gridCellPrefab: {fileID: 2071167164263788559, guid: eff1fa47a9260014597db5950cb1d07a, type: 3}
+  _chipPrefab: {fileID: 6561309693693946282, guid: fc9223ba510a11545a8ab97056c79ecb, type: 3}
+  _animSpeed: 0.2

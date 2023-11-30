@@ -9,9 +9,9 @@ using LevelData;
  */
 namespace GameCoreController
 {
-    public class BoardController : MonoBehaviour
+    public class BoardController
     {
-        [SerializeField] private float _animSpeed = 0.1f;
+        private float _animSpeed = 0.1f;
 
         private Chip2048Game _chip2048Game;
 
@@ -65,7 +65,7 @@ namespace GameCoreController
             _enquedTaps.Add(tapLogicalPosition);
         }
 
-        public void Update()
+        public void DoUpdate()
         {
             if (!_readyToPlay) return;
            
@@ -231,7 +231,7 @@ namespace GameCoreController
             chipCtrl.gameObject.SetActive(false);  // Return to the pool
         }
 
-        private void ClearBoard()
+        public void ClearBoard()
         {
             foreach (KeyValuePair<int, ChipCtrl> entry in _chipViews)
             {

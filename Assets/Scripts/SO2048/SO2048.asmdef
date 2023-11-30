@@ -1,0 +1,16 @@
+{
+    "name": "SO2048",
+    "rootNamespace": "SO2048",
+    "references": [
+        "GUID:e8e930331984eab4fbd0c8edd10b595d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

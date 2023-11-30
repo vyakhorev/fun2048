@@ -281,7 +281,7 @@ namespace GameCoreController
                 return null;
             }
 
-            int rndIdx = Utils.GlobalCtx
+            int rndIdx = CoreUtils.GlobalCtx
                 .Instance
                 .GetRandom()
                 .Next(emptyGridCells.Count);
