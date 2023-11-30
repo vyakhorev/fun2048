@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LevelData;
-using LevelEditor;
 
 namespace GameCoreController
 {
@@ -14,6 +13,8 @@ namespace GameCoreController
         {
             // Start2048Game / Restart2048Game / End2048Game
             _levelController.Start2048Game(LevelsMadeByUra.Level0());
+            // _levelController.Restart2048Game();
+            // _levelController.End2048Game();
         }
     }
 }

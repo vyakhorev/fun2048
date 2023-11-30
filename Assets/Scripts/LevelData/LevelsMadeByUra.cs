@@ -2,10 +2,10 @@ using LevelData;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LevelEditor
+namespace LevelData
 {
     /*
-     * Dummy level controller for core gameplay debug
+     * Game levels
      */
     public class LevelsMadeByUra
     {
