@@ -14,5 +14,10 @@ namespace Utility.Services
         {
             return UnityEngine.Resources.Load<T>(path);
         }
+
+        public T[] LoadAll<T>(string path) where T : Object
+        {
+            return UnityEngine.Resources.LoadAll<T>(path);
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Meta.Level;
 using Utility.Services;
 using VContainer;
 using VContainer.Unity;
@@ -16,6 +17,7 @@ namespace Bootstrap
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<LoadingService>(Lifetime.Scoped);
+            builder.Register<LevelService>(Lifetime.Singleton);
             builder.Register<AudioService>(Lifetime.Singleton);
             builder.RegisterEntryPoint<BootstrapFlow>();
         }
