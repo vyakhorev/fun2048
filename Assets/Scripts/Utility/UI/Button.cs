@@ -32,5 +32,11 @@ namespace Utility.UI
             _currentTween?.Complete();
             _currentTween = _outTransition.Play(transform);
         }
+
+        private void OnDestroy()
+        {
+            _currentTween?.Kill();
+            _currentTween = null;
+        }
     }
 }
