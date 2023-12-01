@@ -1,7 +1,10 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace GameCoreController
 {
@@ -11,14 +14,13 @@ namespace GameCoreController
     public class ChipCtrl : MonoBehaviour
     {
         private CmpNumberChipVisuals _numberChipVisuals;
-        private TextMesh _numberTextMesh;
-        private SpriteRenderer _numberSpriteRenderer;
+        private Dictionary<int, GameObject> _numbers;
 
         private CmpStoneChipVisuals _stoneChipVisuals;
         private CmpEggChipVisuals _eggChipVisuals;
         private CmpBubbleChipVisuals _bubbleChipVisuals;
         private CmpBoosterChipVisuals _boosterChipVisuals;
-
+        
         public void Awake()
         {
             InitHierarchy();
@@ -28,8 +30,7 @@ namespace GameCoreController
         {
             _numberChipVisuals = GetComponentInChildren<CmpNumberChipVisuals>(true);
             if (_numberChipVisuals == null) throw new System.Exception("no CmpNumberChipVisuals");
-            _numberTextMesh = _numberChipVisuals.GetComponentInChildren<TextMesh>();
-            _numberSpriteRenderer = _numberChipVisuals.GetComponentInChildren<SpriteRenderer>();
+            CacheNumberVisuals();
 
             _stoneChipVisuals = GetComponentInChildren<CmpStoneChipVisuals>(true);
             if (_stoneChipVisuals == null) throw new System.Exception("no CmpStoneChipVisuals");
@@ -41,14 +42,35 @@ namespace GameCoreController
             if (_boosterChipVisuals == null) throw new System.Exception("no CmpBoosterChipVisuals");
         }
 
-        public void SetNumber(int number)
+        private void CacheNumberVisuals()
         {
-            _numberTextMesh.text = number.ToString();
+            _numbers = new Dictionary<int, GameObject>();
+            foreach (Transform numberRerpr in _numberChipVisuals.transform)
+            {
+                try
+                {
+                    int numb = Int32.Parse(numberRerpr.gameObject.name);
+                    _numbers[numb] = numberRerpr.gameObject;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"Unable to parse '{numberRerpr.gameObject.name}'");
+                }
+            }
         }
 
-        public void SetColor(Color color)
+        public void SetNumber(int number)
         {
-            _numberSpriteRenderer.color = color;
+            foreach (KeyValuePair<int, GameObject> entry in _numbers)
+            {
+                if (entry.Key == number)
+                {
+                    entry.Value.SetActive(true);
+                } else
+                {
+                    entry.Value.SetActive(false);
+                }
+            }
         }
 
         public void SpawnAsNumber()

@@ -40,16 +40,17 @@ namespace GameCoreController
             int seed = Guid.NewGuid().GetHashCode();
             _globalCtx = new GlobalCtx(seed);
 
+            _lastGameData = levelData;
+
             _chipProducer = new ChipProducer();
             _chipProducer.Init(
                 Camera.main,
                 _gameGridHolder,
                 _SOBoardVisualStyle
             );
-
-            _lastGameData = levelData;
-
+            
             _boardController = new BoardController();
+            _boardController.Init(_chipProducer);
 
             _gameInputWiring = gameObject.AddComponent<GameInputWiring>();
             _gameInputWiring.Init();
@@ -61,7 +62,6 @@ namespace GameCoreController
             _swipeDetection.OnTapEvent += OnTapped;
 
             _boardController.StartNewGame(_lastGameData.Board);
-
         }
 
         /*

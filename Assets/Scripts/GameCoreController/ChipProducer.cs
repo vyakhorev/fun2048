@@ -40,11 +40,11 @@ namespace GameCoreController
             _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
             _pool.EnsurePoolDefinition(_chipPrefab, 64);
 
-            CmpNumberChipVisuals numVis = _chipPrefab.GetComponentInChildren<CmpNumberChipVisuals>();
-            SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>();
+            CmpNumberChipVisuals numVis = _chipPrefab.GetComponentInChildren<CmpNumberChipVisuals>(true);
+            SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>(true);
 
             float imageScale = Mathf.Min(
-                numSr.transform.localScale.x, 
+                numSr.transform.localScale.x,
                 numSr.transform.localScale.y
             );
             _numberChipSpriteSize = Mathf.Max(
@@ -158,6 +158,7 @@ namespace GameCoreController
 
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
+            chipCtrl.SetNumber(val);
             //SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
             //chipCtrl.SetNumber(val);
             //chipCtrl.SetColor(style.ChipColor);
