@@ -6,9 +6,9 @@ using UnityEngine;
 namespace LevelData
 {
     [Serializable]
-    public class StoneChipData
+    public class BombChipData
     {
         public Vector2Int Coords;
-        public int Health;
+
     }
 }

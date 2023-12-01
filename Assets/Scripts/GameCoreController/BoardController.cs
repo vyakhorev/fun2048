@@ -11,8 +11,6 @@ namespace GameCoreController
 {
     public class BoardController
     {
-        private float _animSpeed = 0.1f;
-
         private Chip2048Game _chip2048Game;
 
         private List<GridDirection> _enquedSwipes;
@@ -190,9 +188,9 @@ namespace GameCoreController
                 );
                 _chipViews[chId] = chipCtrl;
             }
-            else if (chipSpawnedEffect.SpawnedChip is StoneChip stoneChip)
+            else if (chipSpawnedEffect.SpawnedChip is BoxChip stoneChip)
             {
-                ChipCtrl chipCtrl = _chipProducer.SpawnStoneChip(
+                ChipCtrl chipCtrl = _chipProducer.SpawnBoxChip(
                     chipSpawnedEffect.Coords,
                     stoneChip.GetHealth()
                 );
@@ -260,7 +258,7 @@ namespace GameCoreController
                         new Vector2Int(x, y)
                     );
                     _gridCellViews[new Vector2Int(x, y)] = gridCellCtrl;
-                    gridCellCtrl.InitHierarchy(_animSpeed);
+                    gridCellCtrl.InitHierarchy(_chipProducer.GetAnimSpeed());
                 }
             }
 
@@ -331,7 +329,7 @@ namespace GameCoreController
                 0f,
                 chipCtrl.transform.DOScale(
                     Vector3.one,
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
 
@@ -346,7 +344,7 @@ namespace GameCoreController
                 0f,
                 chipCtrl.transform.DOScale(
                     Vector3.zero,
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
         }
@@ -360,7 +358,7 @@ namespace GameCoreController
                 0f,
                 chipCtrl.transform.DOMove(
                     _chipProducer.LogicalToWorld(chipMoveEffect.PointTo),
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
         }
@@ -375,7 +373,7 @@ namespace GameCoreController
                 0f,
                 chipCtrlTo.transform.DOScale(
                     Vector3.zero,
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
 
@@ -394,14 +392,14 @@ namespace GameCoreController
                 0f,
                 chipCtrl.transform.DOScale(
                     1.2f * Vector3.one,
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
             tweenSeq.Insert(
-                _animSpeed,
+                _chipProducer.GetAnimSpeed(),
                 chipCtrl.transform.DOScale(
                     Vector3.one,
-                    _animSpeed
+                    _chipProducer.GetAnimSpeed()
                 )
             );
         }

@@ -6,9 +6,9 @@ using UnityEngine;
 namespace LevelData
 {
     [Serializable]
-    public class BoosterChipData
+    public class BoxChipData
     {
         public Vector2Int Coords;
-
+        public int Health;
     }
 }

@@ -61,6 +61,11 @@ namespace GameCoreController
 
         }
 
+        public float GetAnimSpeed()
+        {
+            return _soBoardVisualStyle.AnimSpeed;
+        }
+
         public void InitNewGame(Vector2Int boardSize)
         {
 
@@ -105,10 +110,10 @@ namespace GameCoreController
             return chipCtrl;
         }
 
-        public ChipCtrl SpawnStoneChip(Vector2Int logicalPosition, int health)
+        public ChipCtrl SpawnBoxChip(Vector2Int logicalPosition, int health)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsStone();
+            chipCtrl.SpawnAsBox();
             return chipCtrl;
         }
 
@@ -129,7 +134,7 @@ namespace GameCoreController
         public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBooster();
+            chipCtrl.SpawnAsBomb();
             return chipCtrl;
         }
 
@@ -159,9 +164,6 @@ namespace GameCoreController
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
             chipCtrl.SetNumber(val);
-            //SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
-            //chipCtrl.SetNumber(val);
-            //chipCtrl.SetColor(style.ChipColor);
         }
 
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)

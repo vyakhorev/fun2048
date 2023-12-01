@@ -1,10 +1,6 @@
-using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace GameCoreController
 {
@@ -16,10 +12,14 @@ namespace GameCoreController
         private CmpNumberChipVisuals _numberChipVisuals;
         private Dictionary<int, GameObject> _numbers;
 
-        private CmpStoneChipVisuals _stoneChipVisuals;
+        private CmpBoxChipVisuals _boxChipVisuals;
+        private Dictionary<int, GameObject> _boxByHealh;
+        
         private CmpEggChipVisuals _eggChipVisuals;
+        private Dictionary<int, GameObject> _eggByHealh;
+
         private CmpBubbleChipVisuals _bubbleChipVisuals;
-        private CmpBoosterChipVisuals _boosterChipVisuals;
+        private CmpBombChipVisuals _bombChipVisuals;
         
         public void Awake()
         {
@@ -32,14 +32,18 @@ namespace GameCoreController
             if (_numberChipVisuals == null) throw new System.Exception("no CmpNumberChipVisuals");
             CacheNumberVisuals();
 
-            _stoneChipVisuals = GetComponentInChildren<CmpStoneChipVisuals>(true);
-            if (_stoneChipVisuals == null) throw new System.Exception("no CmpStoneChipVisuals");
+            _boxChipVisuals = GetComponentInChildren<CmpBoxChipVisuals>(true);
+            if (_boxChipVisuals == null) throw new System.Exception("no CmpStoneChipVisuals");
+            CacheBoxChipVisuals();
+
             _eggChipVisuals = GetComponentInChildren<CmpEggChipVisuals>(true);
             if (_eggChipVisuals == null) throw new System.Exception("no CmpEggChipVisuals");
+            CacheEggChipVisuals();
+
             _bubbleChipVisuals = GetComponentInChildren<CmpBubbleChipVisuals>(true);
             if (_bubbleChipVisuals == null) throw new System.Exception("no CmpBubbleChipVisuals");
-            _boosterChipVisuals = GetComponentInChildren<CmpBoosterChipVisuals>(true);
-            if (_boosterChipVisuals == null) throw new System.Exception("no CmpBoosterChipVisuals");
+            _bombChipVisuals = GetComponentInChildren<CmpBombChipVisuals>(true);
+            if (_bombChipVisuals == null) throw new System.Exception("no CmpBoosterChipVisuals");
         }
 
         private void CacheNumberVisuals()
@@ -55,6 +59,40 @@ namespace GameCoreController
                 catch (FormatException)
                 {
                     Console.WriteLine($"Unable to parse '{numberRerpr.gameObject.name}'");
+                }
+            }
+        }
+
+        private void CacheBoxChipVisuals()
+        {
+            _boxByHealh = new Dictionary<int, GameObject>();
+            foreach (Transform healthRepr in _boxChipVisuals.transform)
+            {
+                try
+                {
+                    int numb = Int32.Parse(healthRepr.gameObject.name);
+                    _boxByHealh[numb] = healthRepr.gameObject;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"Unable to parse '{healthRepr.gameObject.name}'");
+                }
+            }
+        }
+
+        private void CacheEggChipVisuals()
+        {
+            _eggByHealh = new Dictionary<int, GameObject>();
+            foreach (Transform healthRepr in _eggChipVisuals.transform)
+            {
+                try
+                {
+                    int numb = Int32.Parse(healthRepr.gameObject.name);
+                    _eggByHealh[numb] = healthRepr.gameObject;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"Unable to parse '{healthRepr.gameObject.name}'");
                 }
             }
         }
@@ -76,46 +114,47 @@ namespace GameCoreController
         public void SpawnAsNumber()
         {
             _numberChipVisuals.gameObject.SetActive(true);
-            _stoneChipVisuals.gameObject.SetActive(false);
+            _boxChipVisuals.gameObject.SetActive(false);
             _eggChipVisuals.gameObject.SetActive(false);
             _bubbleChipVisuals.gameObject.SetActive(false);
-            _boosterChipVisuals.gameObject.SetActive(false);
+            _bombChipVisuals.gameObject.SetActive(false);
         }
 
-        public void SpawnAsStone()
+        public void SpawnAsBox()
         {
             _numberChipVisuals.gameObject.SetActive(false);
-            _stoneChipVisuals.gameObject.SetActive(true);
+            _boxChipVisuals.gameObject.SetActive(true);
             _eggChipVisuals.gameObject.SetActive(false);
             _bubbleChipVisuals.gameObject.SetActive(false);
-            _boosterChipVisuals.gameObject.SetActive(false);
+            _bombChipVisuals.gameObject.SetActive(false);
         }
 
         public void SpawnAsEgg()
         {
             _numberChipVisuals.gameObject.SetActive(false);
-            _stoneChipVisuals.gameObject.SetActive(false);
+            _boxChipVisuals.gameObject.SetActive(false);
             _eggChipVisuals.gameObject.SetActive(true);
             _bubbleChipVisuals.gameObject.SetActive(false);
-            _boosterChipVisuals.gameObject.SetActive(false);
+            _bombChipVisuals.gameObject.SetActive(false);
         }
 
+        // Not in use
         public void SpawnAsBubble()
         {
             _numberChipVisuals.gameObject.SetActive(false);
-            _stoneChipVisuals.gameObject.SetActive(false);
+            _boxChipVisuals.gameObject.SetActive(false);
             _eggChipVisuals.gameObject.SetActive(false);
             _bubbleChipVisuals.gameObject.SetActive(true);
-            _boosterChipVisuals.gameObject.SetActive(false);
+            _bombChipVisuals.gameObject.SetActive(false);
         }
 
-        public void SpawnAsBooster()
+        public void SpawnAsBomb()
         {
             _numberChipVisuals.gameObject.SetActive(false);
-            _stoneChipVisuals.gameObject.SetActive(false);
+            _boxChipVisuals.gameObject.SetActive(false);
             _eggChipVisuals.gameObject.SetActive(false);
             _bubbleChipVisuals.gameObject.SetActive(false);
-            _boosterChipVisuals.gameObject.SetActive(true);
+            _bombChipVisuals.gameObject.SetActive(true);
         }
 
 

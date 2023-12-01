@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameCoreController
 {
-    public class CmpBoosterChipVisuals : MonoBehaviour
+    public class CmpBombChipVisuals : MonoBehaviour
     {
 
     }
