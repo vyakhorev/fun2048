@@ -13,6 +13,7 @@ namespace DebugCoreClient
         [SerializeField] private RectTransform _goalsGrid;
         [SerializeField] private GameObject _goalGridElementPrefab;
         [SerializeField] private TextMeshProUGUI _turnsLeftTMP;
+        [SerializeField] private RectTransform _boardSafeBounds;
         private Dictionary<string, GoalVisCntr> _goalVisuals;
 
         void Start()
@@ -44,6 +45,11 @@ namespace DebugCoreClient
 
         private void InitGoals()
         {
+            foreach (RectTransform child in _goalsGrid)
+            {
+                Destroy(child.gameObject);
+            }
+
             _goalVisuals = new Dictionary<string, GoalVisCntr>();
             foreach (var goalView in _levelController.GetBoardController().GetGoalViews())
             {

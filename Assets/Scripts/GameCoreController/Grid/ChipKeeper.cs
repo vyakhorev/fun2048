@@ -217,7 +217,7 @@ namespace GameCoreController
 
             GridCell cell = _gridCells[at.x, at.y];
 
-            return true;
+            return false;
 
         }
 

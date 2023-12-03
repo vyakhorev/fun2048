@@ -29,10 +29,13 @@ namespace GameCoreController
 
         private List<AGridEffect> _effects;
 
+        private bool _gameWon;
+
         public void Init()
         {
             _numberComb = new Dictionary<int, int>();
             _effects = new List<AGridEffect>();
+            _gameWon = false;
         }
 
         public void AccountForEffect(AGridEffect effect)
@@ -73,8 +76,9 @@ namespace GameCoreController
                 }
             }            
 
-            if (IsGameWon())
+            if (IsGameWon() && !_gameWon)
             {
+                _gameWon = true;
                 _effects.Add(new GameWonEffect());
             }
 

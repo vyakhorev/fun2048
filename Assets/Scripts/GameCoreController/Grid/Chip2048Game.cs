@@ -112,8 +112,8 @@ namespace GameCoreController
         public List<AGridEffect> GetEffects()
         {
             var allEffects = new List<AGridEffect>();
-            allEffects.AddRange(_watcher.GetEffects());
             allEffects.AddRange(_chipKeeper.GetEffects());
+            allEffects.AddRange(_watcher.GetEffects());
             allEffects.AddRange(_effects);
             return allEffects;
         }
