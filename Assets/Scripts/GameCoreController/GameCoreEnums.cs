@@ -8,4 +8,13 @@ namespace GameCoreController
         RIGHT = 3
     }
 
+    public enum GameGoals
+    {
+        GRASS = 0,
+        BOX = 1,
+        EGG = 2,
+        HONEY = 3,
+        NUMBER = 4
+    }
+
 }

@@ -14,6 +14,7 @@ namespace GameCoreController
         private GameObject _gridCellPrefab;
         private GameObject _chipPrefab;
         private SOBoardVisualStyle _soBoardVisualStyle;
+        public SOBoardVisualStyle SOBoardVisualStyle => _soBoardVisualStyle;
         private GameObjectPools _pool;
 
         private float _cellSize;

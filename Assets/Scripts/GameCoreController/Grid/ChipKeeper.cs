@@ -29,7 +29,7 @@ namespace GameCoreController
             _effects = new List<AGridEffect>();
         }
 
-        public void ResetCells(BoardData boardData)
+        public void ResetLevel()
         {
             _lastChipId = 0;
             for (int idx = 0; idx < _X; idx++)
@@ -49,8 +49,6 @@ namespace GameCoreController
             _effects.Add(
                 new BoardResetEffect()
             );
-
-            ChipKeeperLoader.LoadBoard(this, boardData);
 
         }
 
@@ -173,7 +171,7 @@ namespace GameCoreController
             }
         }
 
-        public void DoMergeInDirection(GridDirection gridDirection)
+        public bool DoMergeInDirection(GridDirection gridDirection)
         {
             const int max_recursion = 100;
             const int max_iters = 100;
@@ -205,17 +203,21 @@ namespace GameCoreController
                     }
                 }
             }
+
+            return true;
         }
 
-        public void DoInteractionAt(Vector2Int at)
+        public bool DoInteractionAt(Vector2Int at)
         {
             if (!(at.x > 0 && at.x < _X && at.y >0 && at.y <_Y))
             {
-                return;
+                return false;
             }
             Debug.Log("Interacting at " +  at);
 
             GridCell cell = _gridCells[at.x, at.y];
+
+            return true;
 
         }
 

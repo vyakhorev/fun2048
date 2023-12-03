@@ -7,13 +7,14 @@ using GameInput;
 using CoreUtils;
 using System;
 
-#nullable enable
+
 
 namespace GameCoreController
 {
     /*
      * Responsible for game level lifecycle: inputs + public win/lose events
      */
+
     public class LevelController : MonoBehaviour
     {
         [Tooltip("Cells are spawned in this hierarchy")]
@@ -22,14 +23,14 @@ namespace GameCoreController
         [Tooltip("Visual settings")]
         [SerializeField] private SOBoardVisualStyle _SOBoardVisualStyle;
 
+        /* 
+         * Internals 
+         */
         private GameInputWiring _gameInputWiring;
         private SwipeDetection _swipeDetection;
-        private BoardController? _boardController;
-
-        private RootLevelData? _lastGameData;
-
+        private BoardController _boardController;
+        private RootLevelData _lastGameData;
         private ChipProducer _chipProducer;
-
         private GlobalCtx _globalCtx;
 
         /*
@@ -61,7 +62,12 @@ namespace GameCoreController
             _swipeDetection.OnSwipeEvent += OnSwiped;
             _swipeDetection.OnTapEvent += OnTapped;
 
-            _boardController.StartNewGame(_lastGameData.Board);
+            _boardController.StartNewGame(_lastGameData);
+        }
+
+        public BoardController GetBoardController()
+        {
+            return _boardController;
         }
 
         /*
@@ -73,7 +79,7 @@ namespace GameCoreController
             {
                 throw new InvalidOperationException("Please call LevelController.Start2048Game first");
             }
-            _boardController.StartNewGame(_lastGameData.Board);
+            _boardController.StartNewGame(_lastGameData);
         }
 
 
@@ -129,4 +135,3 @@ namespace GameCoreController
     }
 }
 
-#nullable disable

@@ -3,6 +3,7 @@
 using Codice.Client.BaseCommands.BranchExplorer.ExplorerData;
 using LevelData;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCoreController
@@ -12,6 +13,37 @@ namespace GameCoreController
      */
     public class ChipKeeperLoader
     {
+
+        public static void LoadGoals(GameGoalWatcher watcher, List<LevelGoal> goals)
+        {
+            foreach (LevelGoal goal in goals)
+            {
+                if (goal.GoalType == LevelGoalType.CLEAR_GRASS)
+                {
+                    watcher.SetCleanGrassGoal(goal.Quantity);
+                }
+                else if (goal.GoalType == LevelGoalType.CLEAR_HONEY)
+                {
+                    watcher.SetCleanHoneyGoal(goal.Quantity);
+                }
+                else if (goal.GoalType == LevelGoalType.CLEAR_EGG)
+                {
+                    watcher.SetCleanEggGoal(goal.Quantity);
+                }
+                else if (goal.GoalType == LevelGoalType.CLEAR_BOX)
+                {
+                    watcher.SetCleanBoxGoal(goal.Quantity);
+                }
+                else if (goal.GoalType == LevelGoalType.COMBINE_NUMBER)
+                {
+                    watcher.SetCombineNumbersGoal(
+                        goal.NumberToCombine, 
+                        goal.Quantity
+                    );
+                }
+            }
+        }
+
         public static void LoadBoard(ChipKeeper chipKeeper, BoardData boardData)
         {
             if (boardData.GridCellList != null)
@@ -88,10 +120,8 @@ namespace GameCoreController
                     LoadBombChip(chipKeeper, bombData, cell);
                 }
             }
-
-
         }
-    
+
         private static void LoadCell(ChipKeeper chipKeeper, GridCellData cellData, GridCell cell)
         {
             if (cellData.GrassHealth > 0)
