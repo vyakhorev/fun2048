@@ -209,16 +209,20 @@ namespace GameCoreController
 
         public bool DoInteractionAt(Vector2Int at)
         {
-            if (!(at.x > 0 && at.x < _X && at.y >0 && at.y <_Y))
+            if (!(at.x >= 0 && at.x < _X && at.y >= 0 && at.y <_Y))
             {
                 return false;
             }
             Debug.Log("Interacting at " +  at);
 
             GridCell cell = _gridCells[at.x, at.y];
-
+            if (cell.GetChip() is BombChip bombChip)
+            {
+                DoDamageToBombChip(cell, bombChip);
+                ActivateBomb(cell);
+                return true;
+            }
             return false;
-
         }
 
         /*
@@ -319,6 +323,48 @@ namespace GameCoreController
             return false;
         }
 
+        private void ActivateBomb(GridCell gridCell)
+        {
+            List<GridCell> otherBombs = new List<GridCell>();
+            foreach (var cell in GetRadius(gridCell.GetCoords(), true))
+            {
+                // Priority 1 - other chips. Then honey / grass.
+                if (cell.GetChip() is EggChip eggChip)
+                {
+                    DoDamageToEggChip(cell, eggChip);
+                }
+                else if (cell.GetChip() is BoxChip boxChip)
+                {
+                    DoDamageToBoxChip(cell, boxChip);
+                }
+                else if (cell.GetChip() is BombChip otherBombChip)
+                {
+                    // This shall remove bomb from the cell so no
+                    // recursive loop occurs.
+                    DoDamageToBombChip(cell, otherBombChip);
+                    otherBombs.Add(cell);
+                }
+                else if (cell.GetChip() is NumberChip numberChip)
+                {
+                    DoDamageToNumberChip(cell, numberChip);
+                }
+                else if (cell.IsHoney())
+                {
+                    DoDamageToHoney(cell);
+                }
+                else if (cell.IsGrass())
+                {
+                    DoDamageToGrass(cell);
+                }
+            }
+
+            foreach (var cell in otherBombs)
+            {
+                ActivateBomb(cell);
+            }
+
+        }
+
         private void DoMove(GridCell cellFrom, GridCell cellTo)
         {
             AChip? chip = cellFrom.GetChip() ?? throw new Exception("nothing to move from cell " + cellFrom.GetCoords());
@@ -340,6 +386,14 @@ namespace GameCoreController
             // Move the chip on logical level.
             cellTo.SetChip(chip);
             cellFrom.ClearChip();
+
+            // If we moved a bomb - detonate it!
+            if (chip is BombChip bombChip)
+            {
+                DoDamageToBombChip(cellTo, bombChip);
+                ActivateBomb(cellTo);
+            }
+
         }
 
         private void ClearGrass(Vector2Int cellFromCoords, Vector2Int cellToCoords)
@@ -349,22 +403,12 @@ namespace GameCoreController
             int minY = Math.Min(cellFromCoords.y, cellToCoords.y);
             int maxY = Math.Max(cellFromCoords.y, cellToCoords.y);
 
-            // Essentially a line, always
             for (int x=minX; x<=maxX; x++)
             {
                 for (int y=minY; y<=maxY; y++)
                 {
                     GridCell cell_i = _gridCells[x, y];
-                    if (cell_i.IsGrass())
-                    {
-                        cell_i.DecreaseGrassHealth();
-                        _effects.Add(
-                            new GrassHealthChangeEffect(
-                                new Vector2Int(x, y),
-                                cell_i.GetGrassHealth()
-                            )
-                        );
-                    }
+                    DoDamageToGrass(cell_i);
                 }
             }
         }
@@ -414,57 +458,15 @@ namespace GameCoreController
                     // Eggs and stones inside honey are not destroyed the same turn
                     if (cellNeigh.IsHoney())
                     {
-                        cellNeigh.DecreaseHoneyHealth();
-                        _effects.Add(
-                            new HoneyHealthChangeEffect(
-                                cellNeigh.GetCoords(),
-                                cellNeigh.GetHoneyHealth()
-                            )
-                        );
+                        DoDamageToHoney(cellNeigh);
                     }
                     else if (cellNeigh.GetChip() is EggChip eggChip)
                     {
-                        eggChip.DecreaseHealth();
-                        if (!eggChip.IsAlive())
-                        {
-                            cellNeigh.ClearChip();
-                            _effects.Add(
-                                new ChipDeletedEffect(
-                                    eggChip
-                                )
-                            );
-                        } 
-                        else
-                        {
-                            _effects.Add(
-                                new ChipHealthChangeEffect(
-                                    eggChip,
-                                    eggChip.GetHealth()
-                                )
-                            );
-                        }
+                        DoDamageToEggChip(cellNeigh, eggChip);
                     }
-                    else if (cellNeigh.GetChip() is BoxChip stoneChip)
+                    else if (cellNeigh.GetChip() is BoxChip boxChip)
                     {
-                        stoneChip.DecreaseHealth();
-                        if (!stoneChip.IsAlive())
-                        {
-                            cellNeigh.ClearChip();
-                            _effects.Add(
-                                new ChipDeletedEffect(
-                                    stoneChip
-                                )
-                            );
-                        }
-                        else
-                        {
-                            _effects.Add(
-                                new ChipHealthChangeEffect(
-                                    stoneChip,
-                                    stoneChip.GetHealth()
-                                )
-                            );
-                        }
+                        DoDamageToBoxChip(cellNeigh, boxChip);
                     }
                 }
 
@@ -520,6 +522,105 @@ namespace GameCoreController
             }
 
             return false;
+        }
+
+        private void DoDamageToBombChip(GridCell cell, BombChip bombChip)
+        {
+            cell.ClearChip();
+            _effects.Add(
+                new BombActivationEffect(
+                    bombChip
+                )
+            );
+            _effects.Add(
+                new ChipDeletedEffect(
+                    bombChip
+                )
+            );
+        }
+
+        private void DoDamageToNumberChip(GridCell cell, NumberChip numberChip)
+        {
+            cell.ClearChip();
+            _effects.Add(
+                new ChipDeletedEffect(
+                    numberChip
+                )
+            );
+        }
+
+        private void DoDamageToGrass(GridCell cell)
+        {
+            if (cell.IsGrass())
+            {
+                cell.DecreaseGrassHealth();
+                _effects.Add(
+                    new GrassHealthChangeEffect(
+                        cell.GetCoords(),
+                        cell.GetGrassHealth()
+                    )
+                );
+            }
+        }
+
+        private void DoDamageToHoney(GridCell cell)
+        {
+            if (cell.IsHoney())
+            {
+                cell.DecreaseHoneyHealth();
+                _effects.Add(
+                    new HoneyHealthChangeEffect(
+                        cell.GetCoords(),
+                        cell.GetHoneyHealth()
+                    )
+                );
+            }
+        }
+
+        private void DoDamageToEggChip(GridCell cell, EggChip eggChip)
+        {
+            eggChip.DecreaseHealth();
+            if (!eggChip.IsAlive())
+            {
+                cell.ClearChip();
+                _effects.Add(
+                    new ChipDeletedEffect(
+                        eggChip
+                    )
+                );
+            }
+            else
+            {
+                _effects.Add(
+                    new ChipHealthChangeEffect(
+                        eggChip,
+                        eggChip.GetHealth()
+                    )
+                );
+            }
+        }
+
+        private void DoDamageToBoxChip(GridCell cell, BoxChip boxChip)
+        {
+            boxChip.DecreaseHealth();
+            if (!boxChip.IsAlive())
+            {
+                cell.ClearChip();
+                _effects.Add(
+                    new ChipDeletedEffect(
+                        boxChip
+                    )
+                );
+            }
+            else
+            {
+                _effects.Add(
+                    new ChipHealthChangeEffect(
+                        boxChip,
+                        boxChip.GetHealth()
+                    )
+                );
+            }
         }
 
         private List<GridCell> GetLineElements(int lineNum, GridDirection gridDirection)
@@ -579,6 +680,51 @@ namespace GameCoreController
             {
                 neigh.Add(_gridCells[coords.x, coords.y]);
             }
+            return neigh;
+        }
+
+        private List<GridCell> GetRadius(Vector2Int coords, bool includeSelf)
+        {
+            var neigh = new List<GridCell>();
+            if (coords.x - 1 >= 0 && coords.y - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x - 1, coords.y - 1]);
+            }
+            if (coords.x - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x - 1, coords.y]);
+            }
+            if (coords.x - 1 >= 0 && coords.y + 1 < _Y)
+            {
+                neigh.Add(_gridCells[coords.x - 1, coords.y + 1]);
+            }
+
+            if (coords.y - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y - 1]);
+            }
+            if (includeSelf)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y]);
+            }
+            if (coords.y + 1 < _Y)
+            {
+                neigh.Add(_gridCells[coords.x, coords.y + 1]);
+            }
+
+            if (coords.x + 1 < _X && coords.y - 1 >= 0)
+            {
+                neigh.Add(_gridCells[coords.x + 1, coords.y - 1]);
+            }
+            if (coords.x + 1 < _X)
+            {
+                neigh.Add(_gridCells[coords.x + 1, coords.y]);
+            }
+            if (coords.x + 1 < _X && coords.y + 1 < _Y)
+            {
+                neigh.Add(_gridCells[coords.x + 1, coords.y + 1]);
+            }
+
             return neigh;
         }
 
