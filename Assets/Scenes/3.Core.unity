@@ -789,7 +789,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1124917512}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1572913712}
+        m_TargetAssemblyTypeName: DebugCoreClient.DebugStarter, DebugCoreClient
+        m_MethodName: End2048Game
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1124917512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -839,7 +851,6 @@ GameObject:
   - component: {fileID: 1197879986}
   - component: {fileID: 1197879989}
   - component: {fileID: 1197879988}
-  - component: {fileID: 1197879987}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -866,20 +877,6 @@ RectTransform:
   m_AnchoredPosition: {x: 540, y: 960}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1197879987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197879985}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AspectMode: 4
-  m_AspectRatio: 0.5625
 --- !u!114 &1197879988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,7 +1097,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1319234197}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1572913712}
+        m_TargetAssemblyTypeName: DebugCoreClient.DebugStarter, DebugCoreClient
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1319234197
 MonoBehaviour:
   m_ObjectHideFlags: 0

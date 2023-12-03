@@ -19,7 +19,11 @@ namespace DebugCoreClient
         void Start()
         {
             // Fisrt Setup2048Game, then read goals, then EnableGameUpdateLoop
-            _levelController.Setup2048Game(LevelsMadeByUra.Level5());
+            
+            _levelController.Setup2048Game(
+                LevelsMadeByUra.Level5(),
+                CalcBoardBounds()
+            );
             InitGoals();
 
             _levelController.GetBoardController().OnGoalUpdateEvent += OnGoalUpdate;
@@ -29,6 +33,14 @@ namespace DebugCoreClient
 
             _levelController.EnableGameUpdateLoop();
 
+        }
+
+        public Rect CalcBoardBounds()
+        {
+            float rectWidth = (_boardSafeBounds.anchorMax.x - _boardSafeBounds.anchorMin.x) * Screen.width;
+            float rectHeight = (_boardSafeBounds.anchorMax.y - _boardSafeBounds.anchorMin.y) * Screen.height;
+            Vector2 position = new Vector2(_boardSafeBounds.anchorMin.x * Screen.width, _boardSafeBounds.anchorMin.y * Screen.height);
+            return new Rect(position.x, position.y, rectWidth, rectHeight);
         }
 
         public void RestartGame()

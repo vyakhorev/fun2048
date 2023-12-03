@@ -36,7 +36,7 @@ namespace GameCoreController
         /*
          * Start a new game. You can take RootLevelData from LevelEditor
          */
-        public void Setup2048Game(RootLevelData levelData)
+        public void Setup2048Game(RootLevelData levelData, Rect bounds)
         {
             int seed = Guid.NewGuid().GetHashCode();
             _globalCtx = new GlobalCtx(seed);
@@ -47,7 +47,8 @@ namespace GameCoreController
             _chipProducer.Init(
                 Camera.main,
                 _gameGridHolder,
-                _SOBoardVisualStyle
+                _SOBoardVisualStyle,
+                bounds
             );
             
             _boardController = new BoardController();

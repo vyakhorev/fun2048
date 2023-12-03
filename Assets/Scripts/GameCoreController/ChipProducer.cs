@@ -17,19 +17,21 @@ namespace GameCoreController
         public SOBoardVisualStyle SOBoardVisualStyle => _soBoardVisualStyle;
         private GameObjectPools _pool;
 
-        private float _cellSize;
+        private float _calculatedCellSize;
         private float _worldWidth;
         private float _worldHeight;
         private float _worldSize;
         private float _vertAlgn;
         private float _horAlgn;
-        private float _numberChipSpriteSize;
+        private float _originalCellSize;
         private float _visualsScale;
+        private Rect _bounds;
 
         public void Init(
             Camera camera,
             Transform boardParentTransform,
-            SOBoardVisualStyle soBoardVisualStyle)
+            SOBoardVisualStyle soBoardVisualStyle,
+            Rect bounds)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
@@ -38,27 +40,33 @@ namespace GameCoreController
 
             _pool = new GameObjectPools(boardParentTransform, 10);
             // Warm-up pools
-            _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
+            _pool.EnsurePoolDefinition(_gridCellPrefab, 99);
             _pool.EnsurePoolDefinition(_chipPrefab, 64);
 
-            CmpNumberChipVisuals numVis = _chipPrefab.GetComponentInChildren<CmpNumberChipVisuals>(true);
-            SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>(true);
-
+            // Cell can be of different scale, let's use it for scaling
+            CmpBackgroundCellVisuals cellVis = _gridCellPrefab.GetComponentInChildren<CmpBackgroundCellVisuals>();
+            SpriteRenderer cellSr = cellVis.GetComponentInChildren<SpriteRenderer>(true);
+            
             float imageScale = Mathf.Min(
-                numSr.transform.localScale.x,
-                numSr.transform.localScale.y
+                cellSr.transform.localScale.x,
+                cellSr.transform.localScale.y
             );
-            _numberChipSpriteSize = Mathf.Max(
-                numSr.sprite.bounds.size.x,
-                numSr.sprite.bounds.size.y
+            _originalCellSize = Mathf.Max(
+                cellSr.sprite.bounds.size.x,
+                cellSr.sprite.bounds.size.y
             ) * imageScale;
+
+            Debug.Log(_originalCellSize);
 
             _worldHeight = _camera.orthographicSize * 2f;
             _worldWidth = _worldHeight / Screen.height * Screen.width;
             _worldSize = Mathf.Min(_worldHeight, _worldWidth);
-
             _horAlgn = _worldWidth / 2f;
             _vertAlgn = _worldHeight / 2f;
+
+            _bounds = bounds;
+
+            Debug.Log(_bounds);
 
         }
 
@@ -72,13 +80,13 @@ namespace GameCoreController
 
             if (boardSize.y <= boardSize.x)
             {
-                _cellSize = _worldSize / (boardSize.y + 2);
+                _calculatedCellSize = _worldSize / (boardSize.y + 1);
             }
             else
             {
-                _cellSize = _worldSize / (boardSize.x + 2);
+                _calculatedCellSize = _worldSize / (boardSize.x + 1);
             }
-            _visualsScale = _cellSize / _numberChipSpriteSize;
+            _visualsScale = _calculatedCellSize / _originalCellSize;
         }
 
         public GridCellCtrl SpawnGridCell(Vector2Int logicalPosition)
@@ -170,8 +178,8 @@ namespace GameCoreController
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)
         {
             return new Vector3(
-                _cellSize * (logicalPosition.x + 1) - _horAlgn,
-                _cellSize * (logicalPosition.y + 1) - _vertAlgn,
+                _calculatedCellSize * (logicalPosition.x + 1) - _horAlgn,
+                _calculatedCellSize * (logicalPosition.y + 1) - _vertAlgn,
                 0f
             );
         }
@@ -179,8 +187,8 @@ namespace GameCoreController
         public Vector2Int WorldToLogical(Vector2 worldPosition)
         {
             return new Vector2Int(
-                Mathf.RoundToInt((worldPosition.x + _horAlgn - _cellSize) / _cellSize),
-                Mathf.RoundToInt((worldPosition.y + _vertAlgn - _cellSize) / _cellSize)
+                Mathf.RoundToInt((worldPosition.x + _horAlgn - _calculatedCellSize) / _calculatedCellSize),
+                Mathf.RoundToInt((worldPosition.y + _vertAlgn - _calculatedCellSize) / _calculatedCellSize)
             );
         }
     }
