@@ -96,6 +96,7 @@ namespace GameCoreController
         {
             if (!_readyToPlay) return;
             Vector2Int tapLogicalPosition = _chipProducer.WorldToLogical(tapWorldPosition);
+            Debug.Log("Tapping " + tapLogicalPosition);
             _enquedTaps.Add(tapLogicalPosition);
         }
 

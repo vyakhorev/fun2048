@@ -56,7 +56,14 @@ namespace GameCoreController
             if (didApply)
             {
                 _moves += 1;
-                _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
+                if (_moves > _maxMoves)
+                {
+                    _effects.Add(new GameLostEffect(true, false));
+                }
+                else
+                {
+                    _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
+                }
             }
             bool spawned = TrySpawnNewNumber();
 

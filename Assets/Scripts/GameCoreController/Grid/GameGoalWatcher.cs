@@ -126,6 +126,7 @@ namespace GameCoreController
                 _honeyCnt >= _honeyGoal &&
                 _eggCnt >= _eggGoal &&
                 _boxCnt >= _boxGoal &&
+                _bombCnt >= _bombGoal &&
                 chipsCombined;
         }
 
