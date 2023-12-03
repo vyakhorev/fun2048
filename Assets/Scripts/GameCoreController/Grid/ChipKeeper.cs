@@ -29,7 +29,7 @@ namespace GameCoreController
             _effects = new List<AGridEffect>();
         }
 
-        public void ResetCells(BoardData boardData)
+        public void ResetLevel()
         {
             _lastChipId = 0;
             for (int idx = 0; idx < _X; idx++)
@@ -50,170 +50,21 @@ namespace GameCoreController
                 new BoardResetEffect()
             );
 
-            LoadBoard(boardData);
-
         }
 
-        // TODO - reversable command pattern will be better here
-        // (so that we can spawn things runtime).
-        private void LoadBoard(BoardData boardData)
+        public GridCell GetGridCell(int x, int y)
         {
-            if (boardData.GridCellList != null)
-            {
-                foreach (GridCellData cellData in boardData.GridCellList)
-                {
-                    GridCell cell = _gridCells[
-                        cellData.Coords.x,
-                        cellData.Coords.y
-                    ];
-                    if (cellData.GrassHealth > 0)
-                    {
-                        cell.SetGrassHealth(cellData.GrassHealth);
-                        _effects.Add(
-                            new GrassHealthChangeEffect(
-                                cellData.Coords,
-                                cellData.GrassHealth
-                            )
-                        );
-                    }
-                    if (cellData.HoneyHealth > 0)
-                    {
-                        cell.SetHoneyHealth(cellData.HoneyHealth);
-                        _effects.Add(
-                            new HoneyHealthChangeEffect(
-                                cellData.Coords,
-                                cellData.HoneyHealth
-                            )
-                        );
-                    }
-                    if (!cellData.IsEnabled)
-                    {
-                        cell.Disable();
-                        _effects.Add(
-                            new CellEnabledChangeEffect(
-                                cellData.Coords,
-                                false
-                            )
-                        );
-                    }
-                }
-            }
+            return _gridCells[x, y];
+        }
 
-            if (boardData.NumberChipList != null)
-            {
-                foreach (NumberChipData numberData in boardData.NumberChipList)
-                {
-                    var coords = numberData.Coords;
-                    var cell = _gridCells[coords.x, coords.y];
-                    if (!cell.IsEmpty())
-                    {
-                        throw new Exception("cannot spawn number chip at non-empty cell " + coords);
-                    }
+        public void ReportEffect(AGridEffect effect)
+        {
+            _effects.Add(effect);
+        }
 
-                    _lastChipId += 1;
-                    NumberChip newChip = new NumberChip(numberData.NumberValue);
-                    newChip.SetChipId(_lastChipId);
-
-                    cell.SetChip(newChip);
-
-                    _effects.Add(
-                        new ChipSpawnedEffect(newChip, cell.GetCoords())
-                    );
-                }
-            }
-
-            if (boardData.StoneChipList != null)
-            {
-                foreach (StoneChipData stoneData in boardData.StoneChipList)
-                {
-                    var coords = stoneData.Coords;
-                    var cell = _gridCells[coords.x, coords.y];
-                    if (!cell.IsEmpty())
-                    {
-                        throw new Exception("cannot spawn stone chip at non-empty cell " + coords);
-                    }
-
-                    _lastChipId += 1;
-                    StoneChip newChip = new StoneChip(stoneData.Health);
-                    newChip.SetChipId(_lastChipId);
-
-                    cell.SetChip(newChip);
-
-                    _effects.Add(
-                        new ChipSpawnedEffect(newChip, cell.GetCoords())
-                    );
-                }
-            }
-
-            if (boardData.EggChipList != null)
-            {
-                foreach (EggChipData eggData in boardData.EggChipList)
-                {
-                    var coords = eggData.Coords;
-                    var cell = _gridCells[coords.x, coords.y];
-                    if (!cell.IsEmpty())
-                    {
-                        throw new Exception("cannot spawn egg chip at non-empty cell " + coords);
-                    }
-
-                    _lastChipId += 1;
-                    EggChip newChip = new EggChip(eggData.Health);
-                    newChip.SetChipId(_lastChipId);
-
-                    cell.SetChip(newChip);
-
-                    _effects.Add(
-                        new ChipSpawnedEffect(newChip, cell.GetCoords())
-                    );
-                }
-            }
-
-            if (boardData.BubbleChipList != null)
-            {
-                foreach (BubbleChipData bubbleData in boardData.BubbleChipList)
-                {
-                    var coords = bubbleData.Coords;
-                    var cell = _gridCells[coords.x, coords.y];
-                    if (!cell.IsEmpty())
-                    {
-                        throw new Exception("cannot spawn bubble chip at non-empty cell " + coords);
-                    }
-
-                    _lastChipId += 1;
-                    BubbleChip newChip = new BubbleChip(bubbleData.BubbleValue);
-                    newChip.SetChipId(_lastChipId);
-
-                    cell.SetChip(newChip);
-
-                    _effects.Add(
-                        new ChipSpawnedEffect(newChip, cell.GetCoords())
-                    );
-                }
-            }
-
-            if (boardData.BoosterChipList != null)
-            {
-                foreach (BoosterChipData boosterData in boardData.BoosterChipList)
-                {
-                    var coords = boosterData.Coords;
-                    var cell = _gridCells[coords.x, coords.y];
-                    if (!cell.IsEmpty())
-                    {
-                        throw new Exception("cannot spawn booster chip at non-empty cell " + coords);
-                    }
-
-                    _lastChipId += 1;
-                    BoosterChip newChip = new BoosterChip();
-                    newChip.SetChipId(_lastChipId);
-
-                    cell.SetChip(newChip);
-
-                    _effects.Add(
-                        new ChipSpawnedEffect(newChip, cell.GetCoords())
-                    );
-                }
-            }
-
+        public int GetNextChipId() {
+            _lastChipId += 1;
+            return _lastChipId; 
         }
 
         public void SetCellSize(float newCellSize)
@@ -255,9 +106,8 @@ namespace GameCoreController
 
         public bool TrySpawnNewNumberChipAtRandomPosition()
         {
-            _lastChipId += 1;
             NumberChip newChip = new NumberChip(2);
-            newChip.SetChipId(_lastChipId);
+            newChip.SetChipId(GetNextChipId());
 
             GridCell? cell = GetFreeRandomPosition();
             if (cell == null)
@@ -281,7 +131,7 @@ namespace GameCoreController
                 return null;
             }
 
-            int rndIdx = Utils.GlobalCtx
+            int rndIdx = CoreUtils.GlobalCtx
                 .Instance
                 .GetRandom()
                 .Next(emptyGridCells.Count);
@@ -321,7 +171,7 @@ namespace GameCoreController
             }
         }
 
-        public void DoMergeInDirection(GridDirection gridDirection)
+        public bool DoMergeInDirection(GridDirection gridDirection)
         {
             const int max_recursion = 100;
             const int max_iters = 100;
@@ -353,17 +203,21 @@ namespace GameCoreController
                     }
                 }
             }
+
+            return true;
         }
 
-        public void DoInteractionAt(Vector2Int at)
+        public bool DoInteractionAt(Vector2Int at)
         {
             if (!(at.x > 0 && at.x < _X && at.y >0 && at.y <_Y))
             {
-                return;
+                return false;
             }
             Debug.Log("Interacting at " +  at);
 
             GridCell cell = _gridCells[at.x, at.y];
+
+            return false;
 
         }
 
@@ -579,9 +433,18 @@ namespace GameCoreController
                                     eggChip
                                 )
                             );
+                        } 
+                        else
+                        {
+                            _effects.Add(
+                                new ChipHealthChangeEffect(
+                                    eggChip,
+                                    eggChip.GetHealth()
+                                )
+                            );
                         }
                     }
-                    else if (cellNeigh.GetChip() is StoneChip stoneChip)
+                    else if (cellNeigh.GetChip() is BoxChip stoneChip)
                     {
                         stoneChip.DecreaseHealth();
                         if (!stoneChip.IsAlive())
@@ -590,6 +453,15 @@ namespace GameCoreController
                             _effects.Add(
                                 new ChipDeletedEffect(
                                     stoneChip
+                                )
+                            );
+                        }
+                        else
+                        {
+                            _effects.Add(
+                                new ChipHealthChangeEffect(
+                                    stoneChip,
+                                    stoneChip.GetHealth()
                                 )
                             );
                         }
@@ -615,6 +487,14 @@ namespace GameCoreController
                 {
                     // TODO - an event indicating that we're breaking an egg
                     // We'll move the number chip anyway
+
+                    _effects.Add(
+                        new ChipHealthChangeEffect(
+                            eggChip,
+                            eggChip.GetHealth()
+                        )
+                    );
+
                     return false;
                 }
 

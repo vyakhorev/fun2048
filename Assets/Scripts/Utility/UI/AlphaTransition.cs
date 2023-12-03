@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace Utility.UI
 {
+    [System.Serializable]
     public struct AlphaTransition : ITransition<Image>
     {
         [SerializeField]

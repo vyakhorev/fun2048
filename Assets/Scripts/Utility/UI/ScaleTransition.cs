@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Utility.UI
 {
+    [System.Serializable]
     public struct ScaleTransition : ITransition<Transform>
     {
         [SerializeField]

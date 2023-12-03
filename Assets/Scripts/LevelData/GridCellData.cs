@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LevelData
@@ -9,6 +8,7 @@ namespace LevelData
     public class GridCellData
     {
         public Vector2Int Coords;
+        public SqZone Zone;
         public int GrassHealth;
         public int HoneyHealth;
         public bool IsEnabled;

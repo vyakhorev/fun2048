@@ -1,11 +1,11 @@
-using Pooling;
+using LegacyPooling;
 using UnityEngine;
+using SO2048;
 
 namespace GameCoreController
 {
     /*
      * Helps with setting up new chips
-     * TODO - move object pools here and make this thing responsible
      * for all construction / destruction. 
      */
     public class ChipProducer
@@ -14,53 +14,62 @@ namespace GameCoreController
         private GameObject _gridCellPrefab;
         private GameObject _chipPrefab;
         private SOBoardVisualStyle _soBoardVisualStyle;
+        public SOBoardVisualStyle SOBoardVisualStyle => _soBoardVisualStyle;
         private GameObjectPools _pool;
 
-        private float _cellSize;
+        private float _calculatedCellSize;
         private float _worldWidth;
         private float _worldHeight;
         private float _worldSize;
         private float _vertAlgn;
         private float _horAlgn;
-        private float _numberChipSpriteSize;
+        private float _originalCellSize;
         private float _visualsScale;
+        private Vector3[] _worldConers;
 
         public void Init(
             Camera camera,
             Transform boardParentTransform,
-            GameObject chipPrefab,
-            GameObject gridCellPrefab,
-            SOBoardVisualStyle soBoardVisualStyle)
+            SOBoardVisualStyle soBoardVisualStyle,
+            Vector3[] worldConers)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
-            _gridCellPrefab = gridCellPrefab;
-            _chipPrefab = chipPrefab;
+            _gridCellPrefab = soBoardVisualStyle.GridCellPrefab;
+            _chipPrefab = soBoardVisualStyle.ChipPrefab;
 
             _pool = new GameObjectPools(boardParentTransform, 10);
             // Warm-up pools
-            _pool.EnsurePoolDefinition(_gridCellPrefab, 64);
+            _pool.EnsurePoolDefinition(_gridCellPrefab, 99);
             _pool.EnsurePoolDefinition(_chipPrefab, 64);
 
-            CmpNumberChipVisuals numVis = _chipPrefab.GetComponentInChildren<CmpNumberChipVisuals>();
-            SpriteRenderer numSr = numVis.GetComponentInChildren<SpriteRenderer>();
-
+            // Cell can be of different scale, let's use it for scaling
+            CmpBackgroundCellVisuals cellVis = _gridCellPrefab.GetComponentInChildren<CmpBackgroundCellVisuals>();
+            SpriteRenderer cellSr = cellVis.GetComponentInChildren<SpriteRenderer>(true);
+            
             float imageScale = Mathf.Min(
-                numSr.transform.localScale.x, 
-                numSr.transform.localScale.y
+                cellSr.transform.localScale.x,
+                cellSr.transform.localScale.y
             );
-            _numberChipSpriteSize = Mathf.Max(
-                numSr.sprite.bounds.size.x,
-                numSr.sprite.bounds.size.y
+            _originalCellSize = Mathf.Max(
+                cellSr.sprite.bounds.size.x,
+                cellSr.sprite.bounds.size.y
             ) * imageScale;
 
-            _worldHeight = _camera.orthographicSize * 2f;
-            _worldWidth = _worldHeight / Screen.height * Screen.width;
+            _worldConers = worldConers;
+
+            _worldHeight = _worldConers[1].y - _worldConers[0].y;
+            _worldWidth = _worldConers[3].x - _worldConers[0].x;
             _worldSize = Mathf.Min(_worldHeight, _worldWidth);
 
-            _horAlgn = _worldWidth / 2f;
-            _vertAlgn = _worldHeight / 2f;
+            _horAlgn = _worldConers[0].x;
+            _vertAlgn = _worldConers[0].y;
 
+        }
+
+        public float GetAnimSpeed()
+        {
+            return _soBoardVisualStyle.AnimSpeed;
         }
 
         public void InitNewGame(Vector2Int boardSize)
@@ -68,13 +77,13 @@ namespace GameCoreController
 
             if (boardSize.y <= boardSize.x)
             {
-                _cellSize = _worldSize / (boardSize.y + 2);
+                _calculatedCellSize = _worldSize / (boardSize.y);
             }
             else
             {
-                _cellSize = _worldSize / (boardSize.x + 2);
+                _calculatedCellSize = _worldSize / (boardSize.x);
             }
-            _visualsScale = _cellSize / _numberChipSpriteSize;
+            _visualsScale = _calculatedCellSize / _originalCellSize;
         }
 
         public GridCellCtrl SpawnGridCell(Vector2Int logicalPosition)
@@ -88,6 +97,7 @@ namespace GameCoreController
             );
             gridCellGo.transform.localScale = Vector3.one;
             GridCellCtrl gridCellCtrl = gridCellGo.GetComponent<GridCellCtrl>();
+            gridCellCtrl.InitHierarchy();
             CmpScalableVisuals scVis = gridCellGo.GetComponentInChildren<CmpScalableVisuals>();
 
             scVis.transform.localScale = new Vector3(
@@ -95,6 +105,7 @@ namespace GameCoreController
                 _visualsScale,
                 1
             );
+            gridCellCtrl.SetEvenBackgroundColor(logicalPosition);
 
             return gridCellCtrl;
         }
@@ -102,36 +113,36 @@ namespace GameCoreController
         public ChipCtrl SpawnNumberChip(Vector2Int logicalPosition, int val)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsNumber();
+            chipCtrl.SetNumber();
             UpdateNumberVisuals(chipCtrl, val);
             return chipCtrl;
         }
 
-        public ChipCtrl SpawnStoneChip(Vector2Int logicalPosition, int health)
+        public ChipCtrl SpawnBoxChip(Vector2Int logicalPosition, int health)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsStone();
+            chipCtrl.SetBox(health);
             return chipCtrl;
         }
 
         public ChipCtrl SpawnEggChip(Vector2Int logicalPosition, int health)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsEgg();
+            chipCtrl.SetEgg(health);
             return chipCtrl;
         }
 
         public ChipCtrl SpawnBubbleChip(Vector2Int logicalPosition, int bubbleValue)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBubble();
+            chipCtrl.SetBubble();
             return chipCtrl;
         }
 
         public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBooster();
+            chipCtrl.SetBomb();
             return chipCtrl;
         }
 
@@ -160,16 +171,14 @@ namespace GameCoreController
 
         public void UpdateNumberVisuals(ChipCtrl chipCtrl, int val)
         {
-            SONumberVisualStyle style = _soBoardVisualStyle.GetNumberVisualStyle(val);
             chipCtrl.SetNumber(val);
-            chipCtrl.SetColor(style.ChipColor);
         }
 
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)
         {
             return new Vector3(
-                _cellSize * (logicalPosition.x + 1) - _horAlgn,
-                _cellSize * (logicalPosition.y + 1) - _vertAlgn,
+                _calculatedCellSize * (logicalPosition.x) + _horAlgn + _calculatedCellSize / 2f,
+                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize / 2f,
                 0f
             );
         }
@@ -177,8 +186,8 @@ namespace GameCoreController
         public Vector2Int WorldToLogical(Vector2 worldPosition)
         {
             return new Vector2Int(
-                Mathf.RoundToInt((worldPosition.x + _horAlgn - _cellSize) / _cellSize),
-                Mathf.RoundToInt((worldPosition.y + _vertAlgn - _cellSize) / _cellSize)
+                Mathf.RoundToInt((worldPosition.x - _horAlgn) / _calculatedCellSize - 0.5f),
+                Mathf.RoundToInt((worldPosition.y - _vertAlgn) / _calculatedCellSize - 0.5f)
             );
         }
     }

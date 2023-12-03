@@ -1,25 +1,30 @@
 fileFormatVersion: 2
 guid: a811bde74b26b53498b4f6d872b09b6d
 PluginImporter:
-  serializedVersion: 1
+  externalObjects: {}
+  serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
-<<<<<<<< HEAD:Assets/Plugins/Demigiant/DOTween/DOTween.dll.meta
-========
   isOverridable: 0
   isExplicitlyReferenced: 0
   validateReferences: 1
->>>>>>>> e97534e37fc3f7bad65df989a5d306d74380bb3a:Assets/DesperateDevs/DesperateDevs.Logging.dll.meta
   platformData:
-    Any:
+  - first:
+      Any: 
+    second:
       enabled: 1
       settings: {}
-    Editor:
+  - first:
+      Editor: Editor
+    second:
       enabled: 0
       settings:
         DefaultValueInitialized: true
-    WindowsStoreApps:
+  - first:
+      Windows Store Apps: WindowsStoreApps
+    second:
       enabled: 0
       settings:
         CPU: AnyCPU
