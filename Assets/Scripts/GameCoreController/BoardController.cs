@@ -38,7 +38,7 @@ namespace GameCoreController
         private Dictionary<int, ChipCtrl> _chipViews;
         private SortedDictionary<string, GameGoalView> _goalViews;
 
-        private bool _coroutineRuns;
+        private bool _animationLock;
 
         public void Init(ChipProducer chipProducer)
         {
@@ -55,7 +55,7 @@ namespace GameCoreController
             _goalViews = new SortedDictionary<string, GameGoalView>();
 
             _readyToPlay = false;
-            _coroutineRuns = false;
+            _animationLock = false;
         }
 
         public void StartNewGame(RootLevelData levelData)
@@ -94,7 +94,7 @@ namespace GameCoreController
         public void DoUpdate()
         {
             if (!_readyToPlay) return;
-            if (_coroutineRuns) return;
+            if (_animationLock) return;
            
             // TODO - swipes and taps should be in one queue
             List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
@@ -175,7 +175,7 @@ namespace GameCoreController
         // Order is quite important here
         private async void CoroutineRunEffects(List<AGridEffect> effects)
         {
-            _coroutineRuns = true;
+            _animationLock = true;
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
                 ResetBoard(eff);
@@ -213,6 +213,8 @@ namespace GameCoreController
                 ShowEffect(eff, tweenSeq);
             }
             await tweenSeq.AsyncWaitForCompletion();
+
+            _animationLock = false;
 
             tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipsMergeEffect>())
@@ -273,7 +275,6 @@ namespace GameCoreController
             {
                 ShowEffect(eff);
             }
-            _coroutineRuns = false;
         }
 
         private void SpawnNewChip(ChipSpawnedEffect chipSpawnedEffect)
