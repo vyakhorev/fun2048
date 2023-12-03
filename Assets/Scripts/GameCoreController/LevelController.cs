@@ -36,7 +36,7 @@ namespace GameCoreController
         /*
          * Start a new game. You can take RootLevelData from LevelEditor
          */
-        public void Setup2048Game(RootLevelData levelData, Rect bounds)
+        public void Setup2048Game(RootLevelData levelData, Vector3[] worldConers)
         {
             int seed = Guid.NewGuid().GetHashCode();
             _globalCtx = new GlobalCtx(seed);
@@ -48,7 +48,7 @@ namespace GameCoreController
                 Camera.main,
                 _gameGridHolder,
                 _SOBoardVisualStyle,
-                bounds
+                worldConers
             );
             
             _boardController = new BoardController();

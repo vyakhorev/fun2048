@@ -1467,6 +1467,7 @@ MonoBehaviour:
   _goalsGrid: {fileID: 1286847552}
   _goalGridElementPrefab: {fileID: 2546461921780752105, guid: 50229a1c935c927439048c6140920d94, type: 3}
   _turnsLeftTMP: {fileID: 798124503}
+  _groupToWait: {fileID: 142424362}
   _boardSafeBounds: {fileID: 737497178}
 --- !u!1 &1817127671
 GameObject:

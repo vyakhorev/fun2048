@@ -25,13 +25,13 @@ namespace GameCoreController
         private float _horAlgn;
         private float _originalCellSize;
         private float _visualsScale;
-        private Rect _bounds;
+        private Vector3[] _worldConers;
 
         public void Init(
             Camera camera,
             Transform boardParentTransform,
             SOBoardVisualStyle soBoardVisualStyle,
-            Rect bounds)
+            Vector3[] worldConers)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
@@ -56,17 +56,14 @@ namespace GameCoreController
                 cellSr.sprite.bounds.size.y
             ) * imageScale;
 
-            Debug.Log(_originalCellSize);
+            _worldConers = worldConers;
 
-            _worldHeight = _camera.orthographicSize * 2f;
-            _worldWidth = _worldHeight / Screen.height * Screen.width;
+            _worldHeight = _worldConers[1].y - _worldConers[0].y;
+            _worldWidth = _worldConers[3].x - _worldConers[0].x;
             _worldSize = Mathf.Min(_worldHeight, _worldWidth);
-            _horAlgn = _worldWidth / 2f;
-            _vertAlgn = _worldHeight / 2f;
 
-            _bounds = bounds;
-
-            Debug.Log(_bounds);
+            _horAlgn = _worldConers[0].x;
+            _vertAlgn = _worldConers[0].y;
 
         }
 
@@ -80,11 +77,11 @@ namespace GameCoreController
 
             if (boardSize.y <= boardSize.x)
             {
-                _calculatedCellSize = _worldSize / (boardSize.y + 1);
+                _calculatedCellSize = _worldSize / (boardSize.y);
             }
             else
             {
-                _calculatedCellSize = _worldSize / (boardSize.x + 1);
+                _calculatedCellSize = _worldSize / (boardSize.x);
             }
             _visualsScale = _calculatedCellSize / _originalCellSize;
         }
@@ -100,6 +97,7 @@ namespace GameCoreController
             );
             gridCellGo.transform.localScale = Vector3.one;
             GridCellCtrl gridCellCtrl = gridCellGo.GetComponent<GridCellCtrl>();
+            gridCellCtrl.InitHierarchy();
             CmpScalableVisuals scVis = gridCellGo.GetComponentInChildren<CmpScalableVisuals>();
 
             scVis.transform.localScale = new Vector3(
@@ -107,6 +105,7 @@ namespace GameCoreController
                 _visualsScale,
                 1
             );
+            gridCellCtrl.SetEvenBackgroundColor(logicalPosition);
 
             return gridCellCtrl;
         }
@@ -178,8 +177,8 @@ namespace GameCoreController
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)
         {
             return new Vector3(
-                _calculatedCellSize * (logicalPosition.x + 1) - _horAlgn,
-                _calculatedCellSize * (logicalPosition.y + 1) - _vertAlgn,
+                _calculatedCellSize * (logicalPosition.x) + _horAlgn + _calculatedCellSize / 2f,
+                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize / 2f,
                 0f
             );
         }
@@ -187,8 +186,8 @@ namespace GameCoreController
         public Vector2Int WorldToLogical(Vector2 worldPosition)
         {
             return new Vector2Int(
-                Mathf.RoundToInt((worldPosition.x + _horAlgn - _calculatedCellSize) / _calculatedCellSize),
-                Mathf.RoundToInt((worldPosition.y + _vertAlgn - _calculatedCellSize) / _calculatedCellSize)
+                Mathf.RoundToInt((worldPosition.x - _horAlgn) / _calculatedCellSize - 0.5f),
+                Mathf.RoundToInt((worldPosition.y - _vertAlgn) / _calculatedCellSize - 0.5f)
             );
         }
     }

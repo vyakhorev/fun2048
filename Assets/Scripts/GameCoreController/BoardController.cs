@@ -367,11 +367,11 @@ namespace GameCoreController
             {
                 for (int y = 0; y < bs.y; y++)
                 {
-                    GridCellCtrl gridCellCtrl = _chipProducer.SpawnGridCell(
-                        new Vector2Int(x, y)
-                    );
-                    _gridCellViews[new Vector2Int(x, y)] = gridCellCtrl;
-                    gridCellCtrl.InitHierarchy(_chipProducer.GetAnimSpeed());
+                    var v = new Vector2Int(x, y);
+                    GridCellCtrl gridCellCtrl = _chipProducer.SpawnGridCell(v);
+                    _gridCellViews[v] = gridCellCtrl;
+                    gridCellCtrl.InitHierarchy();
+                    gridCellCtrl.SetEvenBackgroundColor(v);
                 }
             }
 
@@ -388,6 +388,7 @@ namespace GameCoreController
             if (cellEnabledChangeEffect.IsEnabled)
             {
                 gridCellCtrl.SetCellEnabled(tweenSeq);
+                gridCellCtrl.SetEvenBackgroundColor(cellEnabledChangeEffect.CellCoords);
             } else
             {
                 gridCellCtrl.SetCellDisabled(tweenSeq);
