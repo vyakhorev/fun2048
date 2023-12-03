@@ -139,7 +139,7 @@ namespace GameCoreController
             return chipCtrl;
         }
 
-        public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
+        public ChipCtrl SpawnBombChip(Vector2Int logicalPosition)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
             chipCtrl.SetBomb();

@@ -1,6 +1,7 @@
 using LevelData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 #nullable enable
@@ -21,12 +22,15 @@ namespace GameCoreController
 
         private List<AGridEffect> _effects;
 
+        private List<GridCell> _mergedAtThisTurn;
+
         public ChipKeeper(int x, int y)
         {
             _X = x;
             _Y = y;
             _gridCells = new GridCell[_X, _Y];
             _effects = new List<AGridEffect>();
+            _mergedAtThisTurn = new List<GridCell>();
         }
 
         public void ResetLevel()
@@ -169,6 +173,7 @@ namespace GameCoreController
             {
                 cell_i.ResetTurn();
             }
+            _mergedAtThisTurn = new List<GridCell>();
         }
 
         public bool DoMergeInDirection(GridDirection gridDirection)
@@ -177,6 +182,8 @@ namespace GameCoreController
             const int max_iters = 100;
             int iters = 0;
             ResetTurn();
+            bool atLeastOneChange = false;
+
             if (gridDirection == GridDirection.LEFT || gridDirection == GridDirection.RIGHT)
             {
                 for (int line_y = 0; line_y < _Y; line_y++)
@@ -186,6 +193,7 @@ namespace GameCoreController
                     while (ApplyMergeToLine(line, 0, max_recursion))
                     {
                         iters += 1;
+                        atLeastOneChange = true;
                         if (iters > max_iters) throw new Exception("max_iters");
                     }
                 }
@@ -199,12 +207,15 @@ namespace GameCoreController
                     while (ApplyMergeToLine(line, 0, max_recursion))
                     {
                         iters += 1;
+                        atLeastOneChange = true;
                         if (iters > max_iters) throw new Exception("max_iters");
                     }
                 }
             }
 
-            return true;
+            ApplySpawnBombRule();
+
+            return atLeastOneChange;
         }
 
         public bool DoInteractionAt(Vector2Int at)
@@ -213,13 +224,14 @@ namespace GameCoreController
             {
                 return false;
             }
-            Debug.Log("Interacting at " +  at);
 
             GridCell cell = _gridCells[at.x, at.y];
             if (cell.GetChip() is BombChip bombChip)
             {
+                ResetTurn();
                 DoDamageToBombChip(cell, bombChip);
                 ActivateBomb(cell);
+                ApplySpawnBombRule();
                 return true;
             }
             return false;
@@ -473,6 +485,8 @@ namespace GameCoreController
                 // Clear grass on the way
                 ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
 
+                _mergedAtThisTurn.Add(cellTo);
+
                 cellTo.SetChip(numberChipFrom);
                 cellFrom.ClearChip();
                 return true;
@@ -621,6 +635,56 @@ namespace GameCoreController
                     )
                 );
             }
+        }
+
+        private void ApplySpawnBombRule()
+        {
+            if (_mergedAtThisTurn.Count <= 1)
+            {
+                return;
+            }
+            // Find highest merge
+            int bestId = 0;
+            int bestNum = 0;
+            int i = 0;
+            foreach (var cell in _mergedAtThisTurn)
+            {
+                if (cell.GetChip() is NumberChip numbChip)
+                {
+                    if (numbChip.GetNumericValue() > bestNum)
+                    {
+                        bestNum = numbChip.GetNumericValue();
+                        bestId = i;
+                    }
+                    i++;
+                } 
+                else
+                {
+                    throw new Exception("Expected to find only number chips in the merged list");
+                }
+            }
+            // Check if we have multiple merges
+            var candidates = _mergedAtThisTurn.Where(
+                cell => ((NumberChip)cell.GetChipEnsure()).GetNumericValue() == bestNum
+            ).ToList();
+
+            int rndIdx = CoreUtils.GlobalCtx
+                        .Instance
+                        .GetRandom()
+                        .Next(candidates.Count);
+
+            GridCell cellToSpawnBomb = _mergedAtThisTurn[rndIdx];
+            DoDamageToNumberChip(cellToSpawnBomb, (NumberChip)cellToSpawnBomb.GetChipEnsure());
+            cellToSpawnBomb.SetChip(
+                new BombChip()
+            );
+            _effects.Add(
+                new ChipSpawnedEffect(
+                    cellToSpawnBomb.GetChip(),
+                    cellToSpawnBomb.GetCoords()
+                )
+            );
+
         }
 
         private List<GridCell> GetLineElements(int lineNum, GridDirection gridDirection)

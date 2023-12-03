@@ -89,21 +89,23 @@ namespace GameCoreController
                 else
                 {
                     _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
-                }        
+                }
+
+                bool spawned = TrySpawnNewNumber();
+                if (!spawned)
+                {
+                    _effects.Add(new GameLostEffect(false, true));
+                }
+
+                foreach (var effect in _chipKeeper.GetEffects())
+                {
+                    _watcher.AccountForEffect(effect);
+                }
+
+                return spawned;
             }
             
-            bool spawned = TrySpawnNewNumber();
-            if (!spawned)
-            {
-                _effects.Add(new GameLostEffect(false, true));
-            }
-
-            foreach (var effect in _chipKeeper.GetEffects())
-            {
-                _watcher.AccountForEffect(effect);
-            }
-
-            return spawned;
+            return false;
         }
 
         public void SetMaxMoves(int maxMoves)

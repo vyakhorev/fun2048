@@ -96,7 +96,6 @@ namespace GameCoreController
         {
             if (!_readyToPlay) return;
             Vector2Int tapLogicalPosition = _chipProducer.WorldToLogical(tapWorldPosition);
-            Debug.Log("Tapping " + tapLogicalPosition);
             _enquedTaps.Add(tapLogicalPosition);
         }
 
@@ -326,9 +325,9 @@ namespace GameCoreController
                 );
                 _chipViews[chId] = chipCtrl;
             }
-            else if (chipSpawnedEffect.SpawnedChip is BombChip boosterChip)
+            else if (chipSpawnedEffect.SpawnedChip is BombChip bombChip)
             {
-                ChipCtrl chipCtrl = _chipProducer.SpawnBoosterChip(
+                ChipCtrl chipCtrl = _chipProducer.SpawnBombChip(
                     chipSpawnedEffect.Coords
                 );
                 _chipViews[chId] = chipCtrl;
