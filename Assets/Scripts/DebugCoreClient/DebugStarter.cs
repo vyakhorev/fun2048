@@ -5,6 +5,7 @@ using LevelData;
 using GameCoreController;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace DebugCoreClient
 {
@@ -21,14 +22,22 @@ namespace DebugCoreClient
         void Start()
         {
             // https://forum.unity.com/threads/force-immediate-layout-update.372630/
-            _groupToWait.CalculateLayoutInputHorizontal();
-            _groupToWait.CalculateLayoutInputVertical();
-            _groupToWait.SetLayoutHorizontal();
-            _groupToWait.SetLayoutVertical();
+            //_groupToWait.CalculateLayoutInputHorizontal();
+            //_groupToWait.CalculateLayoutInputVertical();
+            //_groupToWait.SetLayoutHorizontal();
+            //_groupToWait.SetLayoutVertical();
+
+            StartCoroutine(StartAfterAFrame());
+
+        }
+
+        IEnumerator StartAfterAFrame()
+        {
+            yield return new WaitForEndOfFrame();
 
             // Fisrt Setup2048Game, then read goals, then EnableGameUpdateLoop
             _levelController.Setup2048Game(
-                LevelsMadeByUra.Level6(),
+                LevelsMadeByUra.Level7(),
                 CalcBoardBounds()
             );
             InitGoals();
@@ -39,7 +48,6 @@ namespace DebugCoreClient
             _levelController.GetBoardController().OnWinEvent += OnWin;
 
             _levelController.EnableGameUpdateLoop();
-
         }
 
         public Vector3[] CalcBoardBounds()
