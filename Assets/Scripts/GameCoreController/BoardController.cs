@@ -195,74 +195,65 @@ namespace GameCoreController
             }
 
             Sequence tweenSeq = DOTween.Sequence();
+
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
             foreach (var eff in effects.OfType<ChipSpawnedEffect>())
             {
                 SpawnNewChip(eff);
             }
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipMoveEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipNumberChangedEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            _animationLock = false;
-
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipsMergeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<GrassHealthChangeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<HoneyHealthChangeEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-            await tweenSeq.AsyncWaitForCompletion();
 
-            tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<ChipHealthChangeEffect>())
+            {
+                ShowEffect(eff, tweenSeq);
+            }
+
             foreach (var eff in effects.OfType<ChipSpawnedEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
+
             await tweenSeq.AsyncWaitForCompletion();
+
+            _animationLock = false;
 
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
             {
@@ -457,6 +448,14 @@ namespace GameCoreController
             tweenSeq.Insert(
                 0f,
                 chipCtrl.transform.DOScale(
+                    1.3f * Vector3.one,
+                    _chipProducer.GetAnimSpeed()
+                )
+            );
+
+            tweenSeq.Insert(
+                _chipProducer.GetAnimSpeed(),
+                chipCtrl.transform.DOScale(
                     Vector3.zero,
                     _chipProducer.GetAnimSpeed()
                 )
@@ -505,7 +504,7 @@ namespace GameCoreController
             tweenSeq.Insert(
                 0f,
                 chipCtrl.transform.DOScale(
-                    1.2f * Vector3.one,
+                    1.3f * Vector3.one,
                     _chipProducer.GetAnimSpeed()
                 )
             );
@@ -516,6 +515,52 @@ namespace GameCoreController
                     _chipProducer.GetAnimSpeed()
                 )
             );
+        }
+
+        private void ShowEffect(ChipHealthChangeEffect chipHealthChangeEffect, Sequence tweenSeq)
+        {
+            AChip chip = chipHealthChangeEffect.Chip;
+            ChipCtrl chipCtrl = _chipViews[chip.GetChipId()];
+
+            if (chip is EggChip eggChip)
+            {
+                tweenSeq.Insert(
+                    0f,
+                    chipCtrl.transform.DOScale(
+                        1.3f * Vector3.one,
+                        _chipProducer.GetAnimSpeed()
+                    ).OnComplete(() => chipCtrl.SetEgg(
+                        chipHealthChangeEffect.Health
+                    ))
+                );
+                tweenSeq.Insert(
+                    _chipProducer.GetAnimSpeed(),
+                    chipCtrl.transform.DOScale(
+                        Vector3.one,
+                        _chipProducer.GetAnimSpeed()
+                    )
+                );
+            }
+            else if (chip is BoxChip boxChip)
+            {
+                tweenSeq.Insert(
+                    0f,
+                    chipCtrl.transform.DOScale(
+                        1.3f * Vector3.one,
+                        _chipProducer.GetAnimSpeed()
+                    ).OnComplete(() => chipCtrl.SetBox(
+                        chipHealthChangeEffect.Health
+                    ))
+                );
+                tweenSeq.Insert(
+                    _chipProducer.GetAnimSpeed(),
+                    chipCtrl.transform.DOScale(
+                        Vector3.one,
+                        _chipProducer.GetAnimSpeed()
+                    )
+                );
+            }
+
         }
 
         private void ShowEffect(GoalChangedEffect goalChangedEffect)

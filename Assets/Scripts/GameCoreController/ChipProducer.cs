@@ -106,7 +106,7 @@ namespace GameCoreController
         public ChipCtrl SpawnNumberChip(Vector2Int logicalPosition, int val)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsNumber();
+            chipCtrl.SetNumber();
             UpdateNumberVisuals(chipCtrl, val);
             return chipCtrl;
         }
@@ -114,28 +114,28 @@ namespace GameCoreController
         public ChipCtrl SpawnBoxChip(Vector2Int logicalPosition, int health)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBox();
+            chipCtrl.SetBox(health);
             return chipCtrl;
         }
 
         public ChipCtrl SpawnEggChip(Vector2Int logicalPosition, int health)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsEgg();
+            chipCtrl.SetEgg(health);
             return chipCtrl;
         }
 
         public ChipCtrl SpawnBubbleChip(Vector2Int logicalPosition, int bubbleValue)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBubble();
+            chipCtrl.SetBubble();
             return chipCtrl;
         }
 
         public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
-            chipCtrl.SpawnAsBomb();
+            chipCtrl.SetBomb();
             return chipCtrl;
         }
 

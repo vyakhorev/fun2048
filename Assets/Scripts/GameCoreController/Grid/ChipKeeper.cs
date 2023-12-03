@@ -433,6 +433,15 @@ namespace GameCoreController
                                     eggChip
                                 )
                             );
+                        } 
+                        else
+                        {
+                            _effects.Add(
+                                new ChipHealthChangeEffect(
+                                    eggChip,
+                                    eggChip.GetHealth()
+                                )
+                            );
                         }
                     }
                     else if (cellNeigh.GetChip() is BoxChip stoneChip)
@@ -444,6 +453,15 @@ namespace GameCoreController
                             _effects.Add(
                                 new ChipDeletedEffect(
                                     stoneChip
+                                )
+                            );
+                        }
+                        else
+                        {
+                            _effects.Add(
+                                new ChipHealthChangeEffect(
+                                    stoneChip,
+                                    stoneChip.GetHealth()
                                 )
                             );
                         }
@@ -469,6 +487,14 @@ namespace GameCoreController
                 {
                     // TODO - an event indicating that we're breaking an egg
                     // We'll move the number chip anyway
+
+                    _effects.Add(
+                        new ChipHealthChangeEffect(
+                            eggChip,
+                            eggChip.GetHealth()
+                        )
+                    );
+
                     return false;
                 }
 

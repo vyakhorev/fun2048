@@ -111,7 +111,7 @@ namespace GameCoreController
             }
         }
 
-        public void SpawnAsNumber()
+        public void SetNumber()
         {
             _numberChipVisuals.gameObject.SetActive(true);
             _boxChipVisuals.gameObject.SetActive(false);
@@ -120,26 +120,50 @@ namespace GameCoreController
             _bombChipVisuals.gameObject.SetActive(false);
         }
 
-        public void SpawnAsBox()
+        public void SetBox(int health)
         {
             _numberChipVisuals.gameObject.SetActive(false);
             _boxChipVisuals.gameObject.SetActive(true);
             _eggChipVisuals.gameObject.SetActive(false);
             _bubbleChipVisuals.gameObject.SetActive(false);
             _bombChipVisuals.gameObject.SetActive(false);
+
+            foreach (var box in _boxByHealh)
+            {
+                if (box.Key == health)
+                {
+                    box.Value.SetActive(true);
+                } else
+                {
+                    box.Value.SetActive(false);
+                }
+            }
+
         }
 
-        public void SpawnAsEgg()
+        public void SetEgg(int health)
         {
             _numberChipVisuals.gameObject.SetActive(false);
             _boxChipVisuals.gameObject.SetActive(false);
             _eggChipVisuals.gameObject.SetActive(true);
             _bubbleChipVisuals.gameObject.SetActive(false);
             _bombChipVisuals.gameObject.SetActive(false);
+
+            foreach (var egg in _eggByHealh)
+            {
+                if (egg.Key == health)
+                {
+                    egg.Value.SetActive(true);
+                }
+                else
+                {
+                    egg.Value.SetActive(false);
+                }
+            }
         }
 
         // Not in use
-        public void SpawnAsBubble()
+        public void SetBubble()
         {
             _numberChipVisuals.gameObject.SetActive(false);
             _boxChipVisuals.gameObject.SetActive(false);
@@ -148,7 +172,7 @@ namespace GameCoreController
             _bombChipVisuals.gameObject.SetActive(false);
         }
 
-        public void SpawnAsBomb()
+        public void SetBomb()
         {
             _numberChipVisuals.gameObject.SetActive(false);
             _boxChipVisuals.gameObject.SetActive(false);
