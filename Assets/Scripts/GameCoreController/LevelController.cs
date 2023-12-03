@@ -36,7 +36,7 @@ namespace GameCoreController
         /*
          * Start a new game. You can take RootLevelData from LevelEditor
          */
-        public void Start2048Game(RootLevelData levelData)
+        public void Setup2048Game(RootLevelData levelData)
         {
             int seed = Guid.NewGuid().GetHashCode();
             _globalCtx = new GlobalCtx(seed);
@@ -62,7 +62,17 @@ namespace GameCoreController
             _swipeDetection.OnSwipeEvent += OnSwiped;
             _swipeDetection.OnTapEvent += OnTapped;
 
-            _boardController.StartNewGame(_lastGameData);
+            _boardController.SetupNewGame(_lastGameData);
+        }
+
+        public void EnableGameUpdateLoop()
+        {
+            _boardController.EnableGameUpdateLoop();
+        }
+
+        public void DisableGameUpdateLoop()
+        {
+            _boardController.DisableGameUpdateLoop();
         }
 
         public BoardController GetBoardController()
@@ -73,13 +83,14 @@ namespace GameCoreController
         /*
          * Restarts the game with last received level data
          */
-        public void Restart2048Game()
+        public void Reset2048Game()
         {
+            DisableGameUpdateLoop();
             if (_lastGameData == null || _boardController == null)
             {
                 throw new InvalidOperationException("Please call LevelController.Start2048Game first");
             }
-            _boardController.StartNewGame(_lastGameData);
+            _boardController.SetupNewGame(_lastGameData);
         }
 
 
@@ -88,6 +99,8 @@ namespace GameCoreController
          */
         public void End2048Game()
         {
+            DisableGameUpdateLoop();
+
             if (_lastGameData == null || _boardController == null)
             {
                 throw new InvalidOperationException("Please call LevelController.Start2048Game first");

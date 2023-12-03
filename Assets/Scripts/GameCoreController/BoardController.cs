@@ -3,6 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using LevelData;
+using System.Collections.Specialized;
 
 /*
  * Responsible for board visualisation
@@ -58,7 +59,17 @@ namespace GameCoreController
             _animationLock = false;
         }
 
-        public void StartNewGame(RootLevelData levelData)
+        public void EnableGameUpdateLoop()
+        {
+            _readyToPlay = true;
+        }
+
+        public void DisableGameUpdateLoop()
+        {
+            _readyToPlay = false;
+        }
+
+        public void SetupNewGame(RootLevelData levelData)
         {
             ClearBoard();
 
@@ -73,9 +84,6 @@ namespace GameCoreController
 
             _chipViews = new Dictionary<int, ChipCtrl>();
             _gridCellViews = new Dictionary<Vector2Int, GridCellCtrl>();
-
-            _readyToPlay = true;
-
         }
 
         public void ExecuteSwipe(GridDirection gridDirection)
@@ -121,6 +129,11 @@ namespace GameCoreController
 
         }
 
+        public SortedDictionary<string, GameGoalView> GetGoalViews()
+        {
+            return _goalViews;
+        }
+
         private void InitGoalViews(GameGoalWatcher goalWatcher, ChipProducer chipProducer)
         {
             if (chipProducer.SOBoardVisualStyle == null)
@@ -133,7 +146,7 @@ namespace GameCoreController
                 _goalViews["grass"] = new GameGoalView
                 {
                     GoalSprite = chipProducer.SOBoardVisualStyle.GrassGoalSprite,
-                    GoalCounter = goalWatcher.BoxGoal
+                    GoalCounter = goalWatcher.GrassGoal
                 };
             }
             if (goalWatcher.HoneyGoal > 0)

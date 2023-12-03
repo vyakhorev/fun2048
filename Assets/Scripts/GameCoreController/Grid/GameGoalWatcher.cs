@@ -40,24 +40,24 @@ namespace GameCoreController
             if (_grassGoal > 0 && effect is GrassHealthChangeEffect)
             {
                 _grassCnt += 1;
-                _effects.Add(new GoalChangedEffect(GameGoals.GRASS, _grassCnt, 0));
+                _effects.Add(new GoalChangedEffect(GameGoals.GRASS, _grassGoal - _grassCnt, 0));
             } 
             else if (_honeyGoal > 0 && effect is HoneyHealthChangeEffect)
             {
                 _honeyCnt += 1;
-                _effects.Add(new GoalChangedEffect(GameGoals.HONEY, _honeyCnt, 0));
+                _effects.Add(new GoalChangedEffect(GameGoals.HONEY, _honeyGoal - _honeyCnt, 0));
             }
             else if ((_boxGoal > 0 || _eggGoal > 0) && effect is ChipDeletedEffect deletedEff) 
             { 
                 if (_eggGoal > 0 && deletedEff.Chip is EggChip)
                 {
-                    _eggCnt -= 1;
-                    _effects.Add(new GoalChangedEffect(GameGoals.EGG, _eggCnt, 0));
+                    _eggCnt += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.EGG, _eggGoal - _eggCnt, 0));
                 }
                 else if (_boxGoal > 0 && deletedEff.Chip is BoxChip)
                 {
-                    _boxCnt -= 1;
-                    _effects.Add(new GoalChangedEffect(GameGoals.BOX, _boxCnt, 0));
+                    _boxCnt += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.BOX, _boxGoal - _boxCnt, 0));
                 }
             }
             else if (_numberComb.Count > 0 && effect is ChipsMergeEffect mergeEff)

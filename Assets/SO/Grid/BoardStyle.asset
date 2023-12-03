@@ -28,7 +28,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 31dd05598d01e3c41841ba49e3a0cb7f, type: 3}
     - {fileID: 21300000, guid: dd31ee39208463c40ae3bddefba5e7bc, type: 3}
     - {fileID: 21300000, guid: 0242f5cc964ad614da4f090e9643d813, type: 3}
-  _grassGoalSprite: {fileID: 21300000, guid: 080588bcd75d05f429bbc660e5a6a5b5, type: 3}
+  _grassGoalSprite: {fileID: 21300000, guid: 1ef954a5ab916184d84a3545290078ad, type: 3}
   _honeyGoalSprite: {fileID: 21300000, guid: 8ef6ad444032daf47a1a53ea684edbe6, type: 3}
   _boxGoalSprite: {fileID: 21300000, guid: bfb48d947a98d1b48b921a0943669aac, type: 3}
   _eggGoalSprite: {fileID: 21300000, guid: e8e1b36498abc4249b9eea2758b4128c, type: 3}
