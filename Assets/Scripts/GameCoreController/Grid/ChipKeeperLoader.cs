@@ -41,6 +41,10 @@ namespace GameCoreController
                         goal.Quantity
                     );
                 }
+                else if (goal.GoalType == LevelGoalType.CLEAR_BOMB)
+                {
+                    watcher.SetCleanBombGoal(goal.Quantity);
+                }
             }
         }
 
@@ -218,7 +222,7 @@ namespace GameCoreController
             {
                 throw new Exception("cannot spawn booster chip at non-empty cell");
             }
-            BoosterChip newChip = new BoosterChip();
+            BombChip newChip = new BombChip();
             newChip.SetChipId(chipKeeper.GetNextChipId());
             cell.SetChip(newChip);
             chipKeeper.ReportEffect(

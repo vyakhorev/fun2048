@@ -14,7 +14,8 @@ namespace GameCoreController
         BOX = 1,
         EGG = 2,
         HONEY = 3,
-        NUMBER = 4
+        NUMBER = 4,
+        BOMB = 5
     }
 
 }

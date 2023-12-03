@@ -27,6 +27,10 @@ namespace GameCoreController
         private int _boxCnt;
         public int BoxGoal => _boxGoal;
 
+        private int _bombGoal;
+        private int _bombCnt;
+        public int BombGoal => _bombGoal;
+
         private List<AGridEffect> _effects;
 
         private bool _gameWon;
@@ -40,17 +44,23 @@ namespace GameCoreController
 
         public void AccountForEffect(AGridEffect effect)
         {
-            if (_grassGoal > 0 && effect is GrassHealthChangeEffect)
+            if (_grassGoal > 0 && effect is GrassHealthChangeEffect grassEff)
             {
-                _grassCnt += 1;
-                _effects.Add(new GoalChangedEffect(GameGoals.GRASS, _grassGoal - _grassCnt, 0));
-            } 
-            else if (_honeyGoal > 0 && effect is HoneyHealthChangeEffect)
-            {
-                _honeyCnt += 1;
-                _effects.Add(new GoalChangedEffect(GameGoals.HONEY, _honeyGoal - _honeyCnt, 0));
+                if (grassEff.HealthLevel == 0)
+                {
+                    _grassCnt += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.GRASS, _grassGoal - _grassCnt, 0));
+                }
             }
-            else if ((_boxGoal > 0 || _eggGoal > 0) && effect is ChipDeletedEffect deletedEff) 
+            else if (_honeyGoal > 0 && effect is HoneyHealthChangeEffect honeyEff)
+            {
+                if (honeyEff.HealthLevel == 0)
+                {
+                    _honeyCnt += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.HONEY, _honeyGoal - _honeyCnt, 0));
+                }
+            }
+            else if ((_boxGoal > 0 || _eggGoal > 0 || _bombGoal > 0) && effect is ChipDeletedEffect deletedEff) 
             { 
                 if (_eggGoal > 0 && deletedEff.Chip is EggChip)
                 {
@@ -61,6 +71,11 @@ namespace GameCoreController
                 {
                     _boxCnt += 1;
                     _effects.Add(new GoalChangedEffect(GameGoals.BOX, _boxGoal - _boxCnt, 0));
+                }
+                else if (_bombGoal > 0 && deletedEff.Chip is BombChip)
+                {
+                    _bombCnt += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.BOMB, _bombGoal - _bombCnt, 0));
                 }
             }
             else if (_numberComb.Count > 0 && effect is ChipsMergeEffect mergeEff)
@@ -137,6 +152,11 @@ namespace GameCoreController
         public void SetCombineNumbersGoal(int number, int cnt)
         {
             _numberComb[number] = cnt;
+        }
+
+        public void SetCleanBombGoal(int cnt)
+        {
+            _bombGoal = cnt;
         }
 
     }

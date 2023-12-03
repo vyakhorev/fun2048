@@ -173,6 +173,14 @@ namespace GameCoreController
                     GoalCounter = goalWatcher.BoxGoal
                 };
             }
+            if (goalWatcher.BombGoal > 0)
+            {
+                _goalViews["bombs"] = new GameGoalView
+                {
+                    GoalSprite = chipProducer.SOBoardVisualStyle.BombGoalSprite,
+                    GoalCounter = goalWatcher.BombGoal
+                };
+            }
             foreach (var numberGoal in goalWatcher.NumberComb)
             {
                 var sprite = chipProducer.SOBoardVisualStyle.GetNumberSprite(numberGoal.Key);
@@ -317,7 +325,7 @@ namespace GameCoreController
                 );
                 _chipViews[chId] = chipCtrl;
             }
-            else if (chipSpawnedEffect.SpawnedChip is BoosterChip boosterChip)
+            else if (chipSpawnedEffect.SpawnedChip is BombChip boosterChip)
             {
                 ChipCtrl chipCtrl = _chipProducer.SpawnBoosterChip(
                     chipSpawnedEffect.Coords
@@ -585,6 +593,10 @@ namespace GameCoreController
             else if (goalChangedEffect.Goal == GameGoals.NUMBER)
             {
                 goalId = goalChangedEffect.Number.ToString();
+            }
+            else if (goalChangedEffect.Goal == GameGoals.BOMB)
+            {
+                goalId = "bombs";
             }
             else
             {

@@ -1,9 +1,9 @@
 
 namespace GameCoreController
 {
-    public class BoosterChip : AChip
+    public class BombChip : AChip
     {
-        public BoosterChip()
+        public BombChip()
         {
 
         }

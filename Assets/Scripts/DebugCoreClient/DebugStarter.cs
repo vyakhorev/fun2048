@@ -19,7 +19,7 @@ namespace DebugCoreClient
         void Start()
         {
             // Fisrt Setup2048Game, then read goals, then EnableGameUpdateLoop
-            _levelController.Setup2048Game(LevelsMadeByUra.Level4());
+            _levelController.Setup2048Game(LevelsMadeByUra.Level5());
             InitGoals();
 
             _levelController.GetBoardController().OnGoalUpdateEvent += OnGoalUpdate;

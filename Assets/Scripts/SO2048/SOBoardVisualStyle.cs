@@ -28,6 +28,9 @@ namespace SO2048
         [SerializeField] private Sprite _eggGoalSprite;
         public Sprite EggGoalSprite => _eggGoalSprite;
 
+        [SerializeField] private Sprite _bombGoalSprite;
+        public Sprite BombGoalSprite => _bombGoalSprite;
+
         [SerializeField] private float _animSpeed = 0.2f;
         public float AnimSpeed => _animSpeed;
 

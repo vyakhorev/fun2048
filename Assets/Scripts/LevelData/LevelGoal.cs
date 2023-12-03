@@ -10,7 +10,8 @@ namespace LevelData
         CLEAR_BOX = 1,
         CLEAR_EGG = 2,
         CLEAR_HONEY = 3,
-        COMBINE_NUMBER = 4
+        COMBINE_NUMBER = 4,
+        CLEAR_BOMB = 5
     }
 
     [Serializable]

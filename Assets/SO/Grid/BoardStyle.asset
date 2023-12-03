@@ -32,4 +32,5 @@ MonoBehaviour:
   _honeyGoalSprite: {fileID: 21300000, guid: 8ef6ad444032daf47a1a53ea684edbe6, type: 3}
   _boxGoalSprite: {fileID: 21300000, guid: bfb48d947a98d1b48b921a0943669aac, type: 3}
   _eggGoalSprite: {fileID: 21300000, guid: e8e1b36498abc4249b9eea2758b4128c, type: 3}
+  _bombGoalSprite: {fileID: 21300000, guid: 302b5d33edcb22148989d654011d78bc, type: 3}
   _animSpeed: 0.2
