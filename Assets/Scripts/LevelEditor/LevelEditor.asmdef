@@ -1,0 +1,16 @@
+{
+    "name": "LevelEditor",
+    "rootNamespace": "LevelEditor",
+    "references": [
+        "GUID:04e353867e9a7204dbf534c2ba7f1636"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
