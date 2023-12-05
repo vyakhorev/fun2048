@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,9 +13,8 @@ namespace GameCoreController
         private CmpGrassLevel2Visuals _grassLevel2Visuals;
         private CmpHoneyVisuals _honeyVisuals;
         private CmpScalableVisuals _scalableVisuals;
-        private float _animSpeed;
 
-        public void InitHierarchy(float animSpeed)
+        public void InitHierarchy()
         {
             _backgroundCellVisuals = GetComponentInChildren<CmpBackgroundCellVisuals>(true);
             if (_backgroundCellVisuals == null) throw new System.Exception("no BackgroundCellVisuals");
@@ -26,7 +26,6 @@ namespace GameCoreController
             if (_honeyVisuals == null) throw new System.Exception("no HoneyVisuals");
             _scalableVisuals = GetComponentInChildren<CmpScalableVisuals>(true);
             if (_scalableVisuals == null) throw new System.Exception("no ScalableVisuals");
-            _animSpeed = animSpeed;
 
             _scalableVisuals.gameObject.SetActive(true);
             _backgroundCellVisuals.gameObject.SetActive(true);
@@ -42,9 +41,35 @@ namespace GameCoreController
                 0f,
                 transform.DOScale(
                     Vector3.one,
-                    _animSpeed
+                    0.1f
                 )
             );
+        }
+
+        public void SetEvenBackgroundColor(Vector2Int xy)
+        {
+            int m = (xy.x + xy.y) % 2;
+            string variant;
+            if (m == 0)
+            {
+                variant = "varA";
+            } 
+            else
+            {
+                variant = "varB";
+            }
+
+            foreach (Transform backgroundVariant in _backgroundCellVisuals.transform)
+            {
+                if (backgroundVariant.gameObject.name == variant)
+                {
+                    backgroundVariant.gameObject.SetActive(true);
+                } 
+                else
+                {
+                    backgroundVariant.gameObject.SetActive(false);
+                }
+            }
         }
 
         public void SetCellDisabled(Sequence tweenSeq)
@@ -53,7 +78,7 @@ namespace GameCoreController
                 0f,
                 transform.DOScale(
                     Vector3.zero,
-                    _animSpeed
+                    0.1f
                 )
             );
         }
@@ -66,7 +91,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel1Visuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     ).OnComplete(() => { 
                         _grassLevel1Visuals.gameObject.SetActive(false);  
                     })
@@ -79,7 +104,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel2Visuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     ).OnComplete(() => {
                         _grassLevel2Visuals.gameObject.SetActive(false);
                     })
@@ -97,7 +122,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel1Visuals.transform.DOScale(
                         Vector3.one,
-                        _animSpeed
+                        0.2f
                     )
                 );
             }
@@ -108,7 +133,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel2Visuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     ).OnComplete(() => {
                         _grassLevel2Visuals.gameObject.SetActive(false);
                     })
@@ -125,7 +150,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel2Visuals.transform.DOScale(
                         Vector3.one,
-                        _animSpeed
+                        0.2f
                     )
                 );
             }
@@ -136,7 +161,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel1Visuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     ).OnComplete(() => {
                         _grassLevel1Visuals.gameObject.SetActive(false);
                     })
@@ -152,7 +177,7 @@ namespace GameCoreController
                     0f,
                     _honeyVisuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     ).OnComplete(() => {
                         _honeyVisuals.gameObject.SetActive(false);
                     })
@@ -169,7 +194,7 @@ namespace GameCoreController
                     0f,
                     _grassLevel1Visuals.transform.DOScale(
                         Vector3.zero,
-                        _animSpeed
+                        0.2f
                     )
                 );
             }

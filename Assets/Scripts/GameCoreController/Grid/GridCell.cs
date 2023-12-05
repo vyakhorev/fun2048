@@ -81,6 +81,15 @@ namespace GameCoreController
             return _chip;
         }
 
+        public AChip GetChipEnsure()
+        {
+            if (_chip == null)
+            {
+                throw new System.Exception("Unexpected empty cell " + GetCoords());
+            }
+            return _chip;
+        }
+
         public void ClearChip()
         {
             _chip = null;
@@ -90,7 +99,7 @@ namespace GameCoreController
         {
             if (_chip != null)
             {
-                if (_chip is StoneChip || _chip is EggChip || _chip is BubbleChip) return true;
+                if (_chip is BoxChip || _chip is EggChip || _chip is BubbleChip) return true;
                 return false;
             }
             return false;

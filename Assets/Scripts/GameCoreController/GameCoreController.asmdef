@@ -1,0 +1,22 @@
+{
+    "name": "GameCoreController",
+    "rootNamespace": "GameCoreController",
+    "references": [
+        "LevelData",
+        "LegacyPooling",
+        "SO2048",
+        "CoreUtils",
+        "DOTween.Modules",
+        "GameInput",
+        "Utility"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
