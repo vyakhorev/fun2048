@@ -31,7 +31,7 @@ namespace GameCoreController
             Camera camera,
             Transform boardParentTransform,
             SOBoardVisualStyle soBoardVisualStyle,
-            Vector3[] worldConers)
+            Vector3[] worldCorners)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
@@ -56,15 +56,15 @@ namespace GameCoreController
                 cellSr.sprite.bounds.size.y
             ) * imageScale;
 
-            _worldConers = worldConers;
+            _worldConers = worldCorners;
 
             _worldHeight = _worldConers[1].y - _worldConers[0].y;
             _worldWidth = _worldConers[3].x - _worldConers[0].x;
+            Debug.Log(_worldHeight);
             _worldSize = Mathf.Min(_worldHeight, _worldWidth);
 
             _horAlgn = _worldConers[0].x;
             _vertAlgn = _worldConers[0].y;
-
         }
 
         public float GetAnimSpeed()
@@ -74,15 +74,8 @@ namespace GameCoreController
 
         public void InitNewGame(Vector2Int boardSize)
         {
-
-            if (boardSize.y <= boardSize.x)
-            {
-                _calculatedCellSize = _worldSize / (boardSize.y);
-            }
-            else
-            {
-                _calculatedCellSize = _worldSize / (boardSize.x);
-            }
+            int maxAxisSize = Mathf.Max(boardSize.x, boardSize.y);
+            _calculatedCellSize = _worldSize / maxAxisSize; 
             _visualsScale = _calculatedCellSize / _originalCellSize;
         }
 
@@ -177,8 +170,8 @@ namespace GameCoreController
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)
         {
             return new Vector3(
-                _calculatedCellSize * (logicalPosition.x) + _horAlgn + _calculatedCellSize / 2f,
-                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize / 2f,
+                _calculatedCellSize * (logicalPosition.x) + _horAlgn  + _calculatedCellSize * 0.5f,
+                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize  * 0.5f,
                 0f
             );
         }
