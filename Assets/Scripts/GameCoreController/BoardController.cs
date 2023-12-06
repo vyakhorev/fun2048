@@ -105,19 +105,25 @@ namespace GameCoreController
             if (_animationLock) return;
            
             // TODO - swipes and taps should be in one queue
-            List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
-            _enquedSwipes.Clear();
-            foreach (GridDirection gridDirection in acts)
+            //List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
+
+            foreach (GridDirection gridDirection in _enquedSwipes)
             {
-                _chip2048Game.TrySwipe(gridDirection);
+                bool success = _chip2048Game.TrySwipe(gridDirection);
+
+                if (!success) 
+                    break;
             }
 
-            List<Vector2Int> tapActs = new List<Vector2Int>(_enquedTaps);
-            _enquedTaps.Clear();
-            foreach (Vector2Int tap in tapActs)
+            _enquedSwipes.Clear();
+
+
+            foreach (Vector2Int tap in _enquedTaps)
             {
                 _chip2048Game.TryTap(tap);
             }
+
+            _enquedTaps.Clear();
 
             List<AGridEffect> effects = _chip2048Game.GetEffects();
             _chip2048Game.ResetEffects();

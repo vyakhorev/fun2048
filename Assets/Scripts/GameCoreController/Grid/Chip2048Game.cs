@@ -56,7 +56,7 @@ namespace GameCoreController
             if (didApply)
             {
                 _moves += 1;
-                if (_moves > _maxMoves)
+                if (_moves == _maxMoves)
                 {
                     _effects.Add(new GameLostEffect(true, false));
                 }

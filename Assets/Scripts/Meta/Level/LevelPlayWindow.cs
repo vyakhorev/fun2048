@@ -25,9 +25,11 @@ namespace Meta.Level.UI
 
         private void Start ()
         {
-            _playButton.OnClicked += () => SceneManager.LoadScene(Utility.Constants.Scenes.Core);
+            _playButton.OnClicked += LoadCoreGameplay;
             _levelService.OnLevelPicked += ChangeLevelText;
         }
+
+        private void LoadCoreGameplay() => SceneManager.LoadScene(Utility.Constants.Scenes.Core);
 
         private void ChangeLevelText(int index)
         {
