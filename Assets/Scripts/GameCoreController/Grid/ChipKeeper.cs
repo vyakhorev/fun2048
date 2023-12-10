@@ -639,14 +639,13 @@ namespace GameCoreController
 
         private void ApplySpawnBombRule()
         {
+            return;
             if (_mergedAtThisTurn.Count <= 1)
             {
                 return;
             }
             // Find highest merge
-            int bestId = 0;
             int bestNum = 0;
-            int i = 0;
             foreach (var cell in _mergedAtThisTurn)
             {
                 if (cell.GetChip() is NumberChip numbChip)
@@ -654,16 +653,14 @@ namespace GameCoreController
                     if (numbChip.GetNumericValue() > bestNum)
                     {
                         bestNum = numbChip.GetNumericValue();
-                        bestId = i;
                     }
-                    i++;
                 } 
                 else
                 {
                     throw new Exception("Expected to find only number chips in the merged list");
                 }
             }
-            // Check if we have multiple merges
+            
             var candidates = _mergedAtThisTurn.Where(
                 cell => ((NumberChip)cell.GetChipEnsure()).GetNumericValue() == bestNum
             ).ToList();
@@ -673,7 +670,7 @@ namespace GameCoreController
                         .GetRandom()
                         .Next(candidates.Count);
 
-            GridCell cellToSpawnBomb = _mergedAtThisTurn[rndIdx];
+            GridCell cellToSpawnBomb = candidates[rndIdx];
             DoDamageToNumberChip(cellToSpawnBomb, (NumberChip)cellToSpawnBomb.GetChipEnsure());
             cellToSpawnBomb.SetChip(
                 new BombChip()

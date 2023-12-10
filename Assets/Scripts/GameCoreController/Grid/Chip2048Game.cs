@@ -18,6 +18,8 @@ namespace GameCoreController
         private int _maxMoves;
         private int _moves;
         private List<AGridEffect> _effects;
+        private bool _shouldCheckForEffects;
+        private bool _gameEnded;
 
         public Vector2Int GetBoardSize()
         {
@@ -26,6 +28,8 @@ namespace GameCoreController
 
         public void ResetGame(RootLevelData levelData)
         {
+            _shouldCheckForEffects = false;
+            _gameEnded = false;
             _watcher = new GameGoalWatcher();
             _watcher.Init();
             _effects = new List<AGridEffect>();
@@ -52,13 +56,17 @@ namespace GameCoreController
 
         public bool TrySwipe(GridDirection gridDirection)
         {
+            if (_gameEnded) return false;
+
             bool didApply = _chipKeeper.DoMergeInDirection(gridDirection);
+            _shouldCheckForEffects = true;
             if (didApply)
             {
                 _moves += 1;
                 if (_moves == _maxMoves)
                 {
                     _effects.Add(new GameLostEffect(true, false));
+                    _gameEnded = true;
                 }
                 else
                 {
@@ -66,8 +74,12 @@ namespace GameCoreController
                 }
             }
             bool spawned = TrySpawnNewNumber();
+            if (!spawned)
+            {
+                _effects.Add(new GameLostEffect(false, true));
+                _gameEnded = true;
+            }
 
-            // kinda reactor
             foreach (var effect in _chipKeeper.GetEffects())
             {
                 _watcher.AccountForEffect(effect);
@@ -78,13 +90,17 @@ namespace GameCoreController
 
         public bool TryTap(Vector2Int tapLogicalPosition)
         {
+            if (_gameEnded) return false;
+
             bool didApply = _chipKeeper.DoInteractionAt(tapLogicalPosition);
+            _shouldCheckForEffects = true;
             if (didApply)
             {
                 _moves += 1;
                 if (_moves > _maxMoves)
                 {
                     _effects.Add(new GameLostEffect(true, false));
+                    _gameEnded = true;
                 }
                 else
                 {
@@ -95,6 +111,7 @@ namespace GameCoreController
                 if (!spawned)
                 {
                     _effects.Add(new GameLostEffect(false, true));
+                    _gameEnded = true;
                 }
 
                 foreach (var effect in _chipKeeper.GetEffects())
@@ -118,12 +135,18 @@ namespace GameCoreController
             return _chipKeeper.TrySpawnNewNumberChipAtRandomPosition();
         }
 
+        public bool ShouldCheckForEffects()
+        {
+            return _shouldCheckForEffects;
+        }
+
         public List<AGridEffect> GetEffects()
         {
             var allEffects = new List<AGridEffect>();
             allEffects.AddRange(_chipKeeper.GetEffects());
             allEffects.AddRange(_watcher.GetEffects());
             allEffects.AddRange(_effects);
+            _shouldCheckForEffects = false;
             return allEffects;
         }
 
@@ -132,6 +155,7 @@ namespace GameCoreController
             _chipKeeper.ResetEffects();
             _watcher.ResetEffects();
             _effects.Clear();
+            _shouldCheckForEffects = false;
         }
 
         

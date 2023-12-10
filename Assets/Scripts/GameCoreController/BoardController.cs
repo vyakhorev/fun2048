@@ -30,8 +30,6 @@ namespace GameCoreController
         // 
         private Chip2048Game _chip2048Game;
 
-        private List<GridDirection> _enquedSwipes;
-        private List<Vector2Int> _enquedTaps;
         private bool _readyToPlay = false;
         private ChipProducer _chipProducer;
 
@@ -41,11 +39,15 @@ namespace GameCoreController
 
         private bool _animationLock;
 
+        private GridDirection _activeSwipe;
+        private Vector2Int _activeTap;
+        private bool _hadSwipe;
+        private bool _hadTap;
+
         public void Init(ChipProducer chipProducer)
         {
-            _enquedSwipes = new List<GridDirection>();
-            _enquedTaps = new List<Vector2Int>();
-
+            _hadSwipe = false;
+            _hadTap = false;
             _chipProducer = chipProducer;
 
             _chip2048Game = new Chip2048Game();
@@ -89,50 +91,44 @@ namespace GameCoreController
         public void ExecuteSwipe(GridDirection gridDirection)
         {
             if (!_readyToPlay) return;
-            _enquedSwipes.Add(gridDirection);
+            _activeSwipe = gridDirection;
+            _hadSwipe = true;
         }
 
         public void ExecuteTap(Vector2 tapWorldPosition)
         {
             if (!_readyToPlay) return;
             Vector2Int tapLogicalPosition = _chipProducer.WorldToLogical(tapWorldPosition);
-            _enquedTaps.Add(tapLogicalPosition);
+            _activeTap = tapLogicalPosition;
+            _hadTap = true;
         }
 
         public void DoUpdate()
         {
             if (!_readyToPlay) return;
             if (_animationLock) return;
-           
-            // TODO - swipes and taps should be in one queue
-            //List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
+            if (!_hadSwipe && !_hadTap) return;
 
-            foreach (GridDirection gridDirection in _enquedSwipes)
+            if (_hadTap)
             {
-                bool success = _chip2048Game.TrySwipe(gridDirection);
-
-                if (!success) 
-                    break;
+                _chip2048Game.TryTap(_activeTap);
             }
-
-            _enquedSwipes.Clear();
-
-
-            foreach (Vector2Int tap in _enquedTaps)
+            else if (_hadSwipe)
             {
-                _chip2048Game.TryTap(tap);
+                _chip2048Game.TrySwipe(_activeSwipe);
             }
+            _hadTap = false;
+            _hadSwipe = false;
 
-            _enquedTaps.Clear();
-
-            List<AGridEffect> effects = _chip2048Game.GetEffects();
-            _chip2048Game.ResetEffects();
-            
-            if (effects.Count > 0)
+            if (_chip2048Game.ShouldCheckForEffects())
             {
-                CoroutineRunEffects(effects);
+                List<AGridEffect> effects = _chip2048Game.GetEffects();
+                _chip2048Game.ResetEffects();
+                if (effects.Count > 0)
+                {
+                    CoroutineRunEffects(effects);
+                }
             }
-
         }
 
         public SortedDictionary<string, GameGoalView> GetGoalViews()
@@ -208,6 +204,11 @@ namespace GameCoreController
                 ResetBoard(eff);
             }
 
+            foreach (var eff in effects.OfType<ChipSpawnedEffect>())
+            {
+                SpawnNewChip(eff);
+            }
+
             Sequence tweenSeq = DOTween.Sequence();
 
             foreach (var eff in effects.OfType<BoardResetEffect>())
@@ -217,13 +218,8 @@ namespace GameCoreController
 
             foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
             {
-                ShowEffect(eff, tweenSeq);
-            }
+                ShowEffect(eff, tweenSeq);            }
 
-            foreach (var eff in effects.OfType<ChipSpawnedEffect>())
-            {
-                SpawnNewChip(eff);
-            }
 
             foreach (var eff in effects.OfType<ChipMoveEffect>())
             {
@@ -267,8 +263,6 @@ namespace GameCoreController
 
             await tweenSeq.AsyncWaitForCompletion();
 
-            _animationLock = false;
-
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
             {
                 DeleteChip(eff);
@@ -293,6 +287,8 @@ namespace GameCoreController
             {
                 ShowEffect(eff);
             }
+
+            _animationLock = false;
         }
 
         private void SpawnNewChip(ChipSpawnedEffect chipSpawnedEffect)
