@@ -9,6 +9,8 @@ namespace LevelData
     public class BubbleChipData
     {
         public Vector2Int Coords;
+        public SqZone Zone;
+        public bool IsZone;
         public int BubbleValue;
     }
 }

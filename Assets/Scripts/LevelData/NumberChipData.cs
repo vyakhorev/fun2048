@@ -9,7 +9,8 @@ namespace LevelData
     public class NumberChipData
     {
         public Vector2Int Coords;
+        public SqZone Zone;
+        public bool IsZone;
         public int NumberValue;
-
     }
 }

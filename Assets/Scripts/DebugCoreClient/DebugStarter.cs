@@ -20,7 +20,19 @@ namespace DebugCoreClient
         [SerializeField] private TextMeshProUGUI _turnsLeftTMP;
         [SerializeField] private RectTransform _boardSafeBounds;
 
+#if UNITY_EDITOR
+        [SerializeField] private bool DebugRegime;
+        [SerializeField] private int LevelDebug;
+#endif
+
         private Dictionary<string, GoalVisCntr> _goalVisuals;
+
+        private void Start()
+        {
+#if UNITY_EDITOR
+            if (DebugRegime) RunGame(LevelsMadeByUra.LevelByNumber(LevelDebug));
+#endif
+        }
 
         public void RunGame(RootLevelData rootLevelData)
         {

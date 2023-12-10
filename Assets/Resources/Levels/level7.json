@@ -1,0 +1,697 @@
+{
+    "MaxTurns": 35,
+    "Goals": [
+        {
+            "GoalType": 0,
+            "Quantity": 25,
+            "NumberToCombine": 0
+        },
+        {
+            "GoalType": 1,
+            "Quantity": 25,
+            "NumberToCombine": 0
+        },
+        {
+            "GoalType": 3,
+            "Quantity": 6,
+            "NumberToCombine": 0
+        },
+        {
+            "GoalType": 2,
+            "Quantity": 6,
+            "NumberToCombine": 0
+        }
+    ],
+    "Board": {
+        "BoardSize": {
+            "x": 9,
+            "y": 11
+        },
+        "GridCellList": [
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 4
+                },
+                "IsZone": true,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 8,
+                    "y0": 0,
+                    "x1": 8,
+                    "y1": 4
+                },
+                "IsZone": true,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 1,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 7,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 3,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 10
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 8,
+                    "y": 10
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 7
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 7
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 5
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 8,
+                    "x1": 8,
+                    "y1": 9
+                },
+                "IsZone": true,
+                "GrassHealth": 2,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 1,
+                    "y0": 10,
+                    "x1": 7,
+                    "y1": 10
+                },
+                "IsZone": true,
+                "GrassHealth": 2,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 3,
+                    "y0": 2,
+                    "x1": 5,
+                    "y1": 3
+                },
+                "IsZone": true,
+                "GrassHealth": 0,
+                "HoneyHealth": 2,
+                "IsEnabled": true
+            }
+        ],
+        "NumberChipList": [],
+        "BoxChipList": [
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 3,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 1,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 7,
+                    "y": 1
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 1,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 1,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 7,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 7,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 3,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 1
+            }
+        ],
+        "EggChipList": [
+            {
+                "Coords": {
+                    "x": 3,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 3,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            }
+        ],
+        "BubbleChipList": [],
+        "BombChipList": [
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 5
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false
+            },
+            {
+                "Coords": {
+                    "x": 8,
+                    "y": 5
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false
+            }
+        ]
+    }
+}

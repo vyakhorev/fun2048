@@ -9,8 +9,10 @@ namespace LevelData
     {
         public Vector2Int Coords;
         public SqZone Zone;
+        public bool IsZone;
         public int GrassHealth;
         public int HoneyHealth;
         public bool IsEnabled;
+
     }
 }

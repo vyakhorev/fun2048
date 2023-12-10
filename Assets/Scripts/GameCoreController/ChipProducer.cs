@@ -60,7 +60,7 @@ namespace GameCoreController
 
             _worldHeight = _worldConers[1].y - _worldConers[0].y;
             _worldWidth = _worldConers[3].x - _worldConers[0].x;
-            Debug.Log(_worldHeight);
+
             _worldSize = Mathf.Min(_worldHeight, _worldWidth);
 
             _horAlgn = _worldConers[0].x;
@@ -76,6 +76,15 @@ namespace GameCoreController
         {
             int maxAxisSize = Mathf.Max(boardSize.x, boardSize.y);
             _calculatedCellSize = _worldSize / maxAxisSize; 
+            if (boardSize.y <= boardSize.x)
+            {
+                _calculatedCellSize = _worldSize / (boardSize.y);
+            }
+            else
+            {
+                _calculatedCellSize = _worldSize / (boardSize.x);
+            }
+
             _visualsScale = _calculatedCellSize / _originalCellSize;
         }
 
