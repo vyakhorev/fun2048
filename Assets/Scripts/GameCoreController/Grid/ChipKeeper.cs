@@ -639,16 +639,15 @@ namespace GameCoreController
 
         private void ApplySpawnBombRule()
         {
-            
             if (_mergedAtThisTurn.Count <= 1)
             {
                 return;
             }
-            // Find highest merge
+            // Find highest merges
             int bestNum = 0;
             foreach (var cell in _mergedAtThisTurn)
             {
-                if (cell.GetChip() is NumberChip numbChip)
+                if (cell.GetChip() is NumberChip numbChip && !cell.IsEmpty())
                 {
                     if (numbChip.GetNumericValue() > bestNum)
                     {
@@ -657,13 +656,21 @@ namespace GameCoreController
                 } 
                 else
                 {
-                    throw new Exception("Expected to find only number chips in the merged list");
+                    //throw new Exception("Expected to find only number chips in the merged list");
                 }
             }
-            
-            var candidates = _mergedAtThisTurn.Where(
-                cell => ((NumberChip)cell.GetChipEnsure()).GetNumericValue() == bestNum
-            ).ToList();
+
+            List<GridCell> candidates = new List<GridCell>();
+            foreach (var cell in _mergedAtThisTurn)
+            {
+                if (cell.GetChip() is NumberChip numbChip && !cell.IsEmpty())
+                { 
+                    if (numbChip.GetNumericValue() == bestNum)
+                    {
+                        candidates.Add(cell);
+                    }
+                }
+            }
 
             int rndIdx = CoreUtils.GlobalCtx
                         .Instance
@@ -671,7 +678,18 @@ namespace GameCoreController
                         .Next(candidates.Count);
 
             GridCell cellToSpawnBomb = candidates[rndIdx];
-            DoDamageToNumberChip(cellToSpawnBomb, (NumberChip)cellToSpawnBomb.GetChipEnsure());
+
+            if (!cellToSpawnBomb.IsEmpty())
+            {
+                _effects.Add(
+                    new ChipDeletedEffect(
+                        cellToSpawnBomb.GetChip()
+                    )
+                );
+                cellToSpawnBomb.ClearChip();
+            }
+
+
             cellToSpawnBomb.SetChip(
                 new BombChip()
             );

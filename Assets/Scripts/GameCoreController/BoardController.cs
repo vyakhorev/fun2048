@@ -107,25 +107,27 @@ namespace GameCoreController
         {
             if (!_readyToPlay) return;
             if (_animationLock) return;
-            if (!_hadSwipe && !_hadTap) return;
 
             if (_hadTap)
             {
                 _chip2048Game.TryTap(_activeTap);
+                _hadTap = false;
+                _hadSwipe = false;
             }
             else if (_hadSwipe)
             {
                 _chip2048Game.TrySwipe(_activeSwipe);
+                _hadTap = false;
+                _hadSwipe = false;
             }
-            _hadTap = false;
-            _hadSwipe = false;
-
+            
             if (_chip2048Game.ShouldCheckForEffects())
             {
                 List<AGridEffect> effects = _chip2048Game.GetEffects();
                 _chip2048Game.ResetEffects();
                 if (effects.Count > 0)
                 {
+                    _animationLock = true;
                     CoroutineRunEffects(effects);
                 }
             }
@@ -198,7 +200,6 @@ namespace GameCoreController
         // Order is quite important here
         private async void CoroutineRunEffects(List<AGridEffect> effects)
         {
-            _animationLock = true;
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
                 ResetBoard(eff);

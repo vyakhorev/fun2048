@@ -156,7 +156,6 @@ namespace GameCoreController
             _chipKeeper.ResetEffects();
             _watcher.ResetEffects();
             _effects.Clear();
-            _shouldCheckForEffects = false;
         }
 
         

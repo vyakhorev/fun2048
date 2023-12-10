@@ -34,6 +34,8 @@ namespace LevelData
                     return Level8();
                 case 9:
                     return Level9();
+                case 10:
+                    return Level10();
                 default:
                     throw new Exception("No such level " + number);
             }
@@ -1770,6 +1772,196 @@ namespace LevelData
 
             return rootLevelData;
         }
+
+        public static RootLevelData Level10()
+        {
+            RootLevelData rootLevelData = new RootLevelData();
+            rootLevelData.Board = new BoardData();
+            rootLevelData.MaxTurns = 45;
+            rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
+            rootLevelData.Board.GridCellList = new List<GridCellData>
+            {
+                // Disabled 
+                new GridCellData {
+                    Zone = new SqZone{x0=4, y0=0, x1=5, y1=1},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=6, y0=0, x1=8, y1=3},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=7, y0=4, x1=8, y1=5},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+
+                new GridCellData {
+                    Zone = new SqZone{x0=0, y0=5, x1=1, y1=6},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=0, y0=6, x1=2, y1=10},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=9, x1=4, y1=10},
+                    IsZone = true,
+                    IsEnabled = false
+                },
+
+                // Grass
+                new GridCellData {
+                    Zone = new SqZone{x0=0, y0=4, x1=1, y1=4},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=0, x1=3, y1=1},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=2, y0=2, x1=2, y1=6},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=2, x1=5, y1=2},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=5, y0=3, x1=5, y1=4},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=6, y0=4, x1=6, y1=8},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=7, y0=6, x1=8, y1=6},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=6, x1=3, y1=8},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=4, y0=8, x1=5, y1=8},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=5, y0=9, x1=5, y1=10},
+                    IsZone = true,
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+
+                // Honey
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=3, x1=4, y1=4},
+                    IsZone = true,
+                    HoneyHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=5, x1=5, y1=5},
+                    IsZone = true,
+                    HoneyHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=4, y0=6, x1=5, y1=7},
+                    IsZone = true,
+                    HoneyHealth = 1,
+                    IsEnabled = true
+                },
+
+            };
+
+            rootLevelData.Board.BoxChipList = new List<BoxChipData>
+            {
+                new BoxChipData {
+                    Zone = new SqZone{x0=2, y0=2, x1=2, y1=6},
+                    IsZone = true,
+                    Health = 2
+                },
+                new BoxChipData {
+                    Zone = new SqZone{x0=3, y0=2, x1=5, y1=2},
+                    IsZone = true,
+                    Health = 2
+                },
+                new BoxChipData {
+                    Zone = new SqZone{x0=5, y0=3, x1=5, y1=4},
+                    IsZone = true,
+                    Health = 2
+                },
+                new BoxChipData {
+                    Zone = new SqZone{x0=6, y0=4, x1=6, y1=8},
+                    IsZone = true,
+                    Health = 2
+                },
+                new BoxChipData {
+                    Zone = new SqZone{x0=3, y0=6, x1=3, y1=8},
+                    IsZone = true,
+                    Health = 2
+                },
+                new BoxChipData {
+                    Zone = new SqZone{x0=4, y0=8, x1=5, y1=8},
+                    IsZone = true,
+                    Health = 2
+                },
+            };
+
+            rootLevelData.Board.BombChipList = new List<BombChipData>
+            {
+                new BombChipData
+                {
+                    Coords = new Vector2Int(1, 1)
+                },
+                new BombChipData
+                {
+                    Coords = new Vector2Int(7, 9)
+                },
+            };
+
+            rootLevelData.Goals = new List<LevelGoal> {
+                new LevelGoal {
+                    GoalType = LevelGoalType.CLEAR_GRASS,
+                    Quantity = 28
+                },
+                new LevelGoal {
+                    GoalType = LevelGoalType.CLEAR_BOX,
+                    Quantity = 20
+                },
+                new LevelGoal {
+                    GoalType = LevelGoalType.CLEAR_HONEY,
+                    Quantity = 10
+                }
+            };
+
+            return rootLevelData;
+        }
+
 
     }
 }
