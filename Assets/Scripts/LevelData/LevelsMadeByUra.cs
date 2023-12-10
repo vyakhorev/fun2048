@@ -41,6 +41,11 @@ namespace LevelData
             }
         }
 
+        public static int HowManyLevels()
+        {
+            return 10;
+        }
+
         public static RootLevelData Level1()
         {
             // Default level
