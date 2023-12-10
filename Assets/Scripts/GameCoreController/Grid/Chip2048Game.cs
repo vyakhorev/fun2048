@@ -28,7 +28,7 @@ namespace GameCoreController
 
         public void ResetGame(RootLevelData levelData)
         {
-            _shouldCheckForEffects = false;
+            
             _gameEnded = false;
             _watcher = new GameGoalWatcher();
             _watcher.Init();
@@ -47,6 +47,7 @@ namespace GameCoreController
             ChipKeeperLoader.LoadGoals(_watcher, levelData.Goals);
 
             TrySpawnNewNumber();
+            _shouldCheckForEffects = true;
         }
 
         public GameGoalWatcher GetGameGoalWatcher()

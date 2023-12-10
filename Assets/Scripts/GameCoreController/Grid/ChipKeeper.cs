@@ -639,7 +639,7 @@ namespace GameCoreController
 
         private void ApplySpawnBombRule()
         {
-            return;
+            
             if (_mergedAtThisTurn.Count <= 1)
             {
                 return;
