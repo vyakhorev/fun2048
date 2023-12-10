@@ -3770,7 +3770,8 @@ MonoBehaviour:
   _goalGridElementPrefab: {fileID: 3936140047218199974, guid: 73821eead97c6fb478810aa467be30cb, type: 3}
   _turnsLeftTMP: {fileID: 1621308153}
   _boardSafeBounds: {fileID: 737497178}
-  LevelDebug: 8
+  DebugRegime: 1
+  LevelDebug: 5
 --- !u!1 &1596931342
 GameObject:
   m_ObjectHideFlags: 0

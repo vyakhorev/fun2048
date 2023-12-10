@@ -20,7 +20,7 @@ namespace GameCoreController
         private float _calculatedCellSize;
         private float _worldWidth;
         private float _worldHeight;
-        private float _worldSize;
+        //private float _worldSize;
         private float _vertAlgn;
         private float _horAlgn;
         private float _originalCellSize;
@@ -61,10 +61,7 @@ namespace GameCoreController
             _worldHeight = _worldConers[1].y - _worldConers[0].y;
             _worldWidth = _worldConers[3].x - _worldConers[0].x;
 
-            _worldSize = Mathf.Min(_worldHeight, _worldWidth);
-
-            _horAlgn = _worldConers[0].x;
-            _vertAlgn = _worldConers[0].y;
+            //_worldSize = Mathf.Min(_worldHeight, _worldWidth);
         }
 
         public float GetAnimSpeed()
@@ -74,16 +71,25 @@ namespace GameCoreController
 
         public void InitNewGame(Vector2Int boardSize)
         {
-            int maxAxisSize = Mathf.Max(boardSize.x, boardSize.y);
-            _calculatedCellSize = _worldSize / maxAxisSize; 
-            if (boardSize.y <= boardSize.x)
+            if (boardSize.x >= boardSize.y)
             {
-                _calculatedCellSize = _worldSize / (boardSize.y);
+                _calculatedCellSize = _worldWidth / boardSize.x;
             }
             else
             {
-                _calculatedCellSize = _worldSize / (boardSize.x);
+                _calculatedCellSize = _worldHeight / boardSize.y;
             }
+
+            _horAlgn = (
+                _worldConers[0].x +
+                _worldConers[3].x -
+                _calculatedCellSize * boardSize.x
+            ) / 2f;
+            _vertAlgn = (
+                _worldConers[1].y +
+                _worldConers[0].y -
+                _calculatedCellSize * boardSize.y
+            ) / 2f;
 
             _visualsScale = _calculatedCellSize / _originalCellSize;
         }
