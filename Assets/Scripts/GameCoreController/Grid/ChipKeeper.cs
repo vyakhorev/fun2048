@@ -22,7 +22,8 @@ namespace GameCoreController
 
         private List<AGridEffect> _effects;
 
-        private List<GridCell> _mergedAtThisTurn;
+        private List<NumberChip> _mergedThisTurn;
+        private HashSet<int> _chipsDeletedThisTurn;
 
         public ChipKeeper(int x, int y)
         {
@@ -30,7 +31,9 @@ namespace GameCoreController
             _Y = y;
             _gridCells = new GridCell[_X, _Y];
             _effects = new List<AGridEffect>();
-            _mergedAtThisTurn = new List<GridCell>();
+            // _mergedAtThisTurn = new List<GridCell>();
+            _mergedThisTurn = new List<NumberChip>();
+            _chipsDeletedThisTurn = new HashSet<int>();
         }
 
         public void ResetLevel()
@@ -173,7 +176,9 @@ namespace GameCoreController
             {
                 cell_i.ResetTurn();
             }
-            _mergedAtThisTurn = new List<GridCell>();
+            //_mergedAtThisTurn = new List<GridCell>();
+            _mergedThisTurn = new List<NumberChip>();
+            _chipsDeletedThisTurn = new HashSet<int>();
         }
 
         public bool DoMergeInDirection(GridDirection gridDirection)
@@ -231,7 +236,6 @@ namespace GameCoreController
                 ResetTurn();
                 DoDamageToBombChip(cell, bombChip);
                 ActivateBomb(cell);
-                ApplySpawnBombRule();
                 return true;
             }
             return false;
@@ -464,6 +468,8 @@ namespace GameCoreController
                     )
                 );
 
+                _chipsDeletedThisTurn.Add(numberChipTo.GetChipId());
+
                 // Check merge effects on neighbours - clear honey, eggs, stones
                 foreach (GridCell cellNeigh in GetNeighbours(cellTo.GetCoords(), true))
                 {
@@ -485,8 +491,7 @@ namespace GameCoreController
                 // Clear grass on the way
                 ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
 
-                _mergedAtThisTurn.Add(cellTo);
-
+                _mergedThisTurn.Add(numberChipFrom);
                 cellTo.SetChip(numberChipFrom);
                 cellFrom.ClearChip();
                 return true;
@@ -526,6 +531,7 @@ namespace GameCoreController
                         eggChip
                     )
                 );
+                _chipsDeletedThisTurn.Add(eggChip.GetChipId());
 
                 // Clear grass on the way
                 ClearGrass(cellFrom.GetCoords(), cellTo.GetCoords());
@@ -551,6 +557,7 @@ namespace GameCoreController
                     bombChip
                 )
             );
+            _chipsDeletedThisTurn.Add(bombChip.GetChipId());
         }
 
         private void DoDamageToNumberChip(GridCell cell, NumberChip numberChip)
@@ -561,6 +568,7 @@ namespace GameCoreController
                     numberChip
                 )
             );
+            _chipsDeletedThisTurn.Add(numberChip.GetChipId());
         }
 
         private void DoDamageToGrass(GridCell cell)
@@ -602,6 +610,7 @@ namespace GameCoreController
                         eggChip
                     )
                 );
+                _chipsDeletedThisTurn.Add(eggChip.GetChipId());
             }
             else
             {
@@ -625,6 +634,7 @@ namespace GameCoreController
                         boxChip
                     )
                 );
+                _chipsDeletedThisTurn.Add(boxChip.GetChipId());
             }
             else
             {
@@ -639,37 +649,35 @@ namespace GameCoreController
 
         private void ApplySpawnBombRule()
         {
-            if (_mergedAtThisTurn.Count <= 1)
+            return;
+            if (_mergedThisTurn.Count <= 1)
             {
                 return;
             }
             // Find highest merges
             int bestNum = 0;
-            foreach (var cell in _mergedAtThisTurn)
+            foreach (NumberChip numbChip in _mergedThisTurn)
             {
-                if (cell.GetChip() is NumberChip numbChip && !cell.IsEmpty())
+                if (numbChip.GetNumericValue() > bestNum && 
+                    !_chipsDeletedThisTurn.Contains(numbChip.GetChipId()))
                 {
-                    if (numbChip.GetNumericValue() > bestNum)
-                    {
-                        bestNum = numbChip.GetNumericValue();
-                    }
-                } 
-                else
-                {
-                    //throw new Exception("Expected to find only number chips in the merged list");
+                    bestNum = numbChip.GetNumericValue();
                 }
             }
 
-            List<GridCell> candidates = new List<GridCell>();
-            foreach (var cell in _mergedAtThisTurn)
+            List<NumberChip> candidates = new List<NumberChip>();
+            foreach (NumberChip numbChip in _mergedThisTurn)
             {
-                if (cell.GetChip() is NumberChip numbChip && !cell.IsEmpty())
-                { 
-                    if (numbChip.GetNumericValue() == bestNum)
-                    {
-                        candidates.Add(cell);
-                    }
+                if (numbChip.GetNumericValue() == bestNum &&
+                    !_chipsDeletedThisTurn.Contains(numbChip.GetChipId()))
+                {
+                    candidates.Add(numbChip);
                 }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return;  // Every candidate is already destroyed
             }
 
             int rndIdx = CoreUtils.GlobalCtx
@@ -677,7 +685,13 @@ namespace GameCoreController
                         .GetRandom()
                         .Next(candidates.Count);
 
-            GridCell cellToSpawnBomb = candidates[rndIdx];
+            NumberChip chipToSwapToBomb = candidates[rndIdx];
+            GridCell? cellToSpawnBomb = FindCellByChipId(chipToSwapToBomb.GetChipId());
+            if (cellToSpawnBomb == null)
+            {
+                Debug.LogError("Attempt to spawn a bomb instead of non-existing chip");
+                return;
+            }
 
             if (!cellToSpawnBomb.IsEmpty())
             {
@@ -689,17 +703,29 @@ namespace GameCoreController
                 cellToSpawnBomb.ClearChip();
             }
 
-
+            BombChip bombChip = new BombChip();
             cellToSpawnBomb.SetChip(
-                new BombChip()
+                bombChip
             );
             _effects.Add(
                 new ChipSpawnedEffect(
-                    cellToSpawnBomb.GetChip(),
+                    bombChip,
                     cellToSpawnBomb.GetCoords()
                 )
             );
 
+        }
+
+        private GridCell? FindCellByChipId(int chipId)
+        {
+            foreach (GridCell cell in _gridCells)
+            {
+                if (!cell.IsEmpty() && cell.GetChipEnsure().GetChipId() == chipId)
+                {
+                    return cell;
+                }
+            }
+            return null;
         }
 
         private List<GridCell> GetLineElements(int lineNum, GridDirection gridDirection)

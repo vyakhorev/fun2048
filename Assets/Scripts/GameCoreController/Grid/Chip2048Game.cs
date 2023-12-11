@@ -141,13 +141,14 @@ namespace GameCoreController
             return _shouldCheckForEffects;
         }
 
-        public List<AGridEffect> GetEffects()
+        public List<AGridEffect> CollectEffects()
         {
             var allEffects = new List<AGridEffect>();
             allEffects.AddRange(_chipKeeper.GetEffects());
             allEffects.AddRange(_watcher.GetEffects());
             allEffects.AddRange(_effects);
             _shouldCheckForEffects = false;
+            ResetEffects();
             return allEffects;
         }
 

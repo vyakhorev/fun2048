@@ -123,8 +123,7 @@ namespace GameCoreController
             
             if (_chip2048Game.ShouldCheckForEffects())
             {
-                List<AGridEffect> effects = _chip2048Game.GetEffects();
-                _chip2048Game.ResetEffects();
+                List<AGridEffect> effects = _chip2048Game.CollectEffects();
                 if (effects.Count > 0)
                 {
                     _animationLock = true;
@@ -210,17 +209,16 @@ namespace GameCoreController
                 SpawnNewChip(eff);
             }
 
-            Sequence tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
+            {
+                ShowEffect(eff);
+            }
 
+            Sequence tweenSeq = DOTween.Sequence();
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
                 ShowEffect(eff, tweenSeq);
             }
-
-            foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
-            {
-                ShowEffect(eff, tweenSeq);            }
-
 
             foreach (var eff in effects.OfType<ChipMoveEffect>())
             {
@@ -261,7 +259,6 @@ namespace GameCoreController
             {
                 ShowEffect(eff, tweenSeq);
             }
-
             await tweenSeq.AsyncWaitForCompletion();
 
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
@@ -385,16 +382,16 @@ namespace GameCoreController
 
         }
 
-        private void ShowEffect(CellEnabledChangeEffect cellEnabledChangeEffect, Sequence tweenSeq)
+        private void ShowEffect(CellEnabledChangeEffect cellEnabledChangeEffect)
         {
             GridCellCtrl gridCellCtrl = _gridCellViews[cellEnabledChangeEffect.CellCoords];
             if (cellEnabledChangeEffect.IsEnabled)
             {
-                gridCellCtrl.SetCellEnabled(tweenSeq);
+                gridCellCtrl.SetCellEnabled();
                 gridCellCtrl.SetEvenBackgroundColor(cellEnabledChangeEffect.CellCoords);
             } else
             {
-                gridCellCtrl.SetCellDisabled(tweenSeq);
+                gridCellCtrl.SetCellDisabled();
             }
         }
 

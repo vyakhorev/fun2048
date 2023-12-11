@@ -35,15 +35,16 @@ namespace GameCoreController
 
         }
 
-        public void SetCellEnabled(Sequence tweenSeq)
+        public void SetCellEnabled()
         {
-            tweenSeq.Insert(
-                0f,
-                transform.DOScale(
-                    Vector3.one,
-                    0.1f
-                )
-            );
+            transform.localScale = Vector3.one;
+            //tweenSeq.Insert(
+            //    0f,
+            //    transform.DOScale(
+            //        Vector3.one,
+            //        0.1f
+            //    )
+            //);
         }
 
         public void SetEvenBackgroundColor(Vector2Int xy)
@@ -72,15 +73,16 @@ namespace GameCoreController
             }
         }
 
-        public void SetCellDisabled(Sequence tweenSeq)
+        public void SetCellDisabled()
         {
-            tweenSeq.Insert(
-                0f,
-                transform.DOScale(
-                    Vector3.zero,
-                    0.1f
-                )
-            );
+            transform.localScale = Vector3.zero;
+            //tweenSeq.Insert(
+            //    0f,
+            //    transform.DOScale(
+            //        Vector3.zero,
+            //        0.1f
+            //    )
+            //);
         }
 
         public void RemoveGrass(Sequence tweenSeq)
@@ -193,7 +195,7 @@ namespace GameCoreController
                 tweenSeq.Insert(
                     0f,
                     _grassLevel1Visuals.transform.DOScale(
-                        Vector3.zero,
+                        Vector3.one,
                         0.2f
                     )
                 );
