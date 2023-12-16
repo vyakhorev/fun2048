@@ -2,7 +2,6 @@ using LevelData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static log4net.Appender.ColoredConsoleAppender;
 
 namespace LevelData
 {
@@ -16,6 +15,8 @@ namespace LevelData
         {
             switch (number)
             {
+                case 0:
+                    return Level0();
                 case 1:
                     return Level1();
                 case 2:
@@ -44,6 +45,27 @@ namespace LevelData
         public static int HowManyLevels()
         {
             return 10;
+        }
+
+        public static RootLevelData Level0()
+        {
+            // Default level
+            RootLevelData rootLevelData = new RootLevelData();
+            rootLevelData.Board = new BoardData();
+            rootLevelData.MaxTurns = 100;
+            rootLevelData.Board.BoardSize = new Vector2Int(5, 5);
+
+            rootLevelData.Goals = new List<LevelGoal> {
+                new LevelGoal {
+                    GoalType = LevelGoalType.COMBINE_NUMBER,
+                    NumberToCombine = 512,
+                    Quantity = 20
+                }
+            };
+
+
+            return rootLevelData;
+
         }
 
         public static RootLevelData Level1()
@@ -191,7 +213,7 @@ namespace LevelData
             // Default level
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 35;
+            rootLevelData.MaxTurns = 70;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -367,7 +389,7 @@ namespace LevelData
             // Default level
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 35;
+            rootLevelData.MaxTurns = 70;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -432,7 +454,7 @@ namespace LevelData
             // Default level
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 45;
+            rootLevelData.MaxTurns = 90;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -578,7 +600,7 @@ namespace LevelData
             // Default level
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 35;
+            rootLevelData.MaxTurns = 70;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -782,7 +804,7 @@ namespace LevelData
         {
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 35;
+            rootLevelData.MaxTurns = 70;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -990,7 +1012,7 @@ namespace LevelData
         {
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 35;
+            rootLevelData.MaxTurns = 70;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -1262,7 +1284,7 @@ namespace LevelData
         {
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 45;
+            rootLevelData.MaxTurns = 90;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -1446,7 +1468,7 @@ namespace LevelData
         {
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 45;
+            rootLevelData.MaxTurns = 90;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
@@ -1782,7 +1804,7 @@ namespace LevelData
         {
             RootLevelData rootLevelData = new RootLevelData();
             rootLevelData.Board = new BoardData();
-            rootLevelData.MaxTurns = 45;
+            rootLevelData.MaxTurns = 90;
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {

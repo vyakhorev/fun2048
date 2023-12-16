@@ -649,7 +649,6 @@ namespace GameCoreController
 
         private void ApplySpawnBombRule()
         {
-            return;
             if (_mergedThisTurn.Count <= 1)
             {
                 return;
@@ -686,6 +685,7 @@ namespace GameCoreController
                         .Next(candidates.Count);
 
             NumberChip chipToSwapToBomb = candidates[rndIdx];
+
             GridCell? cellToSpawnBomb = FindCellByChipId(chipToSwapToBomb.GetChipId());
             if (cellToSpawnBomb == null)
             {
@@ -704,6 +704,7 @@ namespace GameCoreController
             }
 
             BombChip bombChip = new BombChip();
+            bombChip.SetChipId(GetNextChipId());
             cellToSpawnBomb.SetChip(
                 bombChip
             );
