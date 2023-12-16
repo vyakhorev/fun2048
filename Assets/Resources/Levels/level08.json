@@ -1,5 +1,5 @@
 {
-    "MaxTurns": 45,
+    "MaxTurns": 90,
     "Goals": [
         {
             "GoalType": 0,
