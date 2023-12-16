@@ -20,7 +20,7 @@ namespace GameCoreController
         private float _calculatedCellSize;
         private float _worldWidth;
         private float _worldHeight;
-        private float _worldSize;
+        //private float _worldSize;
         private float _vertAlgn;
         private float _horAlgn;
         private float _originalCellSize;
@@ -31,7 +31,7 @@ namespace GameCoreController
             Camera camera,
             Transform boardParentTransform,
             SOBoardVisualStyle soBoardVisualStyle,
-            Vector3[] worldConers)
+            Vector3[] worldCorners)
         {
             _camera = camera;
             _soBoardVisualStyle = soBoardVisualStyle;
@@ -56,15 +56,12 @@ namespace GameCoreController
                 cellSr.sprite.bounds.size.y
             ) * imageScale;
 
-            _worldConers = worldConers;
+            _worldConers = worldCorners;
 
             _worldHeight = _worldConers[1].y - _worldConers[0].y;
             _worldWidth = _worldConers[3].x - _worldConers[0].x;
-            _worldSize = Mathf.Min(_worldHeight, _worldWidth);
 
-            _horAlgn = _worldConers[0].x;
-            _vertAlgn = _worldConers[0].y;
-
+            //_worldSize = Mathf.Min(_worldHeight, _worldWidth);
         }
 
         public float GetAnimSpeed()
@@ -74,15 +71,26 @@ namespace GameCoreController
 
         public void InitNewGame(Vector2Int boardSize)
         {
-
-            if (boardSize.y <= boardSize.x)
+            if (boardSize.x >= boardSize.y)
             {
-                _calculatedCellSize = _worldSize / (boardSize.y);
+                _calculatedCellSize = _worldWidth / boardSize.x;
             }
             else
             {
-                _calculatedCellSize = _worldSize / (boardSize.x);
+                _calculatedCellSize = _worldHeight / boardSize.y;
             }
+
+            _horAlgn = (
+                _worldConers[0].x +
+                _worldConers[3].x -
+                _calculatedCellSize * boardSize.x
+            ) / 2f;
+            _vertAlgn = (
+                _worldConers[1].y +
+                _worldConers[0].y -
+                _calculatedCellSize * boardSize.y
+            ) / 2f;
+
             _visualsScale = _calculatedCellSize / _originalCellSize;
         }
 
@@ -139,7 +147,7 @@ namespace GameCoreController
             return chipCtrl;
         }
 
-        public ChipCtrl SpawnBoosterChip(Vector2Int logicalPosition)
+        public ChipCtrl SpawnBombChip(Vector2Int logicalPosition)
         {
             ChipCtrl chipCtrl = SpawnAChip(logicalPosition);
             chipCtrl.SetBomb();
@@ -177,8 +185,8 @@ namespace GameCoreController
         public Vector3 LogicalToWorld(Vector2Int logicalPosition)
         {
             return new Vector3(
-                _calculatedCellSize * (logicalPosition.x) + _horAlgn + _calculatedCellSize / 2f,
-                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize / 2f,
+                _calculatedCellSize * (logicalPosition.x) + _horAlgn  + _calculatedCellSize * 0.5f,
+                _calculatedCellSize * (logicalPosition.y) + _vertAlgn + _calculatedCellSize  * 0.5f,
                 0f
             );
         }

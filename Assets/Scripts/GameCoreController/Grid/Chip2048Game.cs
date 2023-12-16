@@ -18,6 +18,8 @@ namespace GameCoreController
         private int _maxMoves;
         private int _moves;
         private List<AGridEffect> _effects;
+        private bool _shouldCheckForEffects;
+        private bool _gameEnded;
 
         public Vector2Int GetBoardSize()
         {
@@ -26,6 +28,8 @@ namespace GameCoreController
 
         public void ResetGame(RootLevelData levelData)
         {
+            
+            _gameEnded = false;
             _watcher = new GameGoalWatcher();
             _watcher.Init();
             _effects = new List<AGridEffect>();
@@ -43,6 +47,7 @@ namespace GameCoreController
             ChipKeeperLoader.LoadGoals(_watcher, levelData.Goals);
 
             TrySpawnNewNumber();
+            _shouldCheckForEffects = true;
         }
 
         public GameGoalWatcher GetGameGoalWatcher()
@@ -52,15 +57,30 @@ namespace GameCoreController
 
         public bool TrySwipe(GridDirection gridDirection)
         {
+            if (_gameEnded) return false;
+
             bool didApply = _chipKeeper.DoMergeInDirection(gridDirection);
+            _shouldCheckForEffects = true;
             if (didApply)
             {
                 _moves += 1;
-                _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
+                if (_moves == _maxMoves)
+                {
+                    _effects.Add(new GameLostEffect(true, false));
+                    _gameEnded = true;
+                }
+                else
+                {
+                    _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
+                }
             }
             bool spawned = TrySpawnNewNumber();
+            if (!spawned)
+            {
+                _effects.Add(new GameLostEffect(false, true));
+                _gameEnded = true;
+            }
 
-            // kinda reactor
             foreach (var effect in _chipKeeper.GetEffects())
             {
                 _watcher.AccountForEffect(effect);
@@ -71,32 +91,39 @@ namespace GameCoreController
 
         public bool TryTap(Vector2Int tapLogicalPosition)
         {
+            if (_gameEnded) return false;
+
             bool didApply = _chipKeeper.DoInteractionAt(tapLogicalPosition);
+            _shouldCheckForEffects = true;
             if (didApply)
             {
                 _moves += 1;
                 if (_moves > _maxMoves)
                 {
                     _effects.Add(new GameLostEffect(true, false));
+                    _gameEnded = true;
                 }
                 else
                 {
                     _effects.Add(new TurnsLeftChangedEffect(_maxMoves - _moves));
-                }        
+                }
+
+                bool spawned = TrySpawnNewNumber();
+                if (!spawned)
+                {
+                    _effects.Add(new GameLostEffect(false, true));
+                    _gameEnded = true;
+                }
+
+                foreach (var effect in _chipKeeper.GetEffects())
+                {
+                    _watcher.AccountForEffect(effect);
+                }
+
+                return spawned;
             }
             
-            bool spawned = TrySpawnNewNumber();
-            if (!spawned)
-            {
-                _effects.Add(new GameLostEffect(false, true));
-            }
-
-            foreach (var effect in _chipKeeper.GetEffects())
-            {
-                _watcher.AccountForEffect(effect);
-            }
-
-            return spawned;
+            return false;
         }
 
         public void SetMaxMoves(int maxMoves)
@@ -109,12 +136,19 @@ namespace GameCoreController
             return _chipKeeper.TrySpawnNewNumberChipAtRandomPosition();
         }
 
-        public List<AGridEffect> GetEffects()
+        public bool ShouldCheckForEffects()
+        {
+            return _shouldCheckForEffects;
+        }
+
+        public List<AGridEffect> CollectEffects()
         {
             var allEffects = new List<AGridEffect>();
             allEffects.AddRange(_chipKeeper.GetEffects());
             allEffects.AddRange(_watcher.GetEffects());
             allEffects.AddRange(_effects);
+            _shouldCheckForEffects = false;
+            ResetEffects();
             return allEffects;
         }
 

@@ -1,36 +1,47 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LevelData;
 using GameCoreController;
 using TMPro;
-using UnityEngine.UI;
+using Meta.Level;
+using VContainer;
+using System;
 
 namespace DebugCoreClient
 {
     public class DebugStarter : MonoBehaviour
     {
+        public event Action OnWinEvt;
+        public event Action OnLossEvt;
+
         [SerializeField] private LevelController _levelController;
         [SerializeField] private RectTransform _goalsGrid;
         [SerializeField] private GameObject _goalGridElementPrefab;
         [SerializeField] private TextMeshProUGUI _turnsLeftTMP;
-        [SerializeField] private VerticalLayoutGroup _groupToWait;
         [SerializeField] private RectTransform _boardSafeBounds;
+
+#if UNITY_EDITOR
+        [SerializeField] private bool DebugRegime;
+        [SerializeField] private int LevelDebug;
+#endif
+
         private Dictionary<string, GoalVisCntr> _goalVisuals;
 
-        void Start()
+        private void Start()
         {
-            // https://forum.unity.com/threads/force-immediate-layout-update.372630/
-            _groupToWait.CalculateLayoutInputHorizontal();
-            _groupToWait.CalculateLayoutInputVertical();
-            _groupToWait.SetLayoutHorizontal();
-            _groupToWait.SetLayoutVertical();
+#if UNITY_EDITOR
+            if (DebugRegime) RunGame(LevelsMadeByUra.LevelByNumber(LevelDebug));
+#endif
+        }
 
+        public void RunGame(RootLevelData rootLevelData)
+        {
             // Fisrt Setup2048Game, then read goals, then EnableGameUpdateLoop
             _levelController.Setup2048Game(
-                LevelsMadeByUra.Level6(),
+                rootLevelData,
                 CalcBoardBounds()
             );
+
             InitGoals();
 
             _levelController.GetBoardController().OnGoalUpdateEvent += OnGoalUpdate;
@@ -39,7 +50,6 @@ namespace DebugCoreClient
             _levelController.GetBoardController().OnWinEvent += OnWin;
 
             _levelController.EnableGameUpdateLoop();
-
         }
 
         public Vector3[] CalcBoardBounds()
@@ -55,12 +65,6 @@ namespace DebugCoreClient
             _levelController.Reset2048Game();
             InitGoals();
             _levelController.EnableGameUpdateLoop();
-        }
-
-        public void End2048Game()
-        {
-            Debug.Log("Ending the game, clearing the field");
-            _levelController.End2048Game();
         }
 
         private void InitGoals()
@@ -88,8 +92,9 @@ namespace DebugCoreClient
 
         public void OnWin(object sender, WinEventArgs args)
         {
+            _levelController.End2048Game();
             Debug.Log("You won, restarting");
-            RestartGame();
+            OnWinEvt.Invoke();
         }
 
         public void OnLoose(object sender, LooseEventArgs args)
@@ -101,13 +106,13 @@ namespace DebugCoreClient
             {
                 Debug.Log("You lost - no turns left, restarting");
             }
-            RestartGame();
+            _levelController.End2048Game();
+            OnLossEvt.Invoke();
         }
 
         public void OnTurnsLeftUpdate(object sender, TurnsLeftUpdateEventArgs args)
         {
             _turnsLeftTMP.text = args.TurnsLeft.ToString();
         }
-
     }
 }

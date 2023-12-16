@@ -1,6 +1,3 @@
-
-using System;
-
 namespace GameCoreController
 {
     public abstract class AChip
@@ -16,7 +13,5 @@ namespace GameCoreController
         {
             _chipID = chipID;
         }
-
     }
 }
-

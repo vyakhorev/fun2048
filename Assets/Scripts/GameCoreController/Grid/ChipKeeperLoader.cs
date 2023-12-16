@@ -54,7 +54,7 @@ namespace GameCoreController
             {
                 foreach (GridCellData cellData in boardData.GridCellList)
                 {
-                    if (cellData.Zone != null)
+                    if (cellData.IsZone)
                     {
                         var zn = cellData.Zone;
                         for (int x = zn.x0; x <= zn.x1; x++)
@@ -79,9 +79,24 @@ namespace GameCoreController
             {
                 foreach (NumberChipData numberData in boardData.NumberChipList)
                 {
-                    var coords = numberData.Coords;
-                    var cell = chipKeeper.GetGridCell(coords.x, coords.y);
-                    LoadNumberChip(chipKeeper, numberData, cell);
+                    if (numberData.IsZone)
+                    {
+                        var zn = numberData.Zone;
+                        for (int x = zn.x0; x <= zn.x1; x++)
+                        {
+                            for (int y = zn.y0; y <= zn.y1; y++)
+                            {
+                                var cell = chipKeeper.GetGridCell(x, y);
+                                LoadNumberChip(chipKeeper, numberData, cell);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var coords = numberData.Coords;
+                        var cell = chipKeeper.GetGridCell(coords.x, coords.y);
+                        LoadNumberChip(chipKeeper, numberData, cell);
+                    }
                 }
             }
 
@@ -89,9 +104,24 @@ namespace GameCoreController
             {
                 foreach (BoxChipData boxData in boardData.BoxChipList)
                 {
-                    var coords = boxData.Coords;
-                    var cell = chipKeeper.GetGridCell(coords.x, coords.y);
-                    LoadStoneChip(chipKeeper, boxData, cell);
+                    if (boxData.IsZone)
+                    {
+                        var zn = boxData.Zone;
+                        for (int x = zn.x0; x <= zn.x1; x++)
+                        {
+                            for (int y = zn.y0; y <= zn.y1; y++)
+                            {
+                                var cell = chipKeeper.GetGridCell(x, y);
+                                LoadBoxChip(chipKeeper, boxData, cell);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var coords = boxData.Coords;
+                        var cell = chipKeeper.GetGridCell(coords.x, coords.y);
+                        LoadBoxChip(chipKeeper, boxData, cell);
+                    }
                 }
             }
 
@@ -99,9 +129,24 @@ namespace GameCoreController
             {
                 foreach (EggChipData eggData in boardData.EggChipList)
                 {
-                    var coords = eggData.Coords;
-                    var cell = chipKeeper.GetGridCell(coords.x, coords.y);
-                    LoadEggChip(chipKeeper, eggData, cell);
+                    if (eggData.IsZone)
+                    {
+                        var zn = eggData.Zone;
+                        for (int x = zn.x0; x <= zn.x1; x++)
+                        {
+                            for (int y = zn.y0; y <= zn.y1; y++)
+                            {
+                                var cell = chipKeeper.GetGridCell(x, y);
+                                LoadEggChip(chipKeeper, eggData, cell);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var coords = eggData.Coords;
+                        var cell = chipKeeper.GetGridCell(coords.x, coords.y);
+                        LoadEggChip(chipKeeper, eggData, cell);
+                    }
                 }
             }
 
@@ -109,9 +154,24 @@ namespace GameCoreController
             {
                 foreach (BubbleChipData bubbleData in boardData.BubbleChipList)
                 {
-                    var coords = bubbleData.Coords;
-                    var cell = chipKeeper.GetGridCell(coords.x, coords.y);
-                    LoadBubbleChip(chipKeeper, bubbleData, cell);
+                    if (bubbleData.IsZone)
+                    {
+                        var zn = bubbleData.Zone;
+                        for (int x = zn.x0; x <= zn.x1; x++)
+                        {
+                            for (int y = zn.y0; y <= zn.y1; y++)
+                            {
+                                var cell = chipKeeper.GetGridCell(x, y);
+                                LoadBubbleChip(chipKeeper, bubbleData, cell);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var coords = bubbleData.Coords;
+                        var cell = chipKeeper.GetGridCell(coords.x, coords.y);
+                        LoadBubbleChip(chipKeeper, bubbleData, cell);
+                    }
                 }
             }
 
@@ -119,9 +179,24 @@ namespace GameCoreController
             {
                 foreach (BombChipData bombData in boardData.BombChipList)
                 {
-                    var coords = bombData.Coords;
-                    var cell = chipKeeper.GetGridCell(coords.x, coords.y);
-                    LoadBombChip(chipKeeper, bombData, cell);
+                    if (bombData.IsZone)
+                    {
+                        var zn = bombData.Zone;
+                        for (int x = zn.x0; x <= zn.x1; x++)
+                        {
+                            for (int y = zn.y0; y <= zn.y1; y++)
+                            {
+                                var cell = chipKeeper.GetGridCell(x, y);
+                                LoadBombChip(chipKeeper, bombData, cell);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var coords = bombData.Coords;
+                        var cell = chipKeeper.GetGridCell(coords.x, coords.y);
+                        LoadBombChip(chipKeeper, bombData, cell);
+                    }
                 }
             }
         }
@@ -174,11 +249,11 @@ namespace GameCoreController
             );
         }
 
-        private static void LoadStoneChip(ChipKeeper chipKeeper, BoxChipData boxData, GridCell cell)
+        private static void LoadBoxChip(ChipKeeper chipKeeper, BoxChipData boxData, GridCell cell)
         {
             if (!cell.IsEmpty())
             {
-                throw new Exception("cannot spawn stone chip at non-empty cell");
+                throw new Exception("cannot spawn box chip at non-empty cell");
             }
             BoxChip newChip = new BoxChip(boxData.Health);
             newChip.SetChipId(chipKeeper.GetNextChipId());
@@ -216,11 +291,11 @@ namespace GameCoreController
             );
         }
 
-        private static void LoadBombChip(ChipKeeper chipKeeper, BombChipData boosterData, GridCell cell)
+        private static void LoadBombChip(ChipKeeper chipKeeper, BombChipData bombData, GridCell cell)
         {
             if (!cell.IsEmpty())
             {
-                throw new Exception("cannot spawn booster chip at non-empty cell");
+                throw new Exception("cannot spawn bomb chip at non-empty cell");
             }
             BombChip newChip = new BombChip();
             newChip.SetChipId(chipKeeper.GetNextChipId());

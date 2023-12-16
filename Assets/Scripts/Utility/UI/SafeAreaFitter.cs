@@ -70,6 +70,12 @@ namespace Utility.UI
                     anchorMin.x = rectTransform.anchorMin.x;
                     anchorMax.x = rectTransform.anchorMax.x;
                     break;
+                case FitType.VerticalStretch:
+                    anchorMin.y = rectTransform.anchorMin.y - (Screen.height - safeAreaRect.height) / Screen.height;
+                    anchorMax.y = rectTransform.anchorMax.y;
+                    anchorMin.x = rectTransform.anchorMin.x;
+                    anchorMax.x = rectTransform.anchorMax.x;
+                    break;
             }
 
             rectTransform.anchorMin = anchorMin;
@@ -84,7 +90,8 @@ namespace Utility.UI
         Top,
         Bottom,
         Horizontal,
-        Vertical
+        Vertical,
+        VerticalStretch
     }
 
     public enum OffsetType

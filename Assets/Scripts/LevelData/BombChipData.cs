@@ -9,6 +9,7 @@ namespace LevelData
     public class BombChipData
     {
         public Vector2Int Coords;
-
+        public SqZone Zone;
+        public bool IsZone;
     }
 }

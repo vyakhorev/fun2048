@@ -86,11 +86,12 @@ namespace GameCoreController
          */
         public void Reset2048Game()
         {
-            DisableGameUpdateLoop();
             if (_lastGameData == null || _boardController == null)
             {
                 throw new InvalidOperationException("Please call LevelController.Start2048Game first");
             }
+
+            _boardController.ClearBoard();
             _boardController.SetupNewGame(_lastGameData);
         }
 
@@ -101,17 +102,6 @@ namespace GameCoreController
         public void End2048Game()
         {
             DisableGameUpdateLoop();
-
-            if (_lastGameData == null || _boardController == null)
-            {
-                throw new InvalidOperationException("Please call LevelController.Start2048Game first");
-            }
-            _boardController.ClearBoard();
-            _boardController = null;
-            _lastGameData = null;
-            _gameInputWiring.OnSwipeEvent -= OnSwiped;
-            _swipeDetection.OnSwipeEvent -= OnSwiped;
-            _swipeDetection.OnTapEvent -= OnTapped;
         }
 
         private void Update()
@@ -138,7 +128,6 @@ namespace GameCoreController
             {
                 _boardController.ExecuteSwipe(GridDirection.RIGHT);
             }
-
         }
 
         private void OnTapped(object sender, TapEventArgs tapEventArgs)

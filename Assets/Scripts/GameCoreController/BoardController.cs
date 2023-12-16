@@ -30,8 +30,6 @@ namespace GameCoreController
         // 
         private Chip2048Game _chip2048Game;
 
-        private List<GridDirection> _enquedSwipes;
-        private List<Vector2Int> _enquedTaps;
         private bool _readyToPlay = false;
         private ChipProducer _chipProducer;
 
@@ -41,11 +39,15 @@ namespace GameCoreController
 
         private bool _animationLock;
 
+        private GridDirection _activeSwipe;
+        private Vector2Int _activeTap;
+        private bool _hadSwipe;
+        private bool _hadTap;
+
         public void Init(ChipProducer chipProducer)
         {
-            _enquedSwipes = new List<GridDirection>();
-            _enquedTaps = new List<Vector2Int>();
-
+            _hadSwipe = false;
+            _hadTap = false;
             _chipProducer = chipProducer;
 
             _chip2048Game = new Chip2048Game();
@@ -89,44 +91,45 @@ namespace GameCoreController
         public void ExecuteSwipe(GridDirection gridDirection)
         {
             if (!_readyToPlay) return;
-            _enquedSwipes.Add(gridDirection);
+            _activeSwipe = gridDirection;
+            _hadSwipe = true;
         }
 
         public void ExecuteTap(Vector2 tapWorldPosition)
         {
             if (!_readyToPlay) return;
             Vector2Int tapLogicalPosition = _chipProducer.WorldToLogical(tapWorldPosition);
-            _enquedTaps.Add(tapLogicalPosition);
+            _activeTap = tapLogicalPosition;
+            _hadTap = true;
         }
 
         public void DoUpdate()
         {
             if (!_readyToPlay) return;
             if (_animationLock) return;
-           
-            // TODO - swipes and taps should be in one queue
-            List<GridDirection> acts = new List<GridDirection>(_enquedSwipes);
-            _enquedSwipes.Clear();
-            foreach (GridDirection gridDirection in acts)
-            {
-                _chip2048Game.TrySwipe(gridDirection);
-            }
 
-            List<Vector2Int> tapActs = new List<Vector2Int>(_enquedTaps);
-            _enquedTaps.Clear();
-            foreach (Vector2Int tap in tapActs)
+            if (_hadTap)
             {
-                _chip2048Game.TryTap(tap);
+                _chip2048Game.TryTap(_activeTap);
+                _hadTap = false;
+                _hadSwipe = false;
             }
-
-            List<AGridEffect> effects = _chip2048Game.GetEffects();
-            _chip2048Game.ResetEffects();
+            else if (_hadSwipe)
+            {
+                _chip2048Game.TrySwipe(_activeSwipe);
+                _hadTap = false;
+                _hadSwipe = false;
+            }
             
-            if (effects.Count > 0)
+            if (_chip2048Game.ShouldCheckForEffects())
             {
-                CoroutineRunEffects(effects);
+                List<AGridEffect> effects = _chip2048Game.CollectEffects();
+                if (effects.Count > 0)
+                {
+                    _animationLock = true;
+                    CoroutineRunEffects(effects);
+                }
             }
-
         }
 
         public SortedDictionary<string, GameGoalView> GetGoalViews()
@@ -196,27 +199,25 @@ namespace GameCoreController
         // Order is quite important here
         private async void CoroutineRunEffects(List<AGridEffect> effects)
         {
-            _animationLock = true;
             foreach (var eff in effects.OfType<BoardResetEffect>())
             {
                 ResetBoard(eff);
             }
 
-            Sequence tweenSeq = DOTween.Sequence();
-
-            foreach (var eff in effects.OfType<BoardResetEffect>())
+            foreach (var eff in effects.OfType<ChipSpawnedEffect>())
             {
-                ShowEffect(eff, tweenSeq);
+                SpawnNewChip(eff);
             }
 
             foreach (var eff in effects.OfType<CellEnabledChangeEffect>())
             {
-                ShowEffect(eff, tweenSeq);
+                ShowEffect(eff);
             }
 
-            foreach (var eff in effects.OfType<ChipSpawnedEffect>())
+            Sequence tweenSeq = DOTween.Sequence();
+            foreach (var eff in effects.OfType<BoardResetEffect>())
             {
-                SpawnNewChip(eff);
+                ShowEffect(eff, tweenSeq);
             }
 
             foreach (var eff in effects.OfType<ChipMoveEffect>())
@@ -258,10 +259,7 @@ namespace GameCoreController
             {
                 ShowEffect(eff, tweenSeq);
             }
-
             await tweenSeq.AsyncWaitForCompletion();
-
-            _animationLock = false;
 
             foreach (var eff in effects.OfType<ChipDeletedEffect>())
             {
@@ -287,6 +285,8 @@ namespace GameCoreController
             {
                 ShowEffect(eff);
             }
+
+            _animationLock = false;
         }
 
         private void SpawnNewChip(ChipSpawnedEffect chipSpawnedEffect)
@@ -325,9 +325,9 @@ namespace GameCoreController
                 );
                 _chipViews[chId] = chipCtrl;
             }
-            else if (chipSpawnedEffect.SpawnedChip is BombChip boosterChip)
+            else if (chipSpawnedEffect.SpawnedChip is BombChip bombChip)
             {
-                ChipCtrl chipCtrl = _chipProducer.SpawnBoosterChip(
+                ChipCtrl chipCtrl = _chipProducer.SpawnBombChip(
                     chipSpawnedEffect.Coords
                 );
                 _chipViews[chId] = chipCtrl;
@@ -382,16 +382,16 @@ namespace GameCoreController
 
         }
 
-        private void ShowEffect(CellEnabledChangeEffect cellEnabledChangeEffect, Sequence tweenSeq)
+        private void ShowEffect(CellEnabledChangeEffect cellEnabledChangeEffect)
         {
             GridCellCtrl gridCellCtrl = _gridCellViews[cellEnabledChangeEffect.CellCoords];
             if (cellEnabledChangeEffect.IsEnabled)
             {
-                gridCellCtrl.SetCellEnabled(tweenSeq);
+                gridCellCtrl.SetCellEnabled();
                 gridCellCtrl.SetEvenBackgroundColor(cellEnabledChangeEffect.CellCoords);
             } else
             {
-                gridCellCtrl.SetCellDisabled(tweenSeq);
+                gridCellCtrl.SetCellDisabled();
             }
         }
 

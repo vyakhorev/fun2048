@@ -44,3 +44,6 @@ TagManager:
   - name: Core
     uniqueID: 200586843
     locked: 0
+  - name: Overlay
+    uniqueID: 1802477099
+    locked: 0
