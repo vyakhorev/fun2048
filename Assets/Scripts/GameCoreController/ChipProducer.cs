@@ -71,15 +71,10 @@ namespace GameCoreController
 
         public void InitNewGame(Vector2Int boardSize)
         {
-            if (boardSize.x >= boardSize.y)
-            {
-                _calculatedCellSize = _worldWidth / boardSize.x;
-            }
-            else
-            {
-                _calculatedCellSize = _worldHeight / boardSize.y;
-            }
-
+            _calculatedCellSize = Mathf.Min(
+                _worldWidth / boardSize.x, 
+                _worldHeight / boardSize.y
+            );
             _horAlgn = (
                 _worldConers[0].x +
                 _worldConers[3].x -
