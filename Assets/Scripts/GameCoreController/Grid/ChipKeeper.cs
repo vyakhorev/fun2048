@@ -31,7 +31,6 @@ namespace GameCoreController
             _Y = y;
             _gridCells = new GridCell[_X, _Y];
             _effects = new List<AGridEffect>();
-            // _mergedAtThisTurn = new List<GridCell>();
             _mergedThisTurn = new List<NumberChip>();
             _chipsDeletedThisTurn = new HashSet<int>();
         }
@@ -319,7 +318,7 @@ namespace GameCoreController
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                else if (!cell_i.IsEnabled() || cell_i.IsHoney())
+                else if (!cell_i.IsEnabled())
                 {
                     // We cannot merge with a disabled cell
                     if (i + 1 == candidateIdx)
@@ -332,6 +331,32 @@ namespace GameCoreController
                     DoMove(candidateCell, available_cell);
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
+                }
+                else if (cell_i.IsHoney())
+                {
+                    // Try to damage / destroy the honey 
+                    DoDamageToHoney(cell_i);
+                    // Check if there is still honey left
+                    if (cell_i.IsHoney())
+                    {
+                        if (i + 1 == candidateIdx)
+                        {
+                            // No movement, already close to another cell
+                            candidateCell.SetCannotBeMovedThisTurn();
+                            return true;
+                        }
+                        GridCell available_cell = line[i + 1];
+                        DoMove(candidateCell, available_cell);
+                        available_cell.SetCannotBeMovedThisTurn();
+                        return true;
+                    }
+                    else
+                    {
+                        // Move to a freed from honey cell
+                        DoMove(candidateCell, cell_i);
+                        cell_i.SetCannotBeMovedThisTurn();
+                        return true;
+                    }
                 }
 
             }
@@ -499,7 +524,7 @@ namespace GameCoreController
             else if (chipFrom is NumberChip numberChipFromNoMerge &&
                 chipTo is EggChip eggChip)
             {
-                // Minor case - numbers can be merged into eggs,
+                // Minor case - numbers can be merged into eggs and honey,
                 // however, no area effect in this case
 
                 eggChip.DecreaseHealth();
