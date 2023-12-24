@@ -215,7 +215,8 @@ namespace GameCoreController
                 chipKeeper.ReportEffect(
                     new HoneyHealthChangeEffect(
                         cell.GetCoords(),
-                        cellData.HoneyHealth
+                        cellData.HoneyHealth,
+                        false
                     )
                 );
             }

@@ -218,6 +218,7 @@ namespace GameCoreController
             }
 
             ApplySpawnBombRule();
+            ApplySpawnNewHoneyRule();
 
             return atLeastOneChange;
         }
@@ -235,6 +236,7 @@ namespace GameCoreController
                 ResetTurn();
                 DoDamageToBombChip(cell, bombChip);
                 ActivateBomb(cell);
+                ApplySpawnNewHoneyRule();
                 return true;
             }
             return false;
@@ -618,7 +620,8 @@ namespace GameCoreController
                 _effects.Add(
                     new HoneyHealthChangeEffect(
                         cell.GetCoords(),
-                        cell.GetHoneyHealth()
+                        cell.GetHoneyHealth(),
+                        false
                     )
                 );
             }
@@ -737,6 +740,46 @@ namespace GameCoreController
                 new ChipSpawnedEffect(
                     bombChip,
                     cellToSpawnBomb.GetCoords()
+                )
+            );
+
+        }
+
+        private void ApplySpawnNewHoneyRule()
+        {
+            Dictionary<Vector2Int, GridCell> candidates = new Dictionary<Vector2Int, GridCell>();
+            foreach (GridCell cell in _gridCells)
+            {
+                foreach (GridCell neighCell in GetNeighbours(cell.GetCoords(), false))
+                {
+                    if (neighCell.IsEnabled() && !neighCell.IsHoney())
+                    {
+                        candidates.TryAdd(neighCell.GetCoords(), neighCell);
+                    }
+                }
+            }
+
+            List<GridCell> candidatesList = candidates.Values.ToList();
+
+            if (candidatesList.Count == 0)
+            {
+                return;  // No place to spawn new honey
+            }
+
+            int rndIdx = CoreUtils.GlobalCtx
+                        .Instance
+                        .GetRandom()
+                        .Next(candidatesList.Count);
+
+            GridCell cellToSpawnHoney = candidatesList[rndIdx];
+
+            int newHoneyHealth = 1;
+            cellToSpawnHoney.SetHoneyHealth(newHoneyHealth);
+            ReportEffect(
+                new HoneyHealthChangeEffect(
+                    cellToSpawnHoney.GetCoords(),
+                    newHoneyHealth,
+                    true
                 )
             );
 
