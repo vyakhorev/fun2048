@@ -97,12 +97,15 @@ namespace GameCoreController
                 }
             }            
 
+        }
+
+        public void CheckIfGameIsWon()
+        {
             if (IsGameWon() && !_gameWon)
             {
                 _gameWon = true;
                 _effects.Add(new GameWonEffect());
             }
-
         }
 
         public List<AGridEffect> GetEffects()

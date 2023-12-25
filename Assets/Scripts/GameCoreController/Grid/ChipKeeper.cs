@@ -254,7 +254,7 @@ namespace GameCoreController
             for (int i = 0; i < line.Count; i++)
             {
                 GridCell cell_i = line[i];
-                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled())
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled() && !cell_i.IsHoney())
                 {
                     candidateCell = cell_i;
                     candidateIdx = i;

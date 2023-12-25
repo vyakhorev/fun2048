@@ -85,6 +85,7 @@ namespace GameCoreController
             {
                 _watcher.AccountForEffect(effect);
             }
+            _watcher.CheckIfGameIsWon();
 
             return spawned;
         }
