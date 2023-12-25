@@ -248,23 +248,12 @@ namespace GameCoreController
         {
             if (rd > maxRd) throw new Exception("max_recursion");
 
-            for (int i = 0; i < line.Count; i++)
-            {
-                GridCell cell_i = line[i];
-                if (cell_i.IsHoney() && cell_i.CanBeMovedThisTurn())
-                {
-                    // Number chips trapped in honey cannot be moved the same turn
-                    cell_i.SetCannotBeMovedThisTurn();
-                    return ApplyMergeToLine(line, rd + 1, maxRd);
-                }
-            }
-
             GridCell? candidateCell = null;
             int candidateIdx = 0;
             for (int i = 0; i < line.Count; i++)
             {
                 GridCell cell_i = line[i];
-                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled())
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled() && !cell_i.IsHoney())
                 {
                     candidateCell = cell_i;
                     candidateIdx = i;
