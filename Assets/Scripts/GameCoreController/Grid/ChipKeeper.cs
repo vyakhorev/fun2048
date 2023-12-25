@@ -386,7 +386,14 @@ namespace GameCoreController
             foreach (var cell in GetRadius(gridCell.GetCoords(), true))
             {
                 // Priority for the bomb
-                if (cell.IsHoney())
+                if (cell.GetChip() is BombChip otherBombChip)
+                {
+                    // This shall remove bomb from the cell so no
+                    // recursive loop occurs.
+                    DoDamageToBombChip(cell, otherBombChip);
+                    otherBombs.Add(cell);
+                }
+                else if (cell.IsHoney())
                 {
                     DoDamageToHoney(cell);
                 }
@@ -397,13 +404,6 @@ namespace GameCoreController
                 else if (cell.GetChip() is BoxChip boxChip)
                 {
                     DoDamageToBoxChip(cell, boxChip);
-                }
-                else if (cell.GetChip() is BombChip otherBombChip)
-                {
-                    // This shall remove bomb from the cell so no
-                    // recursive loop occurs.
-                    DoDamageToBombChip(cell, otherBombChip);
-                    otherBombs.Add(cell);
                 }
                 else if (cell.IsGrass())
                 {
@@ -764,21 +764,24 @@ namespace GameCoreController
             Dictionary<Vector2Int, GridCell> candidates = new Dictionary<Vector2Int, GridCell>();
             foreach (GridCell cell in _gridCells)
             {
-                foreach (GridCell neighCell in GetNeighbours(cell.GetCoords(), false))
+                if (cell.IsHoney())
                 {
-                    if (neighCell.IsEnabled() && !neighCell.IsHoney())
+                    foreach (GridCell neighCell in GetNeighbours(cell.GetCoords(), false))
                     {
-                        candidates.TryAdd(neighCell.GetCoords(), neighCell);
+                        if (neighCell.IsEnabled() && !neighCell.IsHoney())
+                        {
+                            candidates.TryAdd(neighCell.GetCoords(), neighCell);
+                        }
                     }
                 }
             }
 
-            List<GridCell> candidatesList = candidates.Values.ToList();
-
-            if (candidatesList.Count == 0)
+            if (candidates.Count == 0)
             {
-                return;  // No place to spawn new honey
+                return;  // No place / reason to spawn new honey
             }
+
+            List<GridCell> candidatesList = candidates.Values.ToList();
 
             int rndIdx = CoreUtils.GlobalCtx
                         .Instance

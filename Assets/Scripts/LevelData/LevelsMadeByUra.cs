@@ -161,11 +161,11 @@ namespace LevelData
                 },
 
                 new GridCellData {
-                    Coords = new Vector2Int(0, 5),
+                    Coords = new Vector2Int(0, 6),
                     IsEnabled = false
                 },
                 new GridCellData {
-                    Coords = new Vector2Int(8, 5),
+                    Coords = new Vector2Int(8, 4),
                     IsEnabled = false
                 },
 
@@ -255,6 +255,12 @@ namespace LevelData
                     GrassHealth = 1,
                     IsEnabled = true
                 },
+                new GridCellData {
+                    Zone = new SqZone{x0=3, y0=5, x1=5, y1=5},
+                    IsZone = true,
+                    GrassHealth = 1,
+                    IsEnabled = true
+                },
 
                 // Disabled
                 new GridCellData {
@@ -333,6 +339,14 @@ namespace LevelData
                     IsEnabled = false
                 },
 
+                new GridCellData {
+                    Coords = new Vector2Int(4, 2),
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(4, 8),
+                    IsEnabled = false
+                },
             };
 
             rootLevelData.Board.EggChipList = new List<EggChipData> {
@@ -341,15 +355,13 @@ namespace LevelData
                     Health = 2
                 },
                 new EggChipData {
-                    Coords = new Vector2Int(3, 5),
+                    Zone = new SqZone{x0=3, y0=4, x1=5, y1=4},
+                    IsZone = true,
                     Health = 2
                 },
                 new EggChipData {
-                    Coords = new Vector2Int(4, 5),
-                    Health = 2
-                },
-                new EggChipData {
-                    Coords = new Vector2Int(5, 5),
+                    Zone = new SqZone{x0=3, y0=6, x1=5, y1=6},
+                    IsZone = true,
                     Health = 2
                 },
                 new EggChipData {
@@ -361,11 +373,11 @@ namespace LevelData
             rootLevelData.Goals = new List<LevelGoal> {
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_GRASS,
-                    Quantity = 20
+                    Quantity = 23
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_EGG,
-                    Quantity = 5
+                    Quantity = 8
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.COMBINE_NUMBER,
@@ -414,6 +426,14 @@ namespace LevelData
                     IsZone = true,
                     IsEnabled = false
                 },
+                new GridCellData {
+                    Coords = new Vector2Int(4, 4),
+                    IsEnabled = false
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(4, 6),
+                    IsEnabled = false
+                },
                 
                 // Honey
                 new GridCellData {
@@ -423,8 +443,19 @@ namespace LevelData
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=3, y0=4, x1=5, y1=6},
+                    Zone = new SqZone{x0=3, y0=4, x1=3, y1=6},
                     IsZone = true,
+                    HoneyHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Zone = new SqZone{x0=5, y0=4, x1=5, y1=6},
+                    IsZone = true,
+                    HoneyHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(4, 5),
                     HoneyHealth = 1,
                     IsEnabled = true
                 },
@@ -440,7 +471,7 @@ namespace LevelData
             rootLevelData.Goals = new List<LevelGoal> {
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_HONEY,
-                    Quantity = 27
+                    Quantity = 25
                 },
             };
 
@@ -484,25 +515,25 @@ namespace LevelData
 
                 // Honey
                 new GridCellData {
-                    Zone = new SqZone{x0=0, y0=0, x1=3, y1=3},
+                    Zone = new SqZone{x0=0, y0=0, x1=3, y1=2},
                     IsZone = true,
                     HoneyHealth = 1,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=5, y0=0, x1=8, y1=3},
+                    Zone = new SqZone{x0=5, y0=0, x1=8, y1=2},
                     IsZone = true,
                     HoneyHealth = 1,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=0, y0=7, x1=3, y1=10},
+                    Zone = new SqZone{x0=0, y0=8, x1=3, y1=10},
                     IsZone = true,
                     HoneyHealth = 1,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=5, y0=7, x1=8, y1=10},
+                    Zone = new SqZone{x0=5, y0=8, x1=8, y1=10},
                     IsZone = true,
                     HoneyHealth = 1,
                     IsEnabled = true
@@ -511,70 +542,70 @@ namespace LevelData
 
             rootLevelData.Board.BoxChipList = new List<BoxChipData> {
                 new BoxChipData {
-                    Coords = new Vector2Int(0, 4),
+                    Coords = new Vector2Int(0, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(1, 4),
+                    Coords = new Vector2Int(1, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(2, 4),
+                    Coords = new Vector2Int(2, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(3, 4),
-                    Health = 1
-                },
-
-                new BoxChipData {
-                    Coords = new Vector2Int(5, 4),
-                    Health = 1
-                },
-                new BoxChipData {
-                    Coords = new Vector2Int(6, 4),
-                    Health = 1
-                },
-                new BoxChipData {
-                    Coords = new Vector2Int(7, 4),
-                    Health = 1
-                },
-                new BoxChipData {
-                    Coords = new Vector2Int(8, 4),
+                    Coords = new Vector2Int(3, 3),
                     Health = 1
                 },
 
                 new BoxChipData {
-                    Coords = new Vector2Int(0, 6),
+                    Coords = new Vector2Int(5, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(1, 6),
+                    Coords = new Vector2Int(6, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(2, 6),
+                    Coords = new Vector2Int(7, 3),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(3, 6),
+                    Coords = new Vector2Int(8, 3),
                     Health = 1
                 },
 
                 new BoxChipData {
-                    Coords = new Vector2Int(5, 6),
+                    Coords = new Vector2Int(0, 7),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(6, 6),
+                    Coords = new Vector2Int(1, 7),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(7, 6),
+                    Coords = new Vector2Int(2, 7),
                     Health = 1
                 },
                 new BoxChipData {
-                    Coords = new Vector2Int(8, 6),
+                    Coords = new Vector2Int(3, 7),
+                    Health = 1
+                },
+
+                new BoxChipData {
+                    Coords = new Vector2Int(5, 7),
+                    Health = 1
+                },
+                new BoxChipData {
+                    Coords = new Vector2Int(6, 7),
+                    Health = 1
+                },
+                new BoxChipData {
+                    Coords = new Vector2Int(7, 7),
+                    Health = 1
+                },
+                new BoxChipData {
+                    Coords = new Vector2Int(8, 7),
                     Health = 1
                 },
             };
@@ -582,7 +613,7 @@ namespace LevelData
             rootLevelData.Goals = new List<LevelGoal> {
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_HONEY,
-                    Quantity = 64
+                    Quantity = 48
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_BOX,
@@ -722,10 +753,6 @@ namespace LevelData
                     Health = 2
                 },
                 new EggChipData {
-                    Coords = new Vector2Int(7, 3),
-                    Health = 2
-                },
-                new EggChipData {
                     Coords = new Vector2Int(7, 4),
                     Health = 2
                 },
@@ -751,10 +778,6 @@ namespace LevelData
                     Health = 2
                 },
                 new EggChipData {
-                    Coords = new Vector2Int(8, 3),
-                    Health = 2
-                },
-                new EggChipData {
                     Coords = new Vector2Int(8, 4),
                     Health = 2
                 },
@@ -770,7 +793,16 @@ namespace LevelData
 
             rootLevelData.Board.BombChipList = new List<BombChipData> {
                 new BombChipData {
-                    Coords = new Vector2Int(5, 1)
+                    Coords = new Vector2Int(1, 5)
+                },
+                new BombChipData {
+                    Coords = new Vector2Int(2, 9)
+                },
+                new BombChipData {
+                    Coords = new Vector2Int(7, 3)
+                },
+                new BombChipData {
+                    Coords = new Vector2Int(8, 3)
                 }
             };
 
@@ -786,11 +818,11 @@ namespace LevelData
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_EGG,
-                    Quantity = 14
+                    Quantity = 12
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_BOMB,
-                    Quantity = 1
+                    Quantity = 4
                 },
             };
 
@@ -970,10 +1002,10 @@ namespace LevelData
                     Coords = new Vector2Int(8, 0)
                 },
                 new BombChipData {
-                    Coords = new Vector2Int(0, 3)
+                    Coords = new Vector2Int(2, 4)
                 },
                 new BombChipData {
-                    Coords = new Vector2Int(8, 3)
+                    Coords = new Vector2Int(6, 4)
                 },
                 new BombChipData {
                     Coords = new Vector2Int(3, 6)
@@ -985,7 +1017,7 @@ namespace LevelData
                     Coords = new Vector2Int(0, 10)
                 },
                 new BombChipData {
-                    Coords = new Vector2Int(4, 10)
+                    Coords = new Vector2Int(4, 9)
                 },
                 new BombChipData {
                     Coords = new Vector2Int(8, 10)
@@ -1036,14 +1068,6 @@ namespace LevelData
                     IsEnabled = false
                 },
                 new GridCellData {
-                    Coords = new Vector2Int(3, 1),
-                    IsEnabled = false
-                },
-                new GridCellData {
-                    Coords = new Vector2Int(5, 1),
-                    IsEnabled = false
-                },
-                new GridCellData {
                     Coords = new Vector2Int(0, 10),
                     IsEnabled = false
                 },
@@ -1066,7 +1090,7 @@ namespace LevelData
 
                 // Grass
                 new GridCellData {
-                    Zone = new SqZone{x0=0, y0=8, x1=8, y1=9},
+                    Zone = new SqZone{x0=0, y0=9, x1=8, y1=9},
                     IsZone = true,
                     GrassHealth = 2,
                     IsEnabled = true
@@ -1302,26 +1326,30 @@ namespace LevelData
 
                 // Grass
                 new GridCellData {
-                    Zone = new SqZone{x0=0, y0=10, x1=8, y1=10},
+                    Zone = new SqZone{x0=1, y0=7, x1=1, y1=10},
                     IsZone = true,
                     GrassHealth = 2,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=1, y0=7, x1=1, y1=9},
+                    Zone = new SqZone{x0=4, y0=7, x1=4, y1=10},
                     IsZone = true,
                     GrassHealth = 2,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=4, y0=7, x1=4, y1=9},
+                    Zone = new SqZone{x0=7, y0=7, x1=7, y1=10},
                     IsZone = true,
                     GrassHealth = 2,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=7, y0=7, x1=7, y1=9},
-                    IsZone = true,
+                    Coords = new Vector2Int(0, 10),
+                    GrassHealth = 2,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(8, 10),
                     GrassHealth = 2,
                     IsEnabled = true
                 },
@@ -1332,15 +1360,23 @@ namespace LevelData
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=2, y0=9, x1=3, y1=9},
-                    IsZone = true,
-                    GrassHealth = 2,
+                    Coords = new Vector2Int(2, 9),
+                    GrassHealth = 1,
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=5, y0=9, x1=6, y1=9},
-                    IsZone = true,
-                    GrassHealth = 2,
+                    Coords = new Vector2Int(3, 9),
+                    GrassHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(5, 9),
+                    GrassHealth = 1,
+                    IsEnabled = true
+                },
+                new GridCellData {
+                    Coords = new Vector2Int(6, 9),
+                    GrassHealth = 1,
                     IsEnabled = true
                 },
                 new GridCellData {
@@ -1348,6 +1384,7 @@ namespace LevelData
                     GrassHealth = 1,
                     IsEnabled = true
                 },
+
 
                 // Honey 
                 new GridCellData {
@@ -1392,7 +1429,20 @@ namespace LevelData
                 {
                     Zone = new SqZone{x0=0, y0=6, x1=8, y1=6},
                     IsZone = true,
-                    Health = 2
+                    Health = 1
+                },
+
+                new BoxChipData
+                {
+                    Zone = new SqZone{x0=2, y0=10, x1=3, y1=10},
+                    IsZone = true,
+                    Health = 1
+                },
+                new BoxChipData
+                {
+                    Zone = new SqZone{x0=5, y0=10, x1=6, y1=10},
+                    IsZone = true,
+                    Health = 1
                 },
 
                 new BoxChipData
@@ -1449,7 +1499,7 @@ namespace LevelData
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_BOX,
-                    Quantity = 27
+                    Quantity = 31
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_HONEY,
@@ -1472,17 +1522,6 @@ namespace LevelData
             rootLevelData.Board.BoardSize = new Vector2Int(9, 11);
             rootLevelData.Board.GridCellList = new List<GridCellData>
             {
-                // Disabled 
-                new GridCellData {
-                    Zone = new SqZone{x0=2, y0=6, x1=3, y1=6},
-                    IsZone = true,
-                    IsEnabled = false
-                },
-                new GridCellData {
-                    Zone = new SqZone{x0=5, y0=6, x1=5, y1=6},
-                    IsZone = true,
-                    IsEnabled = false
-                },
 
                 // Grass
                 new GridCellData {
@@ -1542,7 +1581,7 @@ namespace LevelData
                     IsEnabled = true
                 },
                 new GridCellData {
-                    Zone = new SqZone{x0=0, y0=3, x1=8, y1=3},
+                    Zone = new SqZone{x0=1, y0=3, x1=7, y1=3},
                     IsZone = true,
                     HoneyHealth = 1,
                     IsEnabled = true
@@ -1573,6 +1612,17 @@ namespace LevelData
 
             rootLevelData.Board.EggChipList = new List<EggChipData>
             {
+                new EggChipData
+                {
+                    Coords = new Vector2Int(4, 10),
+                    Health = 2
+                },
+                new EggChipData
+                {
+                    Zone = new SqZone{x0=3, y0=7, x1=5, y1=7},
+                    IsZone = true,
+                    Health = 2
+                },
                 new EggChipData
                 {
                     Zone = new SqZone{x0=0, y0=0, x1=8, y1=0},
@@ -1793,7 +1843,7 @@ namespace LevelData
                 },
                 new LevelGoal {
                     GoalType = LevelGoalType.CLEAR_EGG,
-                    Quantity = 46
+                    Quantity = 50
                 },
             };
 
@@ -1957,6 +2007,22 @@ namespace LevelData
                     IsZone = true,
                     Health = 2
                 },
+
+                //new BoxChipData {
+                //    Zone = new SqZone{x0=3, y0=3, x1=4, y1=4},
+                //    IsZone = true,
+                //    Health = 1,
+                //},
+                //new BoxChipData {
+                //    Zone = new SqZone{x0=3, y0=5, x1=5, y1=5},
+                //    IsZone = true,
+                //    Health = 1
+                //},
+                //new BoxChipData {
+                //    Zone = new SqZone{x0=4, y0=6, x1=5, y1=7},
+                //    IsZone = true,
+                //    Health = 1
+                //},
             };
 
             rootLevelData.Board.BombChipList = new List<BombChipData>

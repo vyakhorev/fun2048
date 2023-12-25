@@ -16,7 +16,7 @@ namespace LevelEditor
             for (int i = 1; i <= LevelsMadeByUra.HowManyLevels(); i++)
             {
                 jsonString = JsonUtility.ToJson(LevelsMadeByUra.LevelByNumber(i), true);
-                saveFile = Application.persistentDataPath + "/level" + i.ToString() + ".json";
+                saveFile = Application.persistentDataPath + "/level" + i.ToString("00") + ".json";
                 File.WriteAllText(saveFile, jsonString);
                 Debug.Log("Saving " + saveFile);
             }
