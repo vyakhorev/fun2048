@@ -94,38 +94,6 @@
             },
             {
                 "Coords": {
-                    "x": 3,
-                    "y": 1
-                },
-                "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
-                },
-                "IsZone": false,
-                "GrassHealth": 0,
-                "HoneyHealth": 0,
-                "IsEnabled": false
-            },
-            {
-                "Coords": {
-                    "x": 5,
-                    "y": 1
-                },
-                "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
-                },
-                "IsZone": false,
-                "GrassHealth": 0,
-                "HoneyHealth": 0,
-                "IsEnabled": false
-            },
-            {
-                "Coords": {
                     "x": 0,
                     "y": 10
                 },
@@ -211,7 +179,7 @@
                 },
                 "Zone": {
                     "x0": 0,
-                    "y0": 8,
+                    "y0": 9,
                     "x1": 8,
                     "y1": 9
                 },

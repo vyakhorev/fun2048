@@ -8,7 +8,7 @@
         },
         {
             "GoalType": 1,
-            "Quantity": 27,
+            "Quantity": 31,
             "NumberToCombine": 0
         },
         {
@@ -66,26 +66,10 @@
                     "y": 0
                 },
                 "Zone": {
-                    "x0": 0,
-                    "y0": 10,
-                    "x1": 8,
-                    "y1": 10
-                },
-                "IsZone": true,
-                "GrassHealth": 2,
-                "HoneyHealth": 0,
-                "IsEnabled": true
-            },
-            {
-                "Coords": {
-                    "x": 0,
-                    "y": 0
-                },
-                "Zone": {
                     "x0": 1,
                     "y0": 7,
                     "x1": 1,
-                    "y1": 9
+                    "y1": 10
                 },
                 "IsZone": true,
                 "GrassHealth": 2,
@@ -101,7 +85,7 @@
                     "x0": 4,
                     "y0": 7,
                     "x1": 4,
-                    "y1": 9
+                    "y1": 10
                 },
                 "IsZone": true,
                 "GrassHealth": 2,
@@ -117,9 +101,41 @@
                     "x0": 7,
                     "y0": 7,
                     "x1": 7,
-                    "y1": 9
+                    "y1": 10
                 },
                 "IsZone": true,
+                "GrassHealth": 2,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 10
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 2,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 8,
+                    "y": 10
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
                 "GrassHealth": 2,
                 "HoneyHealth": 0,
                 "IsEnabled": true
@@ -142,33 +158,65 @@
             },
             {
                 "Coords": {
-                    "x": 0,
-                    "y": 0
+                    "x": 2,
+                    "y": 9
                 },
                 "Zone": {
-                    "x0": 2,
-                    "y0": 9,
-                    "x1": 3,
-                    "y1": 9
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
                 },
-                "IsZone": true,
-                "GrassHealth": 2,
+                "IsZone": false,
+                "GrassHealth": 1,
                 "HoneyHealth": 0,
                 "IsEnabled": true
             },
             {
                 "Coords": {
-                    "x": 0,
-                    "y": 0
+                    "x": 3,
+                    "y": 9
                 },
                 "Zone": {
-                    "x0": 5,
-                    "y0": 9,
-                    "x1": 6,
-                    "y1": 9
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
                 },
-                "IsZone": true,
-                "GrassHealth": 2,
+                "IsZone": false,
+                "GrassHealth": 1,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 5,
+                    "y": 9
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 1,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 6,
+                    "y": 9
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 1,
                 "HoneyHealth": 0,
                 "IsEnabled": true
             },
@@ -265,7 +313,35 @@
                     "y1": 6
                 },
                 "IsZone": true,
-                "Health": 2
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 2,
+                    "y0": 10,
+                    "x1": 3,
+                    "y1": 10
+                },
+                "IsZone": true,
+                "Health": 1
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 5,
+                    "y0": 10,
+                    "x1": 6,
+                    "y1": 10
+                },
+                "IsZone": true,
+                "Health": 1
             },
             {
                 "Coords": {

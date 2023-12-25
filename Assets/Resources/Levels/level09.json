@@ -18,7 +18,7 @@
         },
         {
             "GoalType": 2,
-            "Quantity": 46,
+            "Quantity": 50,
             "NumberToCombine": 0
         }
     ],
@@ -28,38 +28,6 @@
             "y": 11
         },
         "GridCellList": [
-            {
-                "Coords": {
-                    "x": 0,
-                    "y": 0
-                },
-                "Zone": {
-                    "x0": 2,
-                    "y0": 6,
-                    "x1": 3,
-                    "y1": 6
-                },
-                "IsZone": true,
-                "GrassHealth": 0,
-                "HoneyHealth": 0,
-                "IsEnabled": false
-            },
-            {
-                "Coords": {
-                    "x": 0,
-                    "y": 0
-                },
-                "Zone": {
-                    "x0": 5,
-                    "y0": 6,
-                    "x1": 5,
-                    "y1": 6
-                },
-                "IsZone": true,
-                "GrassHealth": 0,
-                "HoneyHealth": 0,
-                "IsEnabled": false
-            },
             {
                 "Coords": {
                     "x": 0,
@@ -210,9 +178,9 @@
                     "y": 0
                 },
                 "Zone": {
-                    "x0": 0,
+                    "x0": 1,
                     "y0": 3,
-                    "x1": 8,
+                    "x1": 7,
                     "y1": 3
                 },
                 "IsZone": true,
@@ -345,6 +313,34 @@
             }
         ],
         "EggChipList": [
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 10
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "Health": 2
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 3,
+                    "y0": 7,
+                    "x1": 5,
+                    "y1": 7
+                },
+                "IsZone": true,
+                "Health": 2
+            },
             {
                 "Coords": {
                     "x": 0,

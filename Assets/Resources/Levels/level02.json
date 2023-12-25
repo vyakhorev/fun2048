@@ -3,12 +3,12 @@
     "Goals": [
         {
             "GoalType": 0,
-            "Quantity": 20,
+            "Quantity": 23,
             "NumberToCombine": 0
         },
         {
             "GoalType": 2,
-            "Quantity": 5,
+            "Quantity": 8,
             "NumberToCombine": 0
         },
         {
@@ -118,6 +118,22 @@
                     "y0": 0,
                     "x1": 8,
                     "y1": 1
+                },
+                "IsZone": true,
+                "GrassHealth": 1,
+                "HoneyHealth": 0,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 3,
+                    "y0": 5,
+                    "x1": 5,
+                    "y1": 5
                 },
                 "IsZone": true,
                 "GrassHealth": 1,
@@ -379,6 +395,38 @@
                 "GrassHealth": 0,
                 "HoneyHealth": 0,
                 "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 2
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 8
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
             }
         ],
         "NumberChipList": [],
@@ -400,44 +448,30 @@
             },
             {
                 "Coords": {
-                    "x": 3,
-                    "y": 5
+                    "x": 0,
+                    "y": 0
                 },
                 "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
+                    "x0": 3,
+                    "y0": 4,
+                    "x1": 5,
+                    "y1": 4
                 },
-                "IsZone": false,
+                "IsZone": true,
                 "Health": 2
             },
             {
                 "Coords": {
-                    "x": 4,
-                    "y": 5
+                    "x": 0,
+                    "y": 0
                 },
                 "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
+                    "x0": 3,
+                    "y0": 6,
+                    "x1": 5,
+                    "y1": 6
                 },
-                "IsZone": false,
-                "Health": 2
-            },
-            {
-                "Coords": {
-                    "x": 5,
-                    "y": 5
-                },
-                "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
-                },
-                "IsZone": false,
+                "IsZone": true,
                 "Health": 2
             },
             {

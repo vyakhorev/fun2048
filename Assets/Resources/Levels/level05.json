@@ -13,12 +13,12 @@
         },
         {
             "GoalType": 2,
-            "Quantity": 14,
+            "Quantity": 12,
             "NumberToCombine": 0
         },
         {
             "GoalType": 5,
-            "Quantity": 1,
+            "Quantity": 4,
             "NumberToCombine": 0
         }
     ],
@@ -400,20 +400,6 @@
             {
                 "Coords": {
                     "x": 7,
-                    "y": 3
-                },
-                "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
-                },
-                "IsZone": false,
-                "Health": 2
-            },
-            {
-                "Coords": {
-                    "x": 7,
                     "y": 4
                 },
                 "Zone": {
@@ -498,20 +484,6 @@
             {
                 "Coords": {
                     "x": 8,
-                    "y": 3
-                },
-                "Zone": {
-                    "x0": 0,
-                    "y0": 0,
-                    "x1": 0,
-                    "y1": 0
-                },
-                "IsZone": false,
-                "Health": 2
-            },
-            {
-                "Coords": {
-                    "x": 8,
                     "y": 4
                 },
                 "Zone": {
@@ -556,8 +528,47 @@
         "BombChipList": [
             {
                 "Coords": {
-                    "x": 5,
-                    "y": 1
+                    "x": 1,
+                    "y": 5
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false
+            },
+            {
+                "Coords": {
+                    "x": 2,
+                    "y": 9
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false
+            },
+            {
+                "Coords": {
+                    "x": 7,
+                    "y": 3
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false
+            },
+            {
+                "Coords": {
+                    "x": 8,
+                    "y": 3
                 },
                 "Zone": {
                     "x0": 0,

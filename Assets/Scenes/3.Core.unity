@@ -3771,7 +3771,7 @@ MonoBehaviour:
   _turnsLeftTMP: {fileID: 1621308153}
   _boardSafeBounds: {fileID: 737497178}
   DebugRegime: 0
-  LevelDebug: 9
+  LevelDebug: 10
 --- !u!1 &1596931342
 GameObject:
   m_ObjectHideFlags: 0

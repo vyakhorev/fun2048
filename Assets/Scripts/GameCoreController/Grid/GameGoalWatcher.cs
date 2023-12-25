@@ -59,6 +59,12 @@ namespace GameCoreController
                     _honeyCnt += 1;
                     _effects.Add(new GoalChangedEffect(GameGoals.HONEY, Math.Max(_honeyGoal - _honeyCnt, 0), 0));
                 }
+                else if (honeyEff.JustSpawned) 
+                {
+                    // New honey spawned
+                    _honeyGoal += 1;
+                    _effects.Add(new GoalChangedEffect(GameGoals.HONEY, Math.Max(_honeyGoal - _honeyCnt, 0), 0));
+                }
             }
             else if ((_boxGoal > 0 || _eggGoal > 0 || _bombGoal > 0) && effect is ChipDeletedEffect deletedEff) 
             { 
@@ -91,12 +97,15 @@ namespace GameCoreController
                 }
             }            
 
+        }
+
+        public void CheckIfGameIsWon()
+        {
             if (IsGameWon() && !_gameWon)
             {
                 _gameWon = true;
                 _effects.Add(new GameWonEffect());
             }
-
         }
 
         public List<AGridEffect> GetEffects()

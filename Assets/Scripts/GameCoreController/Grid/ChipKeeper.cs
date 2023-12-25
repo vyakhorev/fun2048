@@ -31,7 +31,6 @@ namespace GameCoreController
             _Y = y;
             _gridCells = new GridCell[_X, _Y];
             _effects = new List<AGridEffect>();
-            // _mergedAtThisTurn = new List<GridCell>();
             _mergedThisTurn = new List<NumberChip>();
             _chipsDeletedThisTurn = new HashSet<int>();
         }
@@ -176,7 +175,6 @@ namespace GameCoreController
             {
                 cell_i.ResetTurn();
             }
-            //_mergedAtThisTurn = new List<GridCell>();
             _mergedThisTurn = new List<NumberChip>();
             _chipsDeletedThisTurn = new HashSet<int>();
         }
@@ -219,6 +217,7 @@ namespace GameCoreController
             }
 
             ApplySpawnBombRule();
+            ApplySpawnNewHoneyRule();
 
             return atLeastOneChange;
         }
@@ -236,6 +235,7 @@ namespace GameCoreController
                 ResetTurn();
                 DoDamageToBombChip(cell, bombChip);
                 ActivateBomb(cell);
+                ApplySpawnNewHoneyRule();
                 return true;
             }
             return false;
@@ -253,7 +253,7 @@ namespace GameCoreController
             for (int i = 0; i < line.Count; i++)
             {
                 GridCell cell_i = line[i];
-                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled())
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled() && !cell_i.IsHoney())
                 {
                     candidateCell = cell_i;
                     candidateIdx = i;
@@ -319,7 +319,7 @@ namespace GameCoreController
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                else if (!cell_i.IsEnabled() || cell_i.IsHoney())
+                else if (!cell_i.IsEnabled())
                 {
                     // We cannot merge with a disabled cell
                     if (i + 1 == candidateIdx)
@@ -333,6 +333,36 @@ namespace GameCoreController
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
                 }
+                else if (cell_i.IsHoney() && cell_i.IsEnabled())
+                {
+                    // Try to damage / destroy the honey 
+                    DoDamageToHoney(cell_i);
+                    // Check if there is still honey left
+                    if (cell_i.IsHoney())
+                    {
+                        // Considered the asme as a disabled cell
+                        if (i + 1 == candidateIdx)
+                        {
+                            // No movement, already close to another cell
+                            candidateCell.SetCannotBeMovedThisTurn();
+                            return true;
+                        }
+                        GridCell available_cell = line[i + 1];
+                        DoMove(candidateCell, available_cell);
+                        available_cell.SetCannotBeMovedThisTurn();
+                        return true;
+                    }
+                    else
+                    {
+                        // Honey is gone, however the cell may be non-empty.
+                        // Apply general movement to the line once more.
+                        return ApplyMergeToLine(line, rd + 1, maxRd);
+
+                        //DoMove(candidateCell, cell_i);
+                        //cell_i.SetCannotBeMovedThisTurn();
+                        //return true;
+                    }
+                }
 
             }
 
@@ -344,8 +374,19 @@ namespace GameCoreController
             List<GridCell> otherBombs = new List<GridCell>();
             foreach (var cell in GetRadius(gridCell.GetCoords(), true))
             {
-                // Priority 1 - other chips. Then honey / grass.
-                if (cell.GetChip() is EggChip eggChip)
+                // Priority for the bomb
+                if (cell.GetChip() is BombChip otherBombChip)
+                {
+                    // This shall remove bomb from the cell so no
+                    // recursive loop occurs.
+                    DoDamageToBombChip(cell, otherBombChip);
+                    otherBombs.Add(cell);
+                }
+                else if (cell.IsHoney())
+                {
+                    DoDamageToHoney(cell);
+                }
+                else if (cell.GetChip() is EggChip eggChip)
                 {
                     DoDamageToEggChip(cell, eggChip);
                 }
@@ -353,24 +394,13 @@ namespace GameCoreController
                 {
                     DoDamageToBoxChip(cell, boxChip);
                 }
-                else if (cell.GetChip() is BombChip otherBombChip)
+                else if (cell.IsGrass())
                 {
-                    // This shall remove bomb from the cell so no
-                    // recursive loop occurs.
-                    DoDamageToBombChip(cell, otherBombChip);
-                    otherBombs.Add(cell);
+                    DoDamageToGrass(cell);
                 }
                 else if (cell.GetChip() is NumberChip numberChip)
                 {
                     DoDamageToNumberChip(cell, numberChip);
-                }
-                else if (cell.IsHoney())
-                {
-                    DoDamageToHoney(cell);
-                }
-                else if (cell.IsGrass())
-                {
-                    DoDamageToGrass(cell);
                 }
             }
 
@@ -499,7 +529,7 @@ namespace GameCoreController
             else if (chipFrom is NumberChip numberChipFromNoMerge &&
                 chipTo is EggChip eggChip)
             {
-                // Minor case - numbers can be merged into eggs,
+                // Minor case - numbers can be merged into eggs and honey,
                 // however, no area effect in this case
 
                 eggChip.DecreaseHealth();
@@ -593,7 +623,8 @@ namespace GameCoreController
                 _effects.Add(
                     new HoneyHealthChangeEffect(
                         cell.GetCoords(),
-                        cell.GetHoneyHealth()
+                        cell.GetHoneyHealth(),
+                        false
                     )
                 );
             }
@@ -712,6 +743,49 @@ namespace GameCoreController
                 new ChipSpawnedEffect(
                     bombChip,
                     cellToSpawnBomb.GetCoords()
+                )
+            );
+
+        }
+
+        private void ApplySpawnNewHoneyRule()
+        {
+            Dictionary<Vector2Int, GridCell> candidates = new Dictionary<Vector2Int, GridCell>();
+            foreach (GridCell cell in _gridCells)
+            {
+                if (cell.IsHoney())
+                {
+                    foreach (GridCell neighCell in GetNeighbours(cell.GetCoords(), false))
+                    {
+                        if (neighCell.IsEnabled() && !neighCell.IsHoney())
+                        {
+                            candidates.TryAdd(neighCell.GetCoords(), neighCell);
+                        }
+                    }
+                }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return;  // No place / reason to spawn new honey
+            }
+
+            List<GridCell> candidatesList = candidates.Values.ToList();
+
+            int rndIdx = CoreUtils.GlobalCtx
+                        .Instance
+                        .GetRandom()
+                        .Next(candidatesList.Count);
+
+            GridCell cellToSpawnHoney = candidatesList[rndIdx];
+
+            int newHoneyHealth = 1;
+            cellToSpawnHoney.SetHoneyHealth(newHoneyHealth);
+            ReportEffect(
+                new HoneyHealthChangeEffect(
+                    cellToSpawnHoney.GetCoords(),
+                    newHoneyHealth,
+                    true
                 )
             );
 

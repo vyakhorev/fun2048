@@ -22,9 +22,11 @@ namespace MessagePack
             _isSerializerRegistered = true;
         }
 
+#if UNITY_EDITOR
         #region UNITY EDITOR UTILITY
         [UnityEditor.InitializeOnLoadMethod]
         private static void InitializeInEditor() => Initialize();
         #endregion
+#endif
     }
 }

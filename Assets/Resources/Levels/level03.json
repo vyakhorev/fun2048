@@ -3,7 +3,7 @@
     "Goals": [
         {
             "GoalType": 3,
-            "Quantity": 27,
+            "Quantity": 25,
             "NumberToCombine": 0
         }
     ],
@@ -79,6 +79,38 @@
             },
             {
                 "Coords": {
+                    "x": 4,
+                    "y": 4
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 6
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
+                "GrassHealth": 0,
+                "HoneyHealth": 0,
+                "IsEnabled": false
+            },
+            {
+                "Coords": {
                     "x": 0,
                     "y": 0
                 },
@@ -101,10 +133,42 @@
                 "Zone": {
                     "x0": 3,
                     "y0": 4,
+                    "x1": 3,
+                    "y1": 6
+                },
+                "IsZone": true,
+                "GrassHealth": 0,
+                "HoneyHealth": 1,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 0,
+                    "y": 0
+                },
+                "Zone": {
+                    "x0": 5,
+                    "y0": 4,
                     "x1": 5,
                     "y1": 6
                 },
                 "IsZone": true,
+                "GrassHealth": 0,
+                "HoneyHealth": 1,
+                "IsEnabled": true
+            },
+            {
+                "Coords": {
+                    "x": 4,
+                    "y": 5
+                },
+                "Zone": {
+                    "x0": 0,
+                    "y0": 0,
+                    "x1": 0,
+                    "y1": 0
+                },
+                "IsZone": false,
                 "GrassHealth": 0,
                 "HoneyHealth": 1,
                 "IsEnabled": true

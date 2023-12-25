@@ -1,10 +1,6 @@
-
-
-using Codice.Client.BaseCommands.BranchExplorer.ExplorerData;
 using LevelData;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace GameCoreController
 {
@@ -219,7 +215,8 @@ namespace GameCoreController
                 chipKeeper.ReportEffect(
                     new HoneyHealthChangeEffect(
                         cell.GetCoords(),
-                        cellData.HoneyHealth
+                        cellData.HoneyHealth,
+                        false
                     )
                 );
             }

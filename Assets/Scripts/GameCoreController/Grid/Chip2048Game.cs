@@ -1,9 +1,8 @@
 
 using LevelData;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
+
 
 namespace GameCoreController
 {
@@ -85,6 +84,7 @@ namespace GameCoreController
             {
                 _watcher.AccountForEffect(effect);
             }
+            _watcher.CheckIfGameIsWon();
 
             return spawned;
         }

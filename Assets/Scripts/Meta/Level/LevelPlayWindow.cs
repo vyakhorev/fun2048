@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utility.UI;
@@ -13,7 +13,7 @@ namespace Meta.Level.UI
         [SerializeField]
         private TextMeshProUGUI[] _lvlTextContainers;
 
-        private readonly string _lvlFormat = "Óðîâåíü {0}";
+        private readonly string _lvlFormat = "Ð£Ñ€Ð¾Ð²ÐµÐ½ÑŒ {0}";
 
         private LevelService _levelService;
 
