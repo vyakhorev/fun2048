@@ -175,7 +175,6 @@ namespace GameCoreController
             {
                 cell_i.ResetTurn();
             }
-            //_mergedAtThisTurn = new List<GridCell>();
             _mergedThisTurn = new List<NumberChip>();
             _chipsDeletedThisTurn = new HashSet<int>();
         }
@@ -249,12 +248,23 @@ namespace GameCoreController
         {
             if (rd > maxRd) throw new Exception("max_recursion");
 
+            for (int i = 0; i < line.Count; i++)
+            {
+                GridCell cell_i = line[i];
+                if (cell_i.IsHoney() && cell_i.CanBeMovedThisTurn())
+                {
+                    // Number chips trapped in honey cannot be moved the same turn
+                    cell_i.SetCannotBeMovedThisTurn();
+                    return ApplyMergeToLine(line, rd + 1, maxRd);
+                }
+            }
+
             GridCell? candidateCell = null;
             int candidateIdx = 0;
             for (int i = 0; i < line.Count; i++)
             {
                 GridCell cell_i = line[i];
-                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled() && !cell_i.IsHoney())
+                if (!cell_i.IsEmpty() && cell_i.CanBeMovedThisTurn() && cell_i.IsEnabled())
                 {
                     candidateCell = cell_i;
                     candidateIdx = i;
@@ -334,13 +344,14 @@ namespace GameCoreController
                     available_cell.SetCannotBeMovedThisTurn();
                     return true;
                 }
-                else if (cell_i.IsHoney())
+                else if (cell_i.IsHoney() && cell_i.IsEnabled())
                 {
                     // Try to damage / destroy the honey 
                     DoDamageToHoney(cell_i);
                     // Check if there is still honey left
                     if (cell_i.IsHoney())
                     {
+                        // Considered the asme as a disabled cell
                         if (i + 1 == candidateIdx)
                         {
                             // No movement, already close to another cell
@@ -354,10 +365,13 @@ namespace GameCoreController
                     }
                     else
                     {
-                        // Move to a freed from honey cell
-                        DoMove(candidateCell, cell_i);
-                        cell_i.SetCannotBeMovedThisTurn();
-                        return true;
+                        // Honey is gone, however the cell may be non-empty.
+                        // Apply general movement to the line once more.
+                        return ApplyMergeToLine(line, rd + 1, maxRd);
+
+                        //DoMove(candidateCell, cell_i);
+                        //cell_i.SetCannotBeMovedThisTurn();
+                        //return true;
                     }
                 }
 
@@ -371,8 +385,12 @@ namespace GameCoreController
             List<GridCell> otherBombs = new List<GridCell>();
             foreach (var cell in GetRadius(gridCell.GetCoords(), true))
             {
-                // Priority 1 - other chips. Then honey / grass.
-                if (cell.GetChip() is EggChip eggChip)
+                // Priority for the bomb
+                if (cell.IsHoney())
+                {
+                    DoDamageToHoney(cell);
+                }
+                else if (cell.GetChip() is EggChip eggChip)
                 {
                     DoDamageToEggChip(cell, eggChip);
                 }
@@ -387,17 +405,13 @@ namespace GameCoreController
                     DoDamageToBombChip(cell, otherBombChip);
                     otherBombs.Add(cell);
                 }
-                else if (cell.GetChip() is NumberChip numberChip)
-                {
-                    DoDamageToNumberChip(cell, numberChip);
-                }
-                else if (cell.IsHoney())
-                {
-                    DoDamageToHoney(cell);
-                }
                 else if (cell.IsGrass())
                 {
                     DoDamageToGrass(cell);
+                }
+                else if (cell.GetChip() is NumberChip numberChip)
+                {
+                    DoDamageToNumberChip(cell, numberChip);
                 }
             }
 
