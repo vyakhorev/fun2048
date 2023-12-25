@@ -68,6 +68,27 @@ namespace GameCoreController
             return _chip == null;
         }
 
+        public bool HasBox()
+        {
+            if (_chip == null) return false;
+            if (_chip is BoxChip) return true;
+            return false;
+        }
+
+        public bool HasEgg()
+        {
+            if (_chip == null) return false;
+            if (_chip is EggChip) return true;
+            return false;
+        }
+
+        public bool HasNumber()
+        {
+            if (_chip == null) return false;
+            if (_chip is NumberChip) return true;
+            return false;
+        }
+
         public bool IsFullyAvailable()
         {
 

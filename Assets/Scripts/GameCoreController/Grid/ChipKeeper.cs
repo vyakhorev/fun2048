@@ -216,7 +216,7 @@ namespace GameCoreController
                 }
             }
 
-            ApplySpawnBombRule();
+            //ApplySpawnBombRule();
             ApplySpawnNewHoneyRule();
 
             return atLeastOneChange;
@@ -757,7 +757,7 @@ namespace GameCoreController
                 {
                     foreach (GridCell neighCell in GetNeighbours(cell.GetCoords(), false))
                     {
-                        if (neighCell.IsEnabled() && !neighCell.IsHoney())
+                        if (neighCell.IsEnabled() && !neighCell.IsHoney() && !neighCell.HasBox())
                         {
                             candidates.TryAdd(neighCell.GetCoords(), neighCell);
                         }
